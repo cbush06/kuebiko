@@ -1,0 +1,25 @@
+// Navbar
+$navbar-height: 3.75rem;
+$navbar-item-img-max-height: 2.5rem;
+$navbar-breakpoint: 0;
+
+// Flex Gap
+$spacing-values: (
+    '0': 0,
+    '1': 0.25rem,
+    '2': 0.5rem,
+    '3': 0.75rem,
+    '4': 1rem,
+    '5': 1.5rem,
+    '6': 3rem,
+) !default;
+
+@each $name, $value in $spacing-values {
+    .is-flex-gap-#{$name} {
+        gap: $value !important;
+    }
+}
+
+.is-squared {
+    border-radius: 0 !important;
+}

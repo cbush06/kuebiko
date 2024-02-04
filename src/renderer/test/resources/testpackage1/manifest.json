@@ -1,0 +1,62 @@
+{
+    "uuid": "462425f3-7367-445e-84f6-0dafd963de1d",
+    "title": "Security+ 601",
+    "descriptionRef": "bf7762f0-a4dd-42f6-a5d9-2db4c0a4e822",
+    "authors": [
+        {
+            "name": "Clinton Bush",
+            "email": "clinton.bush@outlook.com"
+        }
+    ],
+    "created": "2024-01-28T20:30:50Z",
+    "resources": [
+        {
+            "uuid": "bf7762f0-a4dd-42f6-a5d9-2db4c0a4e822",
+            "name": "intro.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "3d0452af8755637e44e45a7087f00888c93901d6506559bf7d0e6903aac6f1fe"
+        },
+        {
+            "uuid": "47452250-e0c6-4873-88ef-d88701e490f4",
+            "name": "question1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "664d867638b40d64beed7f620e95db17ff8b0c1552757c68b541dce5a07bdef1"
+        }
+    ],
+    "sections": [
+        {
+            "uuid": "3ffb6650-f4b1-4e94-8159-3004b7643acb",
+            "default": true,
+            "title": "",
+            "questions": [
+                {
+                    "uuid": "c6436d2c-2f15-4670-a002-c70c31d999e4",
+                    "type": "MULTIPLE",
+                    "contentRef": "47452250-e0c6-4873-88ef-d88701e490f4",
+                    "answer": "fa7f3e15-7676-42ca-bc8c-bf8167f5c3f8",
+                    "options": [
+                        {
+                            "uuid": "fa7f3e15-7676-42ca-bc8c-bf8167f5c3f8",
+                            "contentText": "4"
+                        },
+                        {
+                            "uuid": "c26d7a98-2390-4071-bc5d-6377cb43fce3",
+                            "contentText": "5"
+                        },
+                        {
+                            "uuid": "6b250821-f8cb-463e-a4dd-e38dc4d94751",
+                            "contentText": "6"
+                        },
+                        {
+                            "uuid": "d612a1b7-d167-460e-b533-27234ffa890a",
+                            "contentText": "7"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tags": ["math", "mathematics", "arithmetic"]
+}
