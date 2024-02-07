@@ -6,8 +6,8 @@
             :question-content="questionContent" 
             :options="questionDeliveryItem?.getOptions() ?? []"
             :correct-response="questionDeliveryItem?.getCorrectResponse() as string ?? ''"
-            :success-feedback="questionDeliveryItem.getSuccessFeedback()"
-            :failure-feedback="questionDeliveryItem.getFailureFeedback()"
+            :success-feedback="successFeedbackContent"
+            :failure-feedback="failureFeedbackContent"
             v-model="selection"
             :reveal-answer="revealAnswer"
         />
@@ -16,8 +16,8 @@
             :question-content="questionContent"
             :options="questionDeliveryItem?.getOptions() ?? []"
             :correct-response="(questionDeliveryItem?.getCorrectResponse() as string[]) ?? []"
-            :success-feedback="questionDeliveryItem.getSuccessFeedback()"
-            :failure-feedback="questionDeliveryItem.getFailureFeedback()"
+            :success-feedback="successFeedbackContent"
+            :failure-feedback="failureFeedbackContent"
             v-model="selection"
             :reveal-answer="revealAnswer"
         />
@@ -38,24 +38,43 @@ import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local' });
 const questionContent = ref(t('noQuestionContent'));
+const successFeedbackContent = ref<string>();
+const failureFeedbackContent = ref<string>();
 const selection = ref<AnswerType>();
 const questionDeliveryItem = ref<QuestionDeliveryItem | undefined>();
 const revealAnswer = ref(false);
 
-const updateQuestionDetails = async (newDeliveryItem) => {
+const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => {
     const questionContentResource = (
         await KuebikoDb.INSTANCE.resources
             .where('uuid')
             .equals(newDeliveryItem?.getContentRef() ?? 'nonce')
             .first()
     )?.data as string;
+    questionContent.value = questionDeliveryItem.value?.getContentText() ?? questionContentResource ?? t('noQuestionContent');
+
+    const successFeedbackContentResource = (
+        await KuebikoDb.INSTANCE.resources
+            .where('uuid')
+            .equals(newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce')
+            .first()
+    )?.data as string;
+    successFeedbackContent.value = questionDeliveryItem.value?.getSuccessFeedbackText() ?? successFeedbackContentResource;
+
+    const failureFeedbackContentResource = (
+        await KuebikoDb.INSTANCE.resources
+            .where('uuid')
+            .equals(newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce')
+            .first()
+    )?.data as string;
+    failureFeedbackContent.value = questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;
+
     questionDeliveryItem.value = newDeliveryItem as QuestionDeliveryItem;
-    questionContent.value = questionDeliveryItem.value.getContentText() ?? questionContentResource ?? t('noQuestionContent');
     selection.value = questionDeliveryItem.value.getModel().response;
 };
 
-onBeforeMount(() => updateQuestionDetails(testDeliveryStore.deliveryItem));
-watch(() => testDeliveryStore.deliveryItem, updateQuestionDetails);
+onBeforeMount(() => updateQuestionDetails(testDeliveryStore.deliveryItem as QuestionDeliveryItem));
+watch(() => testDeliveryStore.deliveryItem as QuestionDeliveryItem, updateQuestionDetails);
 watch(
     () => testDeliveryStore.deliveryItem?.isRevealed(),
     (newRevealed) => {

@@ -12,7 +12,7 @@
     <div class="block">
         <div v-for="opt in options" class="block">
             <div
-                class="field p-2"
+                class="field p-2 m-0"
                 :class="{
                     'has-background-success-light': props.revealAnswer && MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
                     'has-background-danger-light': props.revealAnswer && !MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
@@ -38,22 +38,33 @@
                     {{ opt.content }}
                 </label>
             </div>
-            <div class="message is-info" v-if="props.revealAnswer && opt.explanation">
-                {{ opt.explanation }}
+            <div class="has-background-info-light p-2" v-if="props.revealAnswer && opt.explanation">
+                <div class="columns">
+                    <div class="column is-1 is-flex is-flex-direction-row is-justify-content-center is-align-items-center has-text-info-dark is-size-4">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </div>
+                    <div class="column is-11 has-text-info-dark">
+                        {{ opt.explanation }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div
         class="message is-success"
-        v-if="props.revealAnswer && props.successFeedback && MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, model as string)"
+        v-if="props.revealAnswer && props.successFeedback && MULTIPLE_CHOICE_EVALUATOR.evaluate(props.correctResponse, model as string) === 1"
     >
-        {{ props.successFeedback }}
+        <div class="message-body">
+            <MdPreview :modelValue="props.successFeedback" noMermaid noKatex noHighlight noIconfont />
+        </div>
     </div>
     <div
         class="message is-danger"
-        v-if="props.revealAnswer && props.failureFeedback && !MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, model as string)"
+        v-if="props.revealAnswer && props.failureFeedback && MULTIPLE_CHOICE_EVALUATOR.evaluate(props.correctResponse, model as string) !== 1"
     >
-        {{ props.failureFeedback }}
+        <div class="message-body">
+            <MdPreview :modelValue="props.failureFeedback" noMermaid noKatex noHighlight noIconfont />
+        </div>
     </div>
 </template>
 

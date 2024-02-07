@@ -10,7 +10,9 @@ export interface Question {
     contentText?: string;
     answer?: AnswerType;
     options: Option[];
-    successFeedback?: string;
-    failureFeedback?: string;
+    successFeedbackText?: string;
+    successFeedbackRef?: string;
+    failureFeedbackText?: string;
+    failureFeedbackRef?: string;
     categories: string[];
 }

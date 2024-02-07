@@ -58,8 +58,10 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             contentText: o.contentText,
             answer: marshalledAnswer,
             options: marshalledOptions,
-            successFeedback: o.successFeedback,
-            failureFeedback: o.failureFeedback,
+            successFeedbackRef: o.successFeedbackRef,
+            successFeedbackText: o.successFeedbackText,
+            failureFeedbackRef: o.failureFeedbackRef,
+            failureFeedbackText: o.failureFeedbackText,
             categories: o.categories,
         } as Question;
 

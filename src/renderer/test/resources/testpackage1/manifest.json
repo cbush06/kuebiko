@@ -37,6 +37,20 @@
             "type": "MARKDOWN",
             "mime": "text/markdown",
             "sha256": "699381b92571aefdeb6c4e1e82bbd8e9b068dc328b068c03343cd74ddaba7488"
+        },
+        {
+            "uuid": "71059d50-c5a3-4470-8c5e-2a469a59c5fb",
+            "name": "question1success.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "25439222f617d6dc2ebf9b5b6e5ffc57588073d29225d86604882dadf1793917"
+        },
+        {
+            "uuid": "eac2ffc8-c029-4cd3-a8ee-ad2f575f4257",
+            "name": "question1failure.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "3dfac144e5c193b890721631a8421a50e1d6bed11c7a732431ec5796300dd0fe"
         }
     ],
     "sections": [
@@ -53,21 +67,27 @@
                     "options": [
                         {
                             "uuid": "fa7f3e15-7676-42ca-bc8c-bf8167f5c3f8",
-                            "contentText": "Phishing"
+                            "contentText": "Phishing",
+                            "explanation": "Phishing is defind as the practice of tricking Internet users (as through the use of deceptive email messages or websites) into revealing personal or confidential information which can then be used illicitly"
                         },
                         {
                             "uuid": "c26d7a98-2390-4071-bc5d-6377cb43fce3",
-                            "contentText": "Privilege escalation"
+                            "contentText": "Privilege escalation",
+                            "explanation": "While privilege escalation might be the result of a phishing attempt, this is not the correct answer."
                         },
                         {
                             "uuid": "6b250821-f8cb-463e-a4dd-e38dc4d94751",
-                            "contentText": "Backdoor access"
+                            "contentText": "Backdoor access",
+                            "explanation": "Backdoor access might be achieved after a successful phishing attmept, but this is not the correct answer."
                         },
                         {
                             "uuid": "d612a1b7-d167-460e-b533-27234ffa890a",
-                            "contentText": "Shoulder surfing"
+                            "contentText": "Shoulder surfing",
+                            "explanation": "Shoulder surfing is the practice of the use of direct observation, such as looking over someone's shoulder at an ATM, in order to obtain information."
                         }
-                    ]
+                    ],
+                    "successFeedbackRef": "71059d50-c5a3-4470-8c5e-2a469a59c5fb",
+                    "failureFeedbackRef": "eac2ffc8-c029-4cd3-a8ee-ad2f575f4257"
                 },
                 {
                     "uuid": "b30f3012-2d77-4e49-8dde-0d1d42b6b075",
@@ -77,25 +97,32 @@
                     "options": [
                         {
                             "uuid": "09812a89-cdc8-4af4-8e30-2e7a5945ba22",
-                            "contentText": "Social engineering technique"
+                            "contentText": "Social engineering technique",
+                            "explanation": "Smishing attempts to appear official or legitimate by using people's natural tendencies against them; hence, it is a form of social engineering."
                         },
                         {
                             "uuid": "276917cb-8e19-4d2e-9d51-04653f740cad",
-                            "contentText": "E-mail communication"
+                            "contentText": "E-mail communication",
+                            "explanation": "Smishing uses SMS/text messages, it does not use e-mail."
                         },
                         {
                             "uuid": "443d636a-db7c-45aa-b497-957a9d7da41e",
-                            "contentText": "Spam over Internet Telephony (SPIT)"
+                            "contentText": "Spam over Internet Telephony (SPIT)",
+                            "explanation": "Smishing does not use voice communication, that would be \"vishing\"."
                         },
                         {
                             "uuid": "61229954-e0e7-4cba-8370-0a8f5cfc1e1b",
-                            "contentText": "Text messaging"
+                            "contentText": "Text messaging",
+                            "explanation": "Smishing relies on text messages as the form of communication. This is a correct response."
                         },
                         {
                             "uuid": "0b8eaf91-4075-472a-b4b7-4d419602f020",
-                            "contentText": "Spam over Internet Messaging (SPIM)"
+                            "contentText": "Spam over Internet Messaging (SPIM)",
+                            "explanation": "Smishing does not use internet messaging, it uses text messaging."
                         }
-                    ]
+                    ],
+                    "successFeedbackText": "Great job!",
+                    "failureFeedbackRef": "Uh oh! Smishing is a form of social engineering via text messages that attempts to trick people into revealing personal and/or confidential information."
                 },
                 {
                     "uuid": "1a8fe996-90be-4e50-bc91-e818b26c8911",

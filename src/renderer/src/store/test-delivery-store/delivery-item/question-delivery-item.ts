@@ -48,12 +48,20 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
         return this.question.type;
     }
 
-    getSuccessFeedback(): string | undefined {
-        return this.question.successFeedback;
+    getSuccessFeedbackText(): string | undefined {
+        return this.question.successFeedbackText;
     }
 
-    getFailureFeedback(): string | undefined {
-        return this.question.failureFeedback;
+    getSuccessFeedbackRef(): string | undefined {
+        return this.question.successFeedbackRef;
+    }
+
+    getFailureFeedbackText(): string | undefined {
+        return this.question.failureFeedbackText;
+    }
+
+    getFailureFeedbackRef(): string | undefined {
+        return this.question.failureFeedbackRef;
     }
 
     isRevisitable(): boolean {

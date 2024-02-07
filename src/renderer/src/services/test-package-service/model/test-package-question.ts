@@ -11,7 +11,9 @@ export interface TestPackageQuestion {
     contentText?: string;
     answer?: TestPackageAnswerType;
     options: TestPackageOption[];
-    successFeedback?: string;
-    failureFeedback?: string;
+    successFeedbackText?: string;
+    successFeedbackRef?: string;
+    failureFeedbackText?: string;
+    failureFeedbackRef?: string;
     categories: string[];
 }
