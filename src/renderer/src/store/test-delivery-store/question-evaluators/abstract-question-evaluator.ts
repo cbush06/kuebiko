@@ -1,6 +1,7 @@
 import { AnswerType } from '@renderer/db/models/answer';
-import { Question } from '@renderer/db/models/question';
 
-export abstract class AbstractQuestionEvaluator<V extends AnswerType> {
-    abstract evaluate(q: Question, answer: V): number;
+export abstract class AbstractQuestionEvaluator<V extends AnswerType, Y extends AnswerType> {
+    abstract evaluate(correctResponse: V, response: V): number;
+
+    abstract isSingleResponseCorrect(correctResponse: V, response: Y | undefined): boolean;
 }

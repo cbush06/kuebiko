@@ -10,9 +10,15 @@ export abstract class AbstractDeliveryItem {
 
     abstract getModel(): Section | QuestionResponse;
 
-    abstract getContentRef(): string;
+    abstract getContentText(): string | undefined;
+
+    abstract getContentRef(): string | undefined;
 
     abstract getPath(): string;
+
+    abstract setRevealed(): void;
+
+    abstract isRevealed(): boolean;
 
     isVisited() {
         return this.visited;

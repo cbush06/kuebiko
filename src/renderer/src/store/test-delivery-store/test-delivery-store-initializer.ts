@@ -11,6 +11,7 @@ import { AbstractQuestionFilter } from './question-filter/abstract-question-filt
 import { MATCH_ALL_QUESTION_FILTER } from './question-filter/match-all-question-filter';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { NotEnoughQuestionsErrors } from './errors/not-enough-questions-error';
+import { DeliveryFormat } from './types/delivery-format';
 
 export type QuestionOrder = 'ORIGINAL' | 'RANDOM' | 'RANDOM_BY_SECTION';
 
@@ -18,11 +19,14 @@ export interface TestEngineOptions {
     filter: AbstractQuestionFilter;
     order: QuestionOrder;
     maxQuestions?: number;
+    format?: DeliveryFormat;
 }
 
 export const DEFAULT_OPTIONS: Readonly<TestEngineOptions> = {
     filter: MATCH_ALL_QUESTION_FILTER,
     order: 'ORIGINAL',
+    // format: 'SIMULATE',
+    format: 'PREPARE',
 };
 
 export class TestDeliveryStoreInitializer {
@@ -33,6 +37,9 @@ export class TestDeliveryStoreInitializer {
         testStore.test = test;
         testStore.attempt = TestDeliveryStoreInitializer.buildAttempt(test);
         testStore.deliveryItems = await TestDeliveryStoreInitializer.buildDeliveryItemList(test, testStore.attempt, options);
+        testStore.deliveryItemIndex = 0;
+        testStore.deliveryItem = undefined;
+        testStore.format = options.format;
         if (test?.descriptionRef) {
             testStore.description = (await KuebikoDb.INSTANCE.resources.where('uuid').equals(test.descriptionRef).first())?.data as string;
         }
@@ -40,7 +47,7 @@ export class TestDeliveryStoreInitializer {
 
     protected static buildAttempt(test: Test): Attempt {
         return {
-            uuid: window.crypto.randomUUID(),
+            uuid: globalThis.crypto.randomUUID(),
             testRef: test.uuid,
             started: new Date(),
             status: 'INPROGRESS',

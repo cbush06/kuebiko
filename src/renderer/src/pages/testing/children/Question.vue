@@ -1,34 +1,72 @@
 <template>
     <div class="section content">
         <!-- prettier-ignore -->
-        <MdPreview 
-            :modelValue="questionContent?.data.toString() ?? t('noQuestionContent')" 
-            noMermaid 
-            noKatex 
-            noHighlight 
-            noIconfont 
+        <MultipleChoice 
+            v-if="questionDeliveryItem?.getType() === 'MULTIPLE'"
+            :question-content="questionContent" 
+            :options="questionDeliveryItem?.getOptions() ?? []"
+            :correct-response="questionDeliveryItem?.getCorrectResponse() as string ?? ''"
+            :success-feedback="questionDeliveryItem.getSuccessFeedback()"
+            :failure-feedback="questionDeliveryItem.getFailureFeedback()"
+            v-model="selection"
+            :reveal-answer="revealAnswer"
+        />
+        <ManyChoice
+            v-else-if="questionDeliveryItem?.getType() === 'MANY'"
+            :question-content="questionContent"
+            :options="questionDeliveryItem?.getOptions() ?? []"
+            :correct-response="(questionDeliveryItem?.getCorrectResponse() as string[]) ?? []"
+            :success-feedback="questionDeliveryItem.getSuccessFeedback()"
+            :failure-feedback="questionDeliveryItem.getFailureFeedback()"
+            v-model="selection"
+            :reveal-answer="revealAnswer"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { MdPreview } from 'md-editor-v3';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
-import { from, useObservable } from '@vueuse/rxjs';
-import { liveQuery } from 'dexie';
 import { useI18n } from 'vue-i18n';
-import { Resource } from '@renderer/db/models/resource';
+import { ref, watch } from 'vue';
+import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
+import { onBeforeMount } from 'vue';
+import MultipleChoice from '@renderer/components/question-renderers/MultipleChoice.vue';
+import { AnswerType } from '@renderer/db/models/answer';
+import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local' });
+const questionContent = ref(t('noQuestionContent'));
+const selection = ref<AnswerType>();
+const questionDeliveryItem = ref<QuestionDeliveryItem | undefined>();
+const revealAnswer = ref(false);
 
-// prettier-ignore
-const questionContent = useObservable(
-    from(liveQuery<Resource | undefined>(async () => 
-        await KuebikoDb.INSTANCE.resources.where('uuid').equals(testDeliveryStore.deliveryItem!.getContentRef()).first()
-    )),
+const updateQuestionDetails = async (newDeliveryItem) => {
+    const questionContentResource = (
+        await KuebikoDb.INSTANCE.resources
+            .where('uuid')
+            .equals(newDeliveryItem?.getContentRef() ?? 'nonce')
+            .first()
+    )?.data as string;
+    questionDeliveryItem.value = newDeliveryItem as QuestionDeliveryItem;
+    questionContent.value = questionDeliveryItem.value.getContentText() ?? questionContentResource ?? t('noQuestionContent');
+    selection.value = questionDeliveryItem.value.getModel().response;
+};
+
+onBeforeMount(() => updateQuestionDetails(testDeliveryStore.deliveryItem));
+watch(() => testDeliveryStore.deliveryItem, updateQuestionDetails);
+watch(
+    () => testDeliveryStore.deliveryItem?.isRevealed(),
+    (newRevealed) => {
+        revealAnswer.value = !!newRevealed;
+    },
 );
+watch(selection, () => {
+    if (questionDeliveryItem.value) {
+        questionDeliveryItem.value.getModel().response = selection.value;
+    }
+});
 
 testDeliveryStore.deliveryItem?.visit();
 </script>
@@ -42,4 +80,3 @@ testDeliveryStore.deliveryItem?.visit();
     }
 }
 </i18n>
-@renderer/db/kuebiko-db

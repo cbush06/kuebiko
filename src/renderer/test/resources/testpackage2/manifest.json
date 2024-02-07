@@ -1,0 +1,182 @@
+{
+    "uuid": "61bee790-1a82-4ca5-a7b9-16e6c7b0c720",
+    "title": "AWS Solutions Architect - Associate (SAA-C03)",
+    "descriptionRef": "e7694e35-b30d-4dcc-a61f-784ab97e91da",
+    "authors": [
+        {
+            "name": "Clinton Bush",
+            "email": "clinton.bush@outlook.com"
+        }
+    ],
+    "created": "2024-02-04T18:48:44Z",
+    "resources": [
+        {
+            "uuid": "e7694e35-b30d-4dcc-a61f-784ab97e91da",
+            "name": "intro.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "4aab7879cf1f97ef1e2506ebe7fe12e2fee2dbe6ba892a742bd7e4c203870cf9"
+        },
+        {
+            "uuid": "cd091d76-efc4-43db-8880-3389c8044436",
+            "name": "question1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "02aea6ee836a442c4b81d62b5de3ee58ca0b498c34ae1cd2d7e6f4d91a925599"
+        },
+        {
+            "uuid": "9a642af2-458e-4be6-8141-77b456b8bb79",
+            "name": "question2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "2ff2c01b704e259ff5a006ce69b0c6faa7d6de942372d12c6fd0f6a4d5a5c19c"
+        },
+        {
+            "uuid": "d32c0da4-0caf-415b-b1a4-7bc7cfbe352f",
+            "name": "question3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "fb0ef4adf7bb2fd027a10d999dc78b3c45fe9ef022a814d7a3da267b1623621f"
+        },
+        {
+            "uuid": "2e4d422e-acf6-4b57-a13c-c709e3fa762f",
+            "name": "question4.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "37e4e42419cc64f4106570fd0f5c7b919bff7d53dcf3d30e7b4411af7704367f"
+        },
+        {
+            "uuid": "6291bea3-1b71-472e-b9fe-4c91269657ac",
+            "name": "section1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "6fcebcdf007367accbf359375f7153bac877db02d29c242deaac20df81abaf54"
+        },
+        {
+            "uuid": "557e54ec-f9ed-4dde-89ef-7d96a1a430a5",
+            "name": "section2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "88d1a5f282680d6bdd2d0c6edf4d9d2097d3a8f212aafe1a2c5d69644bd52cd0"
+        }
+    ],
+    "sections": [
+        {
+            "uuid": "7c336e1e-dc25-4f5c-956e-7448f57375ee",
+            "default": false,
+            "title": "AWS Security and Availability",
+            "descriptionRef": "6291bea3-1b71-472e-b9fe-4c91269657ac",
+            "questions": [
+                {
+                    "uuid": "423ab307-ce33-43cf-9360-d4c1da8927e3",
+                    "type": "MULTIPLE",
+                    "contentRef": "cd091d76-efc4-43db-8880-3389c8044436",
+                    "answer": "cb9ac5fa-04b0-4a31-b920-13b787469bc5",
+                    "options": [
+                        {
+                            "uuid": "48671bf2-cd69-4b69-a5fa-a38967c431d3",
+                            "contentText": "Put the access key in an S3 bucket, and retrieve the access key on boot from the instance."
+                        },
+                        {
+                            "uuid": "9cfabe14-4a42-40e2-8ac7-6373a283f240",
+                            "contentText": "Pass the access key to the instances through instance user data."
+                        },
+                        {
+                            "uuid": "f2db95ca-e2fa-43fb-8e9c-e856c890f3c9",
+                            "contentText": "Obtain the access key from a key server launched in a private subnet."
+                        },
+                        {
+                            "uuid": "cb9ac5fa-04b0-4a31-b920-13b787469bc5",
+                            "contentText": "Create an IAM role with permissions to access the table, and launch all instances with the new role."
+                        }
+                    ]
+                },
+                {
+                    "uuid": "1cbbf5ac-d97d-40a3-8662-c40c064283ac",
+                    "type": "MANY",
+                    "contentRef": "9a642af2-458e-4be6-8141-77b456b8bb79",
+                    "answer": ["43a0a68a-d659-44f2-ba84-f405fe67bd08", "7094ea4d-8e68-4c6f-b735-a3d9cb825218"],
+                    "options": [
+                        {
+                            "uuid": "303fbe82-88f9-4ada-8134-c238e310c693",
+                            "contentText": "CloudWatch"
+                        },
+                        {
+                            "uuid": "43a0a68a-d659-44f2-ba84-f405fe67bd08",
+                            "contentText": "DynamoDB"
+                        },
+                        {
+                            "uuid": "cee10dea-969a-4fa9-a62e-df10b8714565",
+                            "contentText": "Elastic Load Balancing"
+                        },
+                        {
+                            "uuid": "7094ea4d-8e68-4c6f-b735-a3d9cb825218",
+                            "contentText": "ElastiCache"
+                        },
+                        {
+                            "uuid": "268d10f4-99ec-4ca0-991f-3fd86892c84c",
+                            "contentText": "Storage Gateway"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uuid": "4b5a40b1-b38f-4c24-85f7-b937cedeb774",
+            "default": false,
+            "title": "AWS Data Storage Solutions",
+            "descriptionRef": "557e54ec-f9ed-4dde-89ef-7d96a1a430a5",
+            "questions": [
+                {
+                    "uuid": "e7bdff55-a415-4069-9fde-d43330b20542",
+                    "type": "MULTIPLE",
+                    "contentRef": "d32c0da4-0caf-415b-b1a4-7bc7cfbe352f",
+                    "answer": "b869ab2a-88fc-40f0-b4b6-58806c86b246",
+                    "options": [
+                        {
+                            "uuid": "ed165ab0-3c6e-43e8-bb58-5245299d4839",
+                            "contentText": "Store data in an EBS volume and create snapshots once a week."
+                        },
+                        {
+                            "uuid": "b869ab2a-88fc-40f0-b4b6-58806c86b246",
+                            "contentText": "Store data in an S3 bucket and enable versioning."
+                        },
+                        {
+                            "uuid": "9ddddbb2-d8f1-4b67-9199-c33d255b8fc8",
+                            "contentText": "Store data in two S3 buckets in different AWS regions."
+                        },
+                        {
+                            "uuid": "130a8cfc-1ce4-4a3a-b31c-3edfdb57ce08",
+                            "contentText": "Store data on EC2 instance storage."
+                        }
+                    ]
+                },
+                {
+                    "uuid": "b22bdaa8-a473-4438-a7f3-fc43fc747005",
+                    "type": "MULTIPLE",
+                    "contentRef": "2e4d422e-acf6-4b57-a13c-c709e3fa762f",
+                    "answer": "6cca0d0a-e96c-4681-9490-50e19a313fad",
+                    "options": [
+                        {
+                            "uuid": "9bfb9c81-51de-4f04-a6a8-a7d6a208e183",
+                            "contentText": "DynamoDB"
+                        },
+                        {
+                            "uuid": "d2927b3c-2c94-4fa9-a370-62e470add8f5",
+                            "contentText": "Amazon S3"
+                        },
+                        {
+                            "uuid": "6cca0d0a-e96c-4681-9490-50e19a313fad",
+                            "contentText": "Amazon Aurora"
+                        },
+                        {
+                            "uuid": "b68fe1ca-1523-44b5-bbd4-9702b9de97eb",
+                            "contentText": "Amazon Redshift"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "tags": ["architect", "aws", "amazon"]
+}

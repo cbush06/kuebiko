@@ -15,14 +15,28 @@
             "name": "intro.md",
             "type": "MARKDOWN",
             "mime": "text/markdown",
-            "sha256": "3d0452af8755637e44e45a7087f00888c93901d6506559bf7d0e6903aac6f1fe"
+            "sha256": "3e42554eeb5cdb4ed1d407b1191a4bbdd15700382ecfb88a1a9a9ad58bd0fbba"
         },
         {
             "uuid": "47452250-e0c6-4873-88ef-d88701e490f4",
             "name": "question1.md",
             "type": "MARKDOWN",
             "mime": "text/markdown",
-            "sha256": "664d867638b40d64beed7f620e95db17ff8b0c1552757c68b541dce5a07bdef1"
+            "sha256": "03d006b6abfb12e8e25196214217c352244ac74f4bccc6a5bd1363caf8a9792a"
+        },
+        {
+            "uuid": "0e17c6ef-8e83-4c5d-89c3-1e16a148f11b",
+            "name": "question2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "be5f7fadae58cb2ab71e09b70b824d3780e5ba179491c2dc437b70be81cafeed"
+        },
+        {
+            "uuid": "607ecb7c-f9db-40ad-891a-72956dd7bc8e",
+            "name": "question3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "699381b92571aefdeb6c4e1e82bbd8e9b068dc328b068c03343cd74ddaba7488"
         }
     ],
     "sections": [
@@ -39,24 +53,76 @@
                     "options": [
                         {
                             "uuid": "fa7f3e15-7676-42ca-bc8c-bf8167f5c3f8",
-                            "contentText": "4"
+                            "contentText": "Phishing"
                         },
                         {
                             "uuid": "c26d7a98-2390-4071-bc5d-6377cb43fce3",
-                            "contentText": "5"
+                            "contentText": "Privilege escalation"
                         },
                         {
                             "uuid": "6b250821-f8cb-463e-a4dd-e38dc4d94751",
-                            "contentText": "6"
+                            "contentText": "Backdoor access"
                         },
                         {
                             "uuid": "d612a1b7-d167-460e-b533-27234ffa890a",
-                            "contentText": "7"
+                            "contentText": "Shoulder surfing"
+                        }
+                    ]
+                },
+                {
+                    "uuid": "b30f3012-2d77-4e49-8dde-0d1d42b6b075",
+                    "type": "MANY",
+                    "contentRef": "0e17c6ef-8e83-4c5d-89c3-1e16a148f11b",
+                    "answer": ["09812a89-cdc8-4af4-8e30-2e7a5945ba22", "61229954-e0e7-4cba-8370-0a8f5cfc1e1b"],
+                    "options": [
+                        {
+                            "uuid": "09812a89-cdc8-4af4-8e30-2e7a5945ba22",
+                            "contentText": "Social engineering technique"
+                        },
+                        {
+                            "uuid": "276917cb-8e19-4d2e-9d51-04653f740cad",
+                            "contentText": "E-mail communication"
+                        },
+                        {
+                            "uuid": "443d636a-db7c-45aa-b497-957a9d7da41e",
+                            "contentText": "Spam over Internet Telephony (SPIT)"
+                        },
+                        {
+                            "uuid": "61229954-e0e7-4cba-8370-0a8f5cfc1e1b",
+                            "contentText": "Text messaging"
+                        },
+                        {
+                            "uuid": "0b8eaf91-4075-472a-b4b7-4d419602f020",
+                            "contentText": "Spam over Internet Messaging (SPIM)"
+                        }
+                    ]
+                },
+                {
+                    "uuid": "1a8fe996-90be-4e50-bc91-e818b26c8911",
+                    "type": "MULTIPLE",
+                    "contentRef": "607ecb7c-f9db-40ad-891a-72956dd7bc8e",
+                    "answer": "36f2fe46-6c5a-40c8-888a-43eaae029c75",
+                    "options": [
+                        {
+                            "uuid": "019ec809-4189-4bb8-99d7-d11dafbffc72",
+                            "contentText": "Whaling"
+                        },
+                        {
+                            "uuid": "1c7c5961-c22b-47f2-ac7e-82e55e7128b8",
+                            "contentText": "Spear Phishing"
+                        },
+                        {
+                            "uuid": "36f2fe46-6c5a-40c8-888a-43eaae029c75",
+                            "contentText": "Vishing"
+                        },
+                        {
+                            "uuid": "1fc44c90-50b3-444d-8ae9-d078fb8da7c8",
+                            "contentText": "Pharming"
                         }
                     ]
                 }
             ]
         }
     ],
-    "tags": ["math", "mathematics", "arithmetic"]
+    "tags": ["security+", "comptia", "cybersecurity"]
 }

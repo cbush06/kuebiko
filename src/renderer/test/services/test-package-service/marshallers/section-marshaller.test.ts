@@ -10,12 +10,12 @@ import { Mock, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the DB
 vi.mock('@renderer/db/kuebiko-db.ts', () => {
-    const kuebikoDb = vi.fn();
-    kuebikoDb.prototype.questions = {
+    const KuebikoDb = vi.fn();
+    KuebikoDb.prototype.questions = {
         add: vi.fn().mockImplementation(() => Promise.resolve()),
     };
     return {
-        kuebikoDb,
+        KuebikoDb,
     };
 });
 
@@ -58,6 +58,7 @@ describe('section marshaller', async () => {
         expect(await sectionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'ab3ac23vfkjf',
             default: true,
+            descriptionRef: undefined,
             title: 'section',
             questionRefs: ['dskd83rlk'],
         } as Section);

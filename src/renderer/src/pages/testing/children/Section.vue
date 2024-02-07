@@ -1,12 +1,6 @@
 <template>
     <div class="section content">
-        <MdPreview
-            :modelValue="sectionDescription ?? t('defaultSectionIntro', { sectionTitle: testDeliveryStore.section?.title ?? 'Unknown Section' })"
-            noMermaid
-            noKatex
-            noHighlight
-            noIconfont
-        />
+        <MdPreview :modelValue="sectionDescription" noMermaid noKatex noHighlight noIconfont />
     </div>
 </template>
 
@@ -14,19 +8,30 @@
 import { MdPreview } from 'md-editor-v3';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { useI18n } from 'vue-i18n';
-import { from, useObservable } from '@vueuse/rxjs';
-import { liveQuery } from 'dexie';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { ref, watch } from 'vue';
+import { onBeforeMount } from 'vue';
+import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local' });
-const sectionDescription = useObservable(
-    from(
-        liveQuery<string | undefined>(
-            async () => (await KuebikoDb.INSTANCE.resources.where('uuid').equals(testDeliveryStore.section!.descriptionRef!).first())?.data as string,
-        ),
-    ),
-);
+const sectionContent = ref(t('defaultSectionIntro', { sectionTitle: 'Unknown Section' }));
+
+const updateSectionContent = async (newSection: SectionDeliveryItem) => {
+    const sectionDescriptionResource = (
+        await KuebikoDb.INSTANCE.resources
+            .where('uuid')
+            .equals(newSection?.getContentRef() ?? 'nonce')
+            .first()
+    )?.data as string;
+    sectionContent.value =
+        newSection?.getContentText() ??
+        sectionDescriptionResource ??
+        t('defaultSectionIntro', { sectionTitle: testDeliveryStore.section?.title ?? 'Unknown Section' });
+};
+
+onBeforeMount(() => updateSectionContent(testDeliveryStore.deliveryItem as SectionDeliveryItem));
+watch(() => testDeliveryStore.deliveryItem as SectionDeliveryItem, updateSectionContent);
 
 testDeliveryStore.deliveryItem?.visit();
 </script>

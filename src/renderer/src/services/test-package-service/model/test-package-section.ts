@@ -4,6 +4,7 @@ export interface TestPackageSection {
     uuid: string;
     default: boolean;
     title: string;
-    descriptionRef: string;
+    descriptionText?: string;
+    descriptionRef?: string;
     questions: TestPackageQuestion[];
 }

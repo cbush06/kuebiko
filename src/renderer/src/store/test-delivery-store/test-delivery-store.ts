@@ -1,13 +1,14 @@
 import { Attempt } from '@renderer/db/models/attempt';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { AbstractDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/abstract-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { DeliveryItemIsNotRevisitableError } from '@renderer/store/test-delivery-store/errors/delivery-item-is-not-revisitable-error';
 import { NoMoreDeliveryItemsError } from '@renderer/store/test-delivery-store/errors/no-more-delivery-items-error';
 import { NoPreviousDeliveryItemsError } from '@renderer/store/test-delivery-store/errors/no-prev-delivery-items-error';
 import { defineStore } from 'pinia';
+import { QuestionDeliveryItem } from './delivery-item/question-delivery-item';
+import { DeliveryFormat } from './types/delivery-format';
 
 export interface TestDeliveryStoreState {
     test?: Test;
@@ -17,6 +18,7 @@ export interface TestDeliveryStoreState {
     deliveryItem?: AbstractDeliveryItem;
     deliveryItemIndex: number;
     section?: Section;
+    format?: DeliveryFormat;
 }
 
 export const useTestDeliveryStore = defineStore('test-delivery', {
@@ -28,6 +30,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             deliveryItem: undefined,
             deliveryItemIndex: -1,
             section: undefined,
+            format: undefined,
         }) as TestDeliveryStoreState,
     getters: {
         isNextItemNewSection: (state) => {
@@ -41,6 +44,16 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             const canRevisitPreviousItem = state.deliveryItems[state.deliveryItemIndex - 1]?.isRevisitable();
             return hasPreviousItem && canRevisitPreviousItem;
         },
+        // prettier-ignore
+        currentQuestionNumber: (state) => state.deliveryItem 
+            ? state.deliveryItems
+                .filter(di => di instanceof QuestionDeliveryItem)
+                .indexOf(state.deliveryItem!) + 1
+            : -1,
+        // prettier-ignore
+        totalQuestions: (state) => state.deliveryItems
+            .filter((di) => di instanceof QuestionDeliveryItem)
+            .length,
     },
     actions: {
         forward() {

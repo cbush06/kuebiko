@@ -14,7 +14,11 @@ export class SectionDeliveryItem extends AbstractDeliveryItem {
         return this.section;
     }
 
-    getContentRef(): string {
+    getContentText(): string | undefined {
+        return this.section.descriptionText;
+    }
+
+    getContentRef(): string | undefined {
         return this.section.descriptionRef;
     }
 
@@ -28,5 +32,13 @@ export class SectionDeliveryItem extends AbstractDeliveryItem {
 
     getPath(): string {
         return `/test/${this.test.uuid}/section`;
+    }
+
+    setRevealed(): void {
+        return;
+    }
+
+    isRevealed(): boolean {
+        return true;
     }
 }

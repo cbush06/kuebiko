@@ -26,6 +26,7 @@ export const BulmaToastPlugin = {
         bulmaToast.setDefaults({
             position: 'top-center',
             dismissible: true,
+            duration: 5000,
         });
         app.provide(BulmaToast, {
             toast: bulmaToast.toast,

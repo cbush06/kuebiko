@@ -28,7 +28,7 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
                 content = await zipObj.async('string');
         }
 
-        const hash = (window.electron.ipcRenderer as unknown as IpcRenderer).sendSync('sha256', content);
+        const hash = (globalThis.electron.ipcRenderer as unknown as IpcRenderer).sendSync('sha256', content);
 
         if (o.sha256 !== hash) {
             throw new InvalidResourceHashError(o.name, o.uuid);

@@ -30,6 +30,7 @@ export default defineConfig({
         resolve: {
             alias: {
                 '@renderer': resolve('src/renderer/src'),
+                '~': resolve('node_modules'),
             },
         },
         plugins: [
@@ -55,11 +56,6 @@ export default defineConfig({
                 input: {
                     index: resolve(__dirname, 'src/renderer/index.html'),
                 },
-            },
-        },
-        test: {
-            coverage: {
-                reporter: ['lcov'],
             },
         },
     },

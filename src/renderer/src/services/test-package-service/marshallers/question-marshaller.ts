@@ -55,6 +55,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             uuid: o.uuid,
             type: marshalledType,
             contentRef: o.contentRef,
+            contentText: o.contentText,
             answer: marshalledAnswer,
             options: marshalledOptions,
             successFeedback: o.successFeedback,

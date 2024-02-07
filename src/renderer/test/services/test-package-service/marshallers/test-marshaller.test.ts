@@ -10,18 +10,18 @@ import { describe, expect, test, vi } from 'vitest';
 
 // Mock the DB
 vi.mock('@renderer/db/kuebiko-db.ts', () => {
-    const kuebikoDb = vi.fn();
-    kuebikoDb.prototype.questions = {
+    const KuebikoDb = vi.fn();
+    KuebikoDb.prototype.questions = {
         add: vi.fn().mockImplementation(() => Promise.resolve()),
     };
-    kuebikoDb.prototype.resources = {
+    KuebikoDb.prototype.resources = {
         add: vi.fn().mockImplementation(() => Promise.resolve()),
     };
-    kuebikoDb.prototype.tests = {
+    KuebikoDb.prototype.tests = {
         add: vi.fn().mockImplementation(() => Promise.resolve()),
     };
     return {
-        kuebikoDb,
+        KuebikoDb,
     };
 });
 

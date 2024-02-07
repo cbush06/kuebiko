@@ -7,7 +7,8 @@ export type TestPackageAnswerType = string | string[] | TestPackagePoint | TestP
 export interface TestPackageQuestion {
     uuid: string;
     type: TestPackageQuestionType;
-    contentRef: string;
+    contentRef?: string;
+    contentText?: string;
     answer?: TestPackageAnswerType;
     options: TestPackageOption[];
     successFeedback?: string;

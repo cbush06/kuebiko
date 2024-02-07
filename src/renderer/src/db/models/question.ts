@@ -6,7 +6,8 @@ export type QuestionType = 'MULTIPLE' | 'MANY' | 'POINT' | 'FILL' | 'SHORT' | 'L
 export interface Question {
     uuid: string;
     type: QuestionType;
-    contentRef: string;
+    contentRef?: string;
+    contentText?: string;
     answer?: AnswerType;
     options: Option[];
     successFeedback?: string;

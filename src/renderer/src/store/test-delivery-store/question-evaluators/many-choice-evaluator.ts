@@ -1,16 +1,14 @@
-import { Question } from '@renderer/db/models/question';
 import { AbstractQuestionEvaluator } from './abstract-question-evaluator';
 
-class ManyChoiceEvaluator extends AbstractQuestionEvaluator<string[]> {
-    evaluate(q: Question, answer: string[]): number {
-        const correctAnswer = q.answer as string[];
+class ManyChoiceEvaluator extends AbstractQuestionEvaluator<string[], string> {
+    evaluate(correctResponse: string[], response: string[]): number {
+        const numberCorrectlySelected = response.filter((a) => correctResponse.includes(a)).length;
+        const valuePerOption = 1.0 / correctResponse.length;
+        return valuePerOption * numberCorrectlySelected;
+    }
 
-        const numberCorrectlySelected = answer.filter((a) => correctAnswer.includes(a)).length;
-        const numberCorrectlyUnselected = q.options.length - correctAnswer.length - (answer.length - numberCorrectlySelected);
-
-        const valuePerOption = 1.0 / q.options.length;
-
-        return valuePerOption * numberCorrectlySelected + valuePerOption * numberCorrectlyUnselected;
+    isSingleResponseCorrect(correctResponse: string[], response: string | undefined): boolean {
+        return correctResponse.includes(response ?? '');
     }
 }
 

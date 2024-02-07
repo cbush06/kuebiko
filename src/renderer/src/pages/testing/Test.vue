@@ -6,7 +6,9 @@
                 <span class="is-size-4 has-text-weight-semibold ml-3">Kuebiko</span>
             </div>
         </div>
-        <div class="test-title"><span class="title has-text-white">Some centered content</span></div>
+        <div class="test-title">
+            <span class="title has-text-white">{{ test?.title }}</span>
+        </div>
         <div class="navbar-item test-timer">
             <div class="level has-text-white">
                 <i class="fa-solid fa-clock"></i>
@@ -29,24 +31,34 @@
         <div class="prev-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button class="button is-primary is-squared" :disabled="!testDeliveryStore.canGoBackward" @click="testDeliveryStore.backward()">
+                    <button class="button is-link is-radiusless" :disabled="!testDeliveryStore.canGoBackward" @click="testDeliveryStore.backward()">
                         <i class="fas fa-arrow-left mr-2"></i> Prev
                     </button>
                 </div>
             </div>
         </div>
         <div class="item-count-container">
-            <span class="is-size-4 has-text-weight-semibold">
+            <span v-if="testDeliveryStore.currentQuestionNumber > 0" class="is-size-5 has-text-weight-semibold">
                 <i class="fa-solid fa-hashtag"></i>
-                1 of 50
+                {{ testDeliveryStore.currentQuestionNumber }}
+                of
+                {{ testDeliveryStore.totalQuestions }}
             </span>
         </div>
         <div class="next-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button class="button is-primary is-squared" :disabled="!testDeliveryStore.canGoForward" @click="testDeliveryStore.forward()">
+                    <button
+                        v-if="testDeliveryStore.format === 'PREPARE' && testDeliveryStore.deliveryItem && !testDeliveryStore.deliveryItem?.isRevealed()"
+                        class="button is-success is-radiusless"
+                        @click="testDeliveryStore.deliveryItem?.setRevealed()"
+                    >
+                        Grade <i class="fa-solid fa-file-circle-check ml-2"></i>
+                    </button>
+                    <button v-else-if="testDeliveryStore.canGoForward" class="button is-link is-radiusless" @click="testDeliveryStore.forward()">
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
+                    <button v-else class="button is-success is-radiusless" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
                 </div>
             </div>
         </div>
@@ -60,21 +72,24 @@ import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delive
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { TestDeliveryStoreInitializer } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
-import { useObservable, from } from '@vueuse/rxjs';
-import { liveQuery } from 'dexie';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
+import { onBeforeMount } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
 const testDeliveryStore = useTestDeliveryStore();
+const test = ref<Test | undefined>();
 
-const test = useObservable(
-    from(liveQuery<Test | undefined>(async () => await KuebikoDb.INSTANCE.tests.where('uuid').equals(route.params['testUuid']).first())),
-);
+const updateTest = async (uuid: string) => {
+    test.value = await KuebikoDb.INSTANCE.tests.where('uuid').equals(uuid).first();
+};
 
-watch(test, () => TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value!));
+onBeforeMount(async () => {
+    await updateTest(route.params['testUuid'] as string);
+    if (test) TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value!);
+});
 
 watch(
     () => testDeliveryStore.deliveryItem,
@@ -100,6 +115,11 @@ const handleSection = (sdi: SectionDeliveryItem) => {
 
 const handleQuestion = (qdi: QuestionDeliveryItem) => {
     router.push(qdi.getPath());
+};
+
+const finishTest = () => {
+    test.value = undefined;
+    router.push('/');
 };
 </script>
 

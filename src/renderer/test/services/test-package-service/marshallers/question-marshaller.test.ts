@@ -48,6 +48,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'LONG',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: 'blah blah blah',
             options: [],
@@ -74,6 +75,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'SHORT',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: 'Chloroplasts',
             options: [],
@@ -113,6 +115,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'MULTIPLE',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: 'a213fjkdad',
             options: [{}, {}],
@@ -162,6 +165,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'MANY',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: ['a213fjkdad', 'sdcwfadjkdad'],
             options: [{}, {}, {}],
@@ -190,6 +194,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'FILL',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: ['score', 'seven'],
             options: [],
@@ -214,6 +219,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'FILL',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: { x: 1, y: 2 },
             options: [],
@@ -241,6 +247,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'FILL',
+            contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: [
                 { x: 1, y: 2 },
