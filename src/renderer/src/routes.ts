@@ -5,6 +5,7 @@ import TestVue from './pages/testing/Test.vue';
 import IntroVue from './pages/testing/children/Intro.vue';
 import SectionVue from './pages/testing/children/Section.vue';
 import QuestionVue from './pages/testing/children/Question.vue';
+import ResultsVue from './pages/testing/children/Results.vue';
 
 export default [
     {
@@ -32,6 +33,10 @@ export default [
             {
                 path: 'question',
                 component: QuestionVue,
+            },
+            {
+                path: 'results',
+                component: ResultsVue,
             },
         ] as RouteRecordSingleView[],
     },

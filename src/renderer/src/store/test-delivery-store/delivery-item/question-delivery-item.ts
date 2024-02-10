@@ -87,4 +87,8 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
     isRevealed(): boolean {
         return this.revealed;
     }
+
+    getQuestionType(): QuestionType {
+        return this.question.type;
+    }
 }

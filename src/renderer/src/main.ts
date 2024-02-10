@@ -10,6 +10,7 @@ import ResourceRequestInterceptor from '@renderer/services/resource-request-inte
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 import { HelmetStoreState, useHelmetStore } from './store/helmet-store/helmet-store';
+import en from './localization/en';
 
 // Register service worker
 navigator.serviceWorker.register(ResourceRequestInterceptor, {
@@ -28,7 +29,7 @@ createApp(App)
     .use(router)
     .use(BulmaToastPlugin)
     .use(pinia)
-    .use(createI18n({ locale: 'en' }))
+    .use(createI18n({ locale: 'en', messages: { en: en } }))
     .mount('#app')
     .$nextTick(() => {
         // Remove Preload scripts loading

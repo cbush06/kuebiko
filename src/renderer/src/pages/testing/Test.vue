@@ -19,7 +19,7 @@
 
     <nav class="navbar navbar-section-header is-primary" v-if="testDeliveryStore.section && !testDeliveryStore.section.default">
         <div class="navbar-item">
-            <span class="subtitle has-text-white has-text-weight-semibold">Hello</span>
+            <span class="subtitle has-text-white has-text-weight-semibold">{{ testDeliveryStore.section?.title }}</span>
         </div>
     </nav>
 
@@ -31,14 +31,19 @@
         <div class="prev-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button class="button is-link is-radiusless" :disabled="!testDeliveryStore.canGoBackward" @click="testDeliveryStore.backward()">
+                    <button
+                        v-if="!testDeliveryStore.completed"
+                        class="button is-link is-radiusless"
+                        :disabled="!testDeliveryStore.canGoBackward"
+                        @click="testDeliveryStore.backward()"
+                    >
                         <i class="fas fa-arrow-left mr-2"></i> Prev
                     </button>
                 </div>
             </div>
         </div>
         <div class="item-count-container">
-            <span v-if="testDeliveryStore.currentQuestionNumber > 0" class="is-size-5 has-text-weight-semibold">
+            <span v-if="testDeliveryStore.currentQuestionNumber > 0 && !testDeliveryStore.completed" class="is-size-5 has-text-weight-semibold">
                 <i class="fa-solid fa-hashtag"></i>
                 {{ testDeliveryStore.currentQuestionNumber }}
                 of
@@ -58,7 +63,12 @@
                     <button v-else-if="testDeliveryStore.canGoForward" class="button is-link is-radiusless" @click="testDeliveryStore.forward()">
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
-                    <button v-else class="button is-success is-radiusless" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
+                    <button v-else-if="!testDeliveryStore.completed" class="button is-success is-radiusless" @click="finishTest()">
+                        Finish <i class="fas fa-check ml-2"></i>
+                    </button>
+                    <button v-else="testDeliveryStore.completed" class="button is-success is-radiusless" @click="router.push('/')">
+                        Go Home <i class="fas fa-house ml-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -72,15 +82,18 @@ import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delive
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { TestDeliveryStoreInitializer } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
-import { ref, watch } from 'vue';
+import { inject, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
 import { onBeforeMount } from 'vue';
+import { BulmaToastService, BulmaToast } from '@renderer/vue-config/bulma-toast/bulma-toast';
+import { onUnmounted } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
 const testDeliveryStore = useTestDeliveryStore();
 const test = ref<Test | undefined>();
+const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
     test.value = await KuebikoDb.INSTANCE.tests.where('uuid').equals(uuid).first();
@@ -90,6 +103,8 @@ onBeforeMount(async () => {
     await updateTest(route.params['testUuid'] as string);
     if (test) TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value!);
 });
+
+onUnmounted(() => (test.value = undefined));
 
 watch(
     () => testDeliveryStore.deliveryItem,
@@ -117,9 +132,22 @@ const handleQuestion = (qdi: QuestionDeliveryItem) => {
     router.push(qdi.getPath());
 };
 
-const finishTest = () => {
-    test.value = undefined;
-    router.push('/');
+const saveAttempt = async () => {
+    if (!testDeliveryStore.attempt) {
+        throw new Error('Uh oh! Something went wrong and your attempt results cannot be saved.');
+    }
+    testDeliveryStore.complete();
+    await KuebikoDb.INSTANCE.attempts.add(toRaw(testDeliveryStore.attempt));
+};
+
+const finishTest = async () => {
+    try {
+        await saveAttempt();
+        router.push(`/test/${route.params['testUuid']}/results`);
+    } catch (e) {
+        $toast.danger({ message: 'Uh oh! Something went wrong and your attempt results cannot be saved.' });
+        console.error(e);
+    }
 };
 </script>
 

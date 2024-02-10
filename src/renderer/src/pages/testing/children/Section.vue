@@ -1,6 +1,6 @@
 <template>
     <div class="section content">
-        <MdPreview :modelValue="sectionDescription" noMermaid noKatex noHighlight noIconfont />
+        <MdPreview :modelValue="sectionContent" noMermaid noKatex noHighlight noIconfont />
     </div>
 </template>
 
@@ -41,8 +41,7 @@ testDeliveryStore.deliveryItem?.visit();
 <i18n lang="json">
 {
     "en": {
-        "defaultSectionIntro": "# Section: {sectionTitle}"
+        "defaultSectionIntro": "# Section: {sectionTitle}\nNo description provided."
     }
 }
 </i18n>
-@renderer/db/kuebiko-db

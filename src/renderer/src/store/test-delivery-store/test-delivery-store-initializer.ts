@@ -37,9 +37,12 @@ export class TestDeliveryStoreInitializer {
         testStore.test = test;
         testStore.attempt = TestDeliveryStoreInitializer.buildAttempt(test);
         testStore.deliveryItems = await TestDeliveryStoreInitializer.buildDeliveryItemList(test, testStore.attempt, options);
-        testStore.deliveryItemIndex = 0;
+        testStore.description = undefined;
         testStore.deliveryItem = undefined;
+        testStore.deliveryItemIndex = -1;
+        testStore.section = undefined;
         testStore.format = options.format;
+        testStore.completed = false;
         if (test?.descriptionRef) {
             testStore.description = (await KuebikoDb.INSTANCE.resources.where('uuid').equals(test.descriptionRef).first())?.data as string;
         }

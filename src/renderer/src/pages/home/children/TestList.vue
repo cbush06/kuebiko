@@ -1,21 +1,16 @@
 <template>
     <div class="is-flex is-flex-direction-column is-flex-gap-2">
-        <div class="level box p-2 mb-2">
-            <div class="level-left"></div>
-            <div class="level-right">
-                <div class="level-item">
-                    <div class="file is-info">
-                        <label class="file-label level-item">
-                            <input class="file-input" type="file" @input="importTestPackage($event as InputEvent)" />
-                            <span class="file-cta">
-                                <span class="file-icon">
-                                    <i class="fa-solid fa-upload"></i>
-                                </span>
-                                <span class="file-label"> Import a Test... </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
+        <div class="box is-flex is-justify-content-flex-end p-2">
+            <div class="file is-info">
+                <label class="file-label">
+                    <input class="file-input" type="file" @input="importTestPackage($event as InputEvent)" />
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fa-solid fa-upload"></i>
+                        </span>
+                        <span class="file-label"> Import a Test... </span>
+                    </span>
+                </label>
             </div>
         </div>
         <div class="box">

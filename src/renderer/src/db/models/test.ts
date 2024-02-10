@@ -10,4 +10,6 @@ export interface Test {
     resourceRefs: string[];
     sections: Section[];
     tags: string[];
+    passingPercentage?: number;
+    allowedTime?: number;
 }

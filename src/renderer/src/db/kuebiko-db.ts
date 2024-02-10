@@ -18,6 +18,7 @@ export class KuebikoDb extends Dexie {
             resources: '++uuid',
             attempts: '++uuid, testRef, status',
         });
+        this.open();
     }
 
     static readonly INSTANCE = new KuebikoDb();

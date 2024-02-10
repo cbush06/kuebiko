@@ -11,4 +11,6 @@ export interface Manifest {
     resources: TestPackageResource[];
     sections: TestPackageSection[];
     tags: string[];
+    passingPercentage?: number;
+    allowedTime?: number;
 }
