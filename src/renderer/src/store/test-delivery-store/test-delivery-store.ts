@@ -69,6 +69,11 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 throw new NoMoreDeliveryItemsError();
             }
 
+            // deliveryItemIndex is -1 at the start, so we know the user has begun the text and we record the timestamp.
+            if (this.deliveryItemIndex < 0) {
+                this.attempt!.started = new Date();
+            }
+
             this.inProgress = true;
             this.deliveryItem = this.deliveryItems[++this.deliveryItemIndex];
 

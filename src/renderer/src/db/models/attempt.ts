@@ -5,7 +5,7 @@ export type AttemptStatus = 'INPROGRESS' | 'COMPLETED';
 export interface Attempt {
     uuid: string;
     testRef: string;
-    started: Date;
+    started?: Date;
     completed?: Date;
     status: AttemptStatus;
     score: number;

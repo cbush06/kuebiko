@@ -53,7 +53,6 @@ export class TestDeliveryStoreInitializer {
         return {
             uuid: globalThis.crypto.randomUUID(),
             testRef: test.uuid,
-            started: new Date(),
             status: 'INPROGRESS',
             score: 0,
             questionResponses: new Array<QuestionResponse>(),

@@ -14,7 +14,7 @@
             <div class="level has-text-white">
                 <i class="fa-solid fa-clock"></i>
                 <span class="timer is-size-5 ml-2 has-text-weight-semibold">
-                    <TimerVue :duration="3000" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
+                    <TimerVue :duration="0" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
                 </span>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <div class="buttons">
                     <button
                         v-if="!testDeliveryStore.completed"
-                        class="button is-link is-radiusless"
+                        class="button is-link"
                         :disabled="!testDeliveryStore.canGoBackward"
                         @click="testDeliveryStore.backward()"
                     >
@@ -56,20 +56,20 @@
         <div class="next-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button v-if="testDeliveryStore.completed" class="button is-success is-radiusless" @click="router.push('/')">
+                    <button v-if="testDeliveryStore.completed" class="button is-success" @click="router.push('/')">
                         Go Home <i class="fas fa-house ml-2"></i>
                     </button>
                     <button
                         v-else-if="testDeliveryStore.format === 'PREPARE' && testDeliveryStore.deliveryItem && !testDeliveryStore.deliveryItem?.isRevealed()"
-                        class="button is-success is-radiusless"
+                        class="button is-success"
                         @click="testDeliveryStore.deliveryItem?.setRevealed()"
                     >
                         Grade <i class="fa-solid fa-file-circle-check ml-2"></i>
                     </button>
-                    <button v-else-if="testDeliveryStore.canGoForward" class="button is-link is-radiusless" @click="testDeliveryStore.forward()">
+                    <button v-else-if="testDeliveryStore.canGoForward" class="button is-link" @click="testDeliveryStore.forward()">
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
-                    <button v-else class="button is-success is-radiusless" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
+                    <button v-else class="button is-success" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
                 </div>
             </div>
         </div>

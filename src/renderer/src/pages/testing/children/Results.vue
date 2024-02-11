@@ -70,9 +70,9 @@ const gradeColorClass = computed(() => {
 const completionDate = computed(() => (testDeliveryStore.attempt?.completed ? format(testDeliveryStore.attempt?.completed, 'MMMM do, h:mm aa') : ''));
 const duration = computed(() => {
     if (!testDeliveryStore.attempt?.completed) return 0;
-    const hours = differenceInHours(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started);
-    const minutes = differenceInMinutes(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started);
-    const seconds = differenceInSeconds(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started);
+    const hours = differenceInHours(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
+    const minutes = differenceInMinutes(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
+    const seconds = differenceInSeconds(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
     if (hours) {
         return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
     }
