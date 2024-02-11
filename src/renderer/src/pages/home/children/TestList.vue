@@ -22,7 +22,11 @@
                 :clickable="true"
                 :sort="{key: 'title', direction: 'asc'}"
                 @row-click="handleTestSelection($event)"
-            />
+            >
+                <template #tags="{ row }">
+                    <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags?.slice(0, 5)">{{ tag }}</span>
+                </template>
+            </TableVue>
         </div>
     </div>
 </template>
@@ -38,6 +42,7 @@ import { from, useObservable } from '@vueuse/rxjs';
 import { liveQuery } from 'dexie';
 import { computed, inject } from 'vue';
 import { useRouter } from 'vue-router';
+import { useMemoize } from '@vueuse/core';
 
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 const $router = useRouter();
@@ -50,6 +55,17 @@ const columns = computed(
             {
                 title: 'Title',
                 key: 'title',
+                sortable: true,
+            },
+            {
+                title: 'Questions',
+                key: 'questions',
+                sortable: true,
+                computed: useMemoize((v: Test) => v.sections.reduce((total, next) => total + next.questionRefs.length, 0)),
+            },
+            {
+                title: 'Tags',
+                key: 'tags',
             },
         ] as TableColumn[],
 );

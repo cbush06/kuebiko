@@ -21,6 +21,7 @@ export interface TestDeliveryStoreState {
     deliveryItemIndex: number;
     section?: Section;
     format?: DeliveryFormat;
+    inProgress: boolean;
     completed: boolean;
 }
 
@@ -35,6 +36,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             deliveryItemIndex: -1,
             section: undefined,
             format: undefined,
+            inProgress: false,
             completed: false,
         }) as TestDeliveryStoreState,
     getters: {
@@ -67,6 +69,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 throw new NoMoreDeliveryItemsError();
             }
 
+            this.inProgress = true;
             this.deliveryItem = this.deliveryItems[++this.deliveryItemIndex];
 
             // Did the section change?
@@ -105,6 +108,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 });
 
                 this.attempt.score = totalCredit / this.totalQuestions;
+                this.inProgress = false;
                 this.completed = true;
             }
         },

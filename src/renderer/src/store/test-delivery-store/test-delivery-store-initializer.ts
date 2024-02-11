@@ -42,6 +42,7 @@ export class TestDeliveryStoreInitializer {
         testStore.deliveryItemIndex = -1;
         testStore.section = undefined;
         testStore.format = options.format;
+        testStore.inProgress = false;
         testStore.completed = false;
         if (test?.descriptionRef) {
             testStore.description = (await KuebikoDb.INSTANCE.resources.where('uuid').equals(test.descriptionRef).first())?.data as string;

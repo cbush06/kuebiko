@@ -1,14 +1,25 @@
 <template>
     <table :class="`table is-fullwidth ${hoverable ? 'is-hoverable' : ''}`">
         <thead>
-            <th v-for="column in columns">
+            <th
+                v-for="column in columns"
+                :class="{
+                    sortable: column.sortable,
+                    'is-clickable': column.sortable,
+                    asc: currentSort?.key === column.key && currentSort?.direction === 'asc',
+                    desc: currentSort?.key === column.key && currentSort?.direction === 'desc',
+                }"
+                @click="onSortClick(column)"
+            >
                 {{ column.title }}
             </th>
         </thead>
         <tbody v-if="preparedData?.length">
             <tr v-for="row in preparedData" @click="onRowClick($event, row)" :class="`${clickable ? 'is-clickable' : ''}`">
                 <td v-for="column in columns">
-                    {{ row[column.key] }}
+                    <slot :name="column.key" :row="row">
+                        {{ getColumnValue(column, row) }}
+                    </slot>
                 </td>
             </tr>
         </tbody>
@@ -33,13 +44,17 @@ const emit = defineEmits(['rowClick']);
 
 export interface SortBy {
     key: string;
-    comparator?: (a, b) => number;
     direction?: 'asc' | 'desc';
+    computed?: TableColumn['computed'];
 }
 
 export interface TableColumn {
     key: string;
     title: string;
+    computed?: (v: any) => any;
+    formatter: (v: any) => string;
+    sortable?: boolean;
+    comparator?: (a, b) => number;
 }
 
 export interface TableProps {
@@ -55,22 +70,26 @@ export interface TableProps {
 const props = defineProps<TableProps>();
 
 const currentSort = ref(props.sort);
-const defaultComparator = (key, direction) => {
+
+const defaultComparator = (key, direction, computed?: TableColumn['computed']) => {
     if (direction === 'asc') {
-        if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
+        if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? -1 : 1);
+        else if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
         else return (a, b) => (a === b ? 0 : a < b ? -1 : 1);
     }
-
-    if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? 1 : -1);
+    if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? 1 : -1);
+    else if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? 1 : -1);
     else return (a, b) => (a === b ? 0 : a < b ? 1 : -1);
 };
 
 const preparedData = computed(() => {
     if (currentSort.value) {
+        const comparator = props.columns.filter((c) => c.key === currentSort.value?.key)?.[0]?.comparator;
+
         // prettier-ignore
         return Array
             .of(...(props.data ?? []))
-            .sort(currentSort.value.comparator ?? defaultComparator(currentSort.value.key, currentSort.value.direction));
+            .sort(comparator ?? defaultComparator(currentSort.value.key, currentSort.value.direction, currentSort.value.computed));
     }
     return props.data;
 });
@@ -81,11 +100,64 @@ const emptyTableMessage = computed(() => {
     return '';
 });
 
+const onSortClick = (column: TableColumn) => {
+    if (!column.sortable) return;
+
+    let newSort = {
+        key: column.key,
+        computed: column.computed,
+        direction: 'asc',
+    } as SortBy | undefined;
+
+    if (currentSort.value?.key === column.key) {
+        if (currentSort.value?.direction === 'asc') {
+            newSort!.direction = 'desc';
+        } else {
+            newSort = undefined;
+        }
+    }
+
+    currentSort.value = newSort;
+};
+
 const onRowClick = ($event: Event, item: any) => {
     if (!props.clickable) return;
     $event.stopPropagation();
     emit('rowClick', item);
 };
+
+const getColumnValue = (column: TableColumn, row: any) => {
+    const rawValue = column.computed ? column.computed(row) : row[column.key];
+    if (column.formatter) return column.formatter(rawValue);
+    return rawValue;
+};
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+th {
+    display: table-cell;
+    vertical-align: middle;
+
+    &.sortable {
+        &::after {
+            display: inline-block;
+
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 0.5rem;
+
+            text-rendering: auto;
+            font: var(--fa-font-solid);
+            content: '\f0dc';
+        }
+
+        &.asc::after {
+            content: '\f0de';
+        }
+
+        &.desc::after {
+            content: '\f0dd';
+        }
+    }
+}
+</style>

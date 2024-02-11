@@ -114,6 +114,9 @@ const chartData = computed(
                         anchor: 'center',
                         backgroundColor: null,
                         borderWidth: 0,
+                        display: function (ctx: any) {
+                            return ctx.dataset.data[ctx.dataIndex] > 0 ? ctx.dataset.data[ctx.dataIndex] : '';
+                        },
                     },
                     backgroundColor: ['#84E0A3', '#FFAFA3', '#E6E6E6'],
                 },

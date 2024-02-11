@@ -10,9 +10,12 @@
             <span class="title has-text-white">{{ test?.title }}</span>
         </div>
         <div class="navbar-item test-timer">
+            <!-- <div v-if="test?.allowedTime" class="level has-text-white"> -->
             <div class="level has-text-white">
                 <i class="fa-solid fa-clock"></i>
-                <span class="timer is-size-5 ml-2 has-text-weight-semibold">16:35</span>
+                <span class="timer is-size-5 ml-2 has-text-weight-semibold">
+                    <TimerVue :duration="3000" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
+                </span>
             </div>
         </div>
     </nav>
@@ -53,8 +56,11 @@
         <div class="next-button-container">
             <div class="navbar-item">
                 <div class="buttons">
+                    <button v-if="testDeliveryStore.completed" class="button is-success is-radiusless" @click="router.push('/')">
+                        Go Home <i class="fas fa-house ml-2"></i>
+                    </button>
                     <button
-                        v-if="testDeliveryStore.format === 'PREPARE' && testDeliveryStore.deliveryItem && !testDeliveryStore.deliveryItem?.isRevealed()"
+                        v-else-if="testDeliveryStore.format === 'PREPARE' && testDeliveryStore.deliveryItem && !testDeliveryStore.deliveryItem?.isRevealed()"
                         class="button is-success is-radiusless"
                         @click="testDeliveryStore.deliveryItem?.setRevealed()"
                     >
@@ -63,12 +69,7 @@
                     <button v-else-if="testDeliveryStore.canGoForward" class="button is-link is-radiusless" @click="testDeliveryStore.forward()">
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
-                    <button v-else-if="!testDeliveryStore.completed" class="button is-success is-radiusless" @click="finishTest()">
-                        Finish <i class="fas fa-check ml-2"></i>
-                    </button>
-                    <button v-else="testDeliveryStore.completed" class="button is-success is-radiusless" @click="router.push('/')">
-                        Go Home <i class="fas fa-house ml-2"></i>
-                    </button>
+                    <button v-else class="button is-success is-radiusless" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
                 </div>
             </div>
         </div>
@@ -88,6 +89,7 @@ import { CannotNavigateError } from './errors/cannot-navigate-error';
 import { onBeforeMount } from 'vue';
 import { BulmaToastService, BulmaToast } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { onUnmounted } from 'vue';
+import TimerVue from '@renderer/components/Timer.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -148,6 +150,13 @@ const finishTest = async () => {
         $toast.danger({ message: 'Uh oh! Something went wrong and your attempt results cannot be saved.' });
         console.error(e);
     }
+};
+
+const outOfTime = () => {
+    $toast.danger({
+        message: 'Your time has expired!',
+    });
+    finishTest();
 };
 </script>
 
