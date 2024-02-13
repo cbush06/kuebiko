@@ -36,7 +36,7 @@ import { AnswerType } from '@renderer/db/models/answer';
 import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 
 const testDeliveryStore = useTestDeliveryStore();
-const { t } = useI18n({ inheritLocale: true, useScope: 'local' });
+const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 const questionContent = ref(t('noQuestionContent'));
 const successFeedbackContent = ref<string>();
 const failureFeedbackContent = ref<string>();

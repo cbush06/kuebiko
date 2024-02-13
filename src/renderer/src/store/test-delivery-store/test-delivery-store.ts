@@ -113,6 +113,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 });
 
                 this.attempt.score = totalCredit / this.totalQuestions;
+                this.attempt.status = 'COMPLETED';
                 this.inProgress = false;
                 this.completed = true;
             }

@@ -11,7 +11,7 @@
 
         <div class="navbar-menu">
             <div class="navbar-start">
-                <router-link to="/" class="navbar-item" active-class="is-active">Home</router-link>
+                <router-link to="/" class="navbar-item" active-class="is-active">Tests</router-link>
                 <router-link to="/attempts" class="navbar-item" active-class="is-active">Attempts</router-link>
             </div>
 

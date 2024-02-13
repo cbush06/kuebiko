@@ -42,36 +42,36 @@ import { computed, ref } from 'vue';
 
 const emit = defineEmits(['rowClick']);
 
-export interface SortBy {
-    key: string;
+export interface SortBy<T> {
+    key: keyof T;
     direction?: 'asc' | 'desc';
-    computed?: TableColumn['computed'];
+    computed?: TableColumn<T>['computed'];
 }
 
-export interface TableColumn {
-    key: string;
+export interface TableColumn<T> {
+    key: keyof T;
     title: string;
-    computed?: (v: any) => any;
-    formatter: (v: any) => string;
+    computed?: (v: T) => any;
+    formatter: (v: T) => string;
     sortable?: boolean;
-    comparator?: (a, b) => number;
+    comparator?: (a: T, b: T) => number;
 }
 
-export interface TableProps {
-    data?: any[];
-    columns: TableColumn[];
+export interface TableProps<T> {
+    data?: T[];
+    columns: TableColumn<T>[];
     hoverable?: boolean;
     clickable?: boolean;
-    sort?: SortBy;
+    sort?: SortBy<T>;
     noDataMessage?: string;
     noFilterResultsMessage?: string;
 }
 
-const props = defineProps<TableProps>();
+const props = defineProps<TableProps<any>>();
 
 const currentSort = ref(props.sort);
 
-const defaultComparator = (key, direction, computed?: TableColumn['computed']) => {
+const defaultComparator = <T,>(key, direction, computed?: TableColumn<T>['computed']) => {
     if (direction === 'asc') {
         if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? -1 : 1);
         else if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
@@ -100,14 +100,14 @@ const emptyTableMessage = computed(() => {
     return '';
 });
 
-const onSortClick = (column: TableColumn) => {
+const onSortClick = <T,>(column: TableColumn<T>) => {
     if (!column.sortable) return;
 
     let newSort = {
         key: column.key,
         computed: column.computed,
         direction: 'asc',
-    } as SortBy | undefined;
+    } as SortBy<T> | undefined;
 
     if (currentSort.value?.key === column.key) {
         if (currentSort.value?.direction === 'asc') {
@@ -126,7 +126,7 @@ const onRowClick = ($event: Event, item: any) => {
     emit('rowClick', item);
 };
 
-const getColumnValue = (column: TableColumn, row: any) => {
+const getColumnValue = <T,>(column: TableColumn<T>, row: any) => {
     const rawValue = column.computed ? column.computed(row) : row[column.key];
     if (column.formatter) return column.formatter(rawValue);
     return rawValue;
