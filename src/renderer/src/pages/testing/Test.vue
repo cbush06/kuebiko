@@ -34,13 +34,16 @@
         <div class="prev-button-container">
             <div class="navbar-item">
                 <div class="buttons">
+                    <button v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed" class="button is-link" @click="router.push('/')">
+                        <i class="fa-solid fa-house mr-2"></i> Home
+                    </button>
                     <button
-                        v-if="!testDeliveryStore.completed"
+                        v-else-if="!testDeliveryStore.completed"
                         class="button is-link"
                         :disabled="!testDeliveryStore.canGoBackward"
                         @click="testDeliveryStore.backward()"
                     >
-                        <i class="fas fa-arrow-left mr-2"></i> Prev
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Prev
                     </button>
                 </div>
             </div>
@@ -77,19 +80,17 @@
 </template>
 
 <script setup lang="ts">
-import { Test } from '@renderer/db/models/test';
+import TimerVue from '@renderer/components/Timer.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { Test } from '@renderer/db/models/test';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { TestDeliveryStoreInitializer } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
-import { inject, ref, toRaw, watch } from 'vue';
+import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
+import { inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
-import { onBeforeMount } from 'vue';
-import { BulmaToastService, BulmaToast } from '@renderer/vue-config/bulma-toast/bulma-toast';
-import { onUnmounted } from 'vue';
-import TimerVue from '@renderer/components/Timer.vue';
 
 const router = useRouter();
 const route = useRoute();
