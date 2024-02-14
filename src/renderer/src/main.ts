@@ -1,16 +1,16 @@
 import { createApp } from 'vue';
 import './style.scss';
 
-import App from './App.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import App from './App.vue';
 import routes from './routes';
 import { BulmaToastPlugin } from './vue-config/bulma-toast/bulma-toast';
 
 import ResourceRequestInterceptor from '@renderer/services/resource-request-interceptor/resource-request-interceptor?worker&url';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
-import { HelmetStoreState, useHelmetStore } from './store/helmet-store/helmet-store';
 import en from './localization/en';
+import { HelmetStoreState, useHelmetStore } from './store/helmet-store/helmet-store';
 
 // Register service worker
 navigator.serviceWorker.register(ResourceRequestInterceptor, {
@@ -29,7 +29,7 @@ createApp(App)
     .use(router)
     .use(BulmaToastPlugin)
     .use(pinia)
-    .use(createI18n({ locale: 'en', messages: { en: en } }))
+    .use(createI18n({ locale: 'en', messages: { en }, fallbackWarn: false, missingWarn: false }))
     .mount('#app')
     .$nextTick(() => {
         // Remove Preload scripts loading

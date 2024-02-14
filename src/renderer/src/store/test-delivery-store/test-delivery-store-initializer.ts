@@ -1,16 +1,16 @@
+import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Attempt } from '@renderer/db/models/attempt';
 import { Question } from '@renderer/db/models/question';
 import { QuestionResponse } from '@renderer/db/models/question-response';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { Test } from '@renderer/db/models/test';
+import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { ArrayUtils } from '@renderer/utils/array-utils';
 import { AbstractDeliveryItem } from './delivery-item/abstract-delivery-item';
 import { QuestionDeliveryItem } from './delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from './delivery-item/section-delivery-item';
-import { Test } from '@renderer/db/models/test';
+import { NotEnoughQuestionsErrors } from './errors/not-enough-questions-error';
 import { AbstractQuestionFilter } from './question-filter/abstract-question-filter';
 import { MATCH_ALL_QUESTION_FILTER } from './question-filter/match-all-question-filter';
-import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
-import { NotEnoughQuestionsErrors } from './errors/not-enough-questions-error';
 import { DeliveryFormat } from './types/delivery-format';
 
 export type QuestionOrder = 'ORIGINAL' | 'RANDOM' | 'RANDOM_BY_SECTION';
@@ -35,7 +35,7 @@ export class TestDeliveryStoreInitializer {
     static async initializeTestDeliveryStore(test: Test, options: TestEngineOptions = DEFAULT_OPTIONS) {
         const testStore = useTestDeliveryStore();
         testStore.test = test;
-        testStore.attempt = TestDeliveryStoreInitializer.buildAttempt(test);
+        testStore.attempt = TestDeliveryStoreInitializer.buildAttempt(test, options.format ?? 'SIMULATE');
         testStore.deliveryItems = await TestDeliveryStoreInitializer.buildDeliveryItemList(test, testStore.attempt, options);
         testStore.description = undefined;
         testStore.deliveryItem = undefined;
@@ -49,13 +49,14 @@ export class TestDeliveryStoreInitializer {
         }
     }
 
-    protected static buildAttempt(test: Test): Attempt {
+    protected static buildAttempt(test: Test, format: DeliveryFormat): Attempt {
         return {
             uuid: globalThis.crypto.randomUUID(),
             testRef: test.uuid,
             status: 'INPROGRESS',
             score: 0,
             questionResponses: new Array<QuestionResponse>(),
+            format,
         } as Attempt;
     }
 

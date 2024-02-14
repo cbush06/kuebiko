@@ -19,20 +19,20 @@
             <div class="box">
                 <!-- prettier-ignore -->
                 <TableVue 
-                :data="data" 
-                :columns="columns" 
-                :hoverable="true" 
-                :clickable="true"
-                :sort="{key: 'title', direction: 'asc'}"
-                @row-click="handleTestSelection($event)"
-            >
-                <template #title="{ row }">
-                    <router-link :to="`/test/${(row as Test).uuid}`" class="is-underlined">{{ (row as Test).title }}</router-link>
-                </template>
-                <template #tags="{ row }">
-                    <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags?.slice(0, 5)">{{ tag }}</span>
-                </template>
-            </TableVue>
+                    :data="data" 
+                    :columns="columns" 
+                    :hoverable="true" 
+                    :clickable="true"
+                    :sort="{key: 'title', direction: 'asc'}"
+                    @row-click="handleTestSelection($event)"
+                >
+                    <template #title="{ row }">
+                        <router-link :to="`/test/${(row as Test).uuid}`" class="is-underlined">{{ (row as Test).title }}</router-link>
+                    </template>
+                    <template #tags="{ row }">
+                        <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags?.slice(0, 5)">{{ tag }}</span>
+                    </template>
+                </TableVue>
             </div>
         </div>
     </div>

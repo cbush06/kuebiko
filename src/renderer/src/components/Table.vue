@@ -52,7 +52,7 @@ export interface TableColumn<T> {
     key: keyof T;
     title: string;
     computed?: (v: T) => any;
-    formatter: (v: T) => string;
+    formatter: (v: any) => string;
     sortable?: boolean;
     comparator?: (a: T, b: T) => number;
 }

@@ -1,3 +1,4 @@
+import { DeliveryFormat } from '@renderer/store/test-delivery-store/types/delivery-format';
 import { QuestionResponse } from './question-response';
 
 export type AttemptStatus = 'INPROGRESS' | 'COMPLETED';
@@ -10,4 +11,5 @@ export interface Attempt {
     status: AttemptStatus;
     score: number;
     questionResponses: QuestionResponse[];
+    format: DeliveryFormat;
 }

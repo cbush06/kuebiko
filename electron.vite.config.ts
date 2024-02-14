@@ -1,9 +1,9 @@
-import { resolve } from 'path';
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
-import vue from '@vitejs/plugin-vue';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { normalizePath } from 'vite';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from '@vitejs/plugin-vue';
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
+import { resolve } from 'path';
+import { normalizePath } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
     main: {
@@ -31,6 +31,7 @@ export default defineConfig({
             alias: {
                 '@renderer': resolve('src/renderer/src'),
                 '~': resolve('node_modules'),
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
             },
         },
         plugins: [
@@ -49,6 +50,7 @@ export default defineConfig({
             }),
             VueI18nPlugin({
                 include: 'json',
+                jitCompilation: true,
             }),
         ],
         build: {
