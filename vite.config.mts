@@ -4,17 +4,17 @@
 //  This file is only here to support vitest  //
 ////////////////////////////////////////////////
 
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
+import { defineConfig, normalizePath } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { normalizePath } from 'vite';
 
 export default defineConfig({
     resolve: {
         alias: {
-            '@renderer': resolve('src/renderer/src'),
-            '~': resolve('node_modules'),
+            '@renderer': resolve(__dirname, 'src/renderer/src'),
+            '~': resolve(__dirname, 'node_modules'),
+            'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
         },
     },
     plugins: [

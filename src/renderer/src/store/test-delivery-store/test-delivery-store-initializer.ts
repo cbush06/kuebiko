@@ -25,7 +25,6 @@ export interface TestEngineOptions {
 export const DEFAULT_OPTIONS: Readonly<TestEngineOptions> = {
     filter: MATCH_ALL_QUESTION_FILTER,
     order: 'ORIGINAL',
-    // format: 'SIMULATE',
     format: 'PREPARE',
 };
 
@@ -34,6 +33,7 @@ export class TestDeliveryStoreInitializer {
 
     static async initializeTestDeliveryStore(test: Test, options: TestEngineOptions = DEFAULT_OPTIONS) {
         const testStore = useTestDeliveryStore();
+        testStore.initialized = true;
         testStore.test = test;
         testStore.attempt = TestDeliveryStoreInitializer.buildAttempt(test, options.format ?? 'SIMULATE');
         testStore.deliveryItems = await TestDeliveryStoreInitializer.buildDeliveryItemList(test, testStore.attempt, options);

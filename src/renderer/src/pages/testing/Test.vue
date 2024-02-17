@@ -34,7 +34,7 @@
         <div class="prev-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed" class="button is-link" @click="router.push('/')">
+                    <button v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed" class="button is-link" @click="goHome()">
                         <i class="fa-solid fa-house mr-2"></i> Home
                     </button>
                     <button
@@ -59,7 +59,10 @@
         <div class="next-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button v-if="testDeliveryStore.completed" class="button is-success" @click="router.push('/')">
+                    <button v-if="!testDeliveryStore.initialized" class="button is-primary" @click="initializeTest()">
+                        Begin <i class="fa-solid fa-play ml-2"></i>
+                    </button>
+                    <button v-else-if="testDeliveryStore.completed" class="button is-success" @click="goHome()">
                         Go Home <i class="fas fa-house ml-2"></i>
                     </button>
                     <button
@@ -86,7 +89,7 @@ import { Test } from '@renderer/db/models/test';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
-import { TestDeliveryStoreInitializer } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
+import { DEFAULT_OPTIONS, TestDeliveryStoreInitializer, TestEngineOptions } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -96,6 +99,7 @@ const router = useRouter();
 const route = useRoute();
 const testDeliveryStore = useTestDeliveryStore();
 const test = ref<Test | undefined>();
+const testEngineOptions = ref<TestEngineOptions>(DEFAULT_OPTIONS);
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
@@ -104,10 +108,12 @@ const updateTest = async (uuid: string) => {
 
 onBeforeMount(async () => {
     await updateTest(route.params['testUuid'] as string);
-    if (test) TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value!);
 });
 
-onUnmounted(() => (test.value = undefined));
+onUnmounted(() => {
+    testDeliveryStore.reset();
+    test.value = undefined;
+});
 
 watch(
     () => testDeliveryStore.deliveryItem,
@@ -120,6 +126,18 @@ watch(
         }
     },
 );
+
+const initializeTest = async () => {
+    if (test.value) {
+        await TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value, testEngineOptions.value);
+        router.push(`/test/${test.value.uuid}/intro`);
+    }
+};
+
+const goHome = () => {
+    testDeliveryStore.reset();
+    router.push('/');
+};
 
 const handleSection = (sdi: SectionDeliveryItem) => {
     const section = sdi.getModel();

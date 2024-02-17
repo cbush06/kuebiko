@@ -1,4 +1,5 @@
 import { Attempt } from '@renderer/db/models/attempt';
+import { QuestionResponse } from '@renderer/db/models/question-response';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
 import { AbstractDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/abstract-delivery-item';
@@ -8,11 +9,12 @@ import { NoMoreDeliveryItemsError } from '@renderer/store/test-delivery-store/er
 import { NoPreviousDeliveryItemsError } from '@renderer/store/test-delivery-store/errors/no-prev-delivery-items-error';
 import { defineStore } from 'pinia';
 import { QuestionDeliveryItem } from './delivery-item/question-delivery-item';
-import { DeliveryFormat } from './types/delivery-format';
 import { getQuestionEvaluator } from './question-evaluators/question-evaluator-factory';
-import { QuestionResponse } from '@renderer/db/models/question-response';
+import { DeliveryFormat } from './types/delivery-format';
 
 export interface TestDeliveryStoreState {
+    // Props
+    initialized: boolean;
     test?: Test;
     attempt?: Attempt;
     deliveryItems: AbstractDeliveryItem[];
@@ -23,11 +25,33 @@ export interface TestDeliveryStoreState {
     format?: DeliveryFormat;
     inProgress: boolean;
     completed: boolean;
+
+    // Getters
+    isNextItemNewSection: boolean;
+    canGoBackward: boolean;
+    canGoForward: boolean;
+    currentQuestionNumber: number;
+    totalQuestions: number;
 }
+
+const emptyState: Partial<TestDeliveryStoreState> = {
+    initialized: false,
+    test: undefined,
+    attempt: undefined,
+    deliveryItems: [],
+    description: undefined,
+    deliveryItem: undefined,
+    deliveryItemIndex: -1,
+    section: undefined,
+    format: undefined,
+    inProgress: false,
+    completed: false,
+};
 
 export const useTestDeliveryStore = defineStore('test-delivery', {
     state: () =>
         ({
+            initialized: false,
             test: undefined,
             attempt: undefined,
             deliveryItems: [],
@@ -38,15 +62,15 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             format: undefined,
             inProgress: false,
             completed: false,
-        }) as TestDeliveryStoreState,
+        }) as unknown as TestDeliveryStoreState,
     getters: {
-        isNextItemNewSection: (state) => {
-            const canGoForward = state.deliveryItemIndex < state.deliveryItems.length - 1;
+        isNextItemNewSection(state) {
             const isNextItemSection = state.deliveryItems[state.deliveryItemIndex + 1] instanceof SectionDeliveryItem;
-            return canGoForward && isNextItemSection;
+            return this.canGoForward && isNextItemSection;
         },
-        canGoForward: (state) => state.deliveryItemIndex < state.deliveryItems.length - 1,
+        canGoForward: (state) => !!state.test && state.deliveryItemIndex < state.deliveryItems.length - 1,
         canGoBackward: (state) => {
+            // if (!state.test) return false;
             const hasPreviousItem = state.deliveryItemIndex > 0;
             const canRevisitPreviousItem = state.deliveryItems[state.deliveryItemIndex - 1]?.isRevisitable();
             const isThisItemSection = state.deliveryItem instanceof SectionDeliveryItem;
@@ -117,6 +141,9 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 this.inProgress = false;
                 this.completed = true;
             }
+        },
+        reset() {
+            // this.$state = structuredClone(emptyState) as TestDeliveryStoreState;
         },
     },
 });

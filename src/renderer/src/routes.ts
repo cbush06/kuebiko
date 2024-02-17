@@ -2,8 +2,10 @@ import { RouteRecordSingleView, RouteRecordSingleViewWithChildren } from 'vue-ro
 import AttemptsVue from './pages/attempts/Attempts.vue';
 import AttemptsForTestVue from './pages/attempts/children/AttemptsForTest.vue';
 import AttemptsRollupVue from './pages/attempts/children/AttemptsRollup.vue';
+import ResultsForAttemptVue from './pages/attempts/children/ResultsForAttempt.vue';
 import HomeVue from './pages/home/Home.vue';
 import TestVue from './pages/testing/Test.vue';
+import ConfigureVue from './pages/testing/children/Configure.vue';
 import IntroVue from './pages/testing/children/Intro.vue';
 import QuestionVue from './pages/testing/children/Question.vue';
 import ResultsVue from './pages/testing/children/Results.vue';
@@ -20,6 +22,10 @@ export default [
         children: [
             {
                 path: '',
+                component: ConfigureVue,
+            },
+            {
+                path: 'intro',
                 component: IntroVue,
             },
             {
@@ -47,6 +53,10 @@ export default [
             {
                 path: ':testUuid',
                 component: AttemptsForTestVue,
+            },
+            {
+                path: ':testUuid/:attemptUuid',
+                component: ResultsForAttemptVue,
             },
         ] as RouteRecordSingleView[],
     },

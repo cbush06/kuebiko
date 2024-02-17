@@ -9,7 +9,7 @@
             <div class="column is-one-third">
                 <div v-if="testDeliveryStore.test?.allowedTime">
                     <i class="fa-solid fa-clock mr-2"></i>
-                    {{ t('hours', [testDeliveryStore.test.allowedTime]) }}
+                    {{ t('hours', [allowedTime]) }}
                 </div>
             </div>
             <div class="column is-one-third">
@@ -34,9 +34,9 @@
             </div>
         </div>
         <div class="block is-flex is-flex-direction-row is-justify-content-center is-align-items-center">
-            <button class="button is-info">
+            <button class="button is-info" @click="reviewQuestions()">
                 <i class="fa-solid fa-chart-column mr-2"></i>
-                Review Questions
+                {{ t('reviewQuestions') }}
             </button>
         </div>
     </div>
@@ -47,16 +47,19 @@ import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-d
 import { differenceInMinutes, differenceInSeconds, format } from 'date-fns';
 import { differenceInHours } from 'date-fns/differenceInHours';
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { Doughnut } from 'vue-chartjs';
+import { useI18n } from 'vue-i18n';
 
 // see https://www.chartjs.org/docs/latest/getting-started/integration.html
-import { Chart as ChartJS, PieController, ArcElement, Tooltip, Legend, ChartData, ChartOptions, DoughnutDataPoint } from 'chart.js';
+import { ArcElement, ChartData, Chart as ChartJS, ChartOptions, DoughnutDataPoint, Legend, PieController, Tooltip } from 'chart.js';
 import { DistributiveArray } from 'chart.js/dist/types/utils';
 
 // see https://chartjs-plugin-datalabels.netlify.app/
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 
@@ -67,6 +70,7 @@ const gradeColorClass = computed(() => {
     return 'has-text-success';
 });
 
+const allowedTime = computed(() => ((testDeliveryStore.test?.allowedTime ?? 0) / 60).toFixed(2).toString().padStart(1, '0'));
 const completionDate = computed(() => (testDeliveryStore.attempt?.completed ? format(testDeliveryStore.attempt?.completed, 'MMMM do, h:mm aa') : ''));
 const duration = computed(() => {
     if (!testDeliveryStore.attempt?.completed) return 0;
@@ -74,9 +78,9 @@ const duration = computed(() => {
     const minutes = differenceInMinutes(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
     const seconds = differenceInSeconds(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
     if (hours) {
-        return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+        return `${hours} ${t('hours')}, ${minutes} ${t('minutes')}, ${seconds} ${t('seconds')}`;
     }
-    return `${minutes} minutes, ${seconds} seconds`;
+    return `${minutes} ${t('minutes')}, ${seconds} ${t('seconds')}`;
 });
 const scoringBreakdown = computed(() => ({
     correct: testDeliveryStore.attempt?.questionResponses.filter((r) => r.credit === 1).length,
@@ -106,7 +110,7 @@ const chartOptions = computed(
 const chartData = computed(
     () =>
         ({
-            labels: ['Correct', 'Incorrect', 'Skipped'],
+            labels: [t('correct'), t('incorrect'), t('skipped')],
             datasets: [
                 {
                     data: [scoringBreakdown.value.correct, scoringBreakdown.value.incorrect, scoringBreakdown.value.skipped],
@@ -123,6 +127,11 @@ const chartData = computed(
             ],
         }) as ChartData<'doughnut', DistributiveArray<DoughnutDataPoint>>,
 );
+
+const reviewQuestions = () => {
+    testDeliveryStore.reset();
+    router.push(`/attempts/${testDeliveryStore.test?.uuid}/${testDeliveryStore.attempt?.uuid}`);
+};
 </script>
 
 <style scoped></style>
@@ -130,10 +139,11 @@ const chartData = computed(
 <i18n lang="json">
 {
     "en": {
-        "testResults": "Test Results",
-        "totalQuestions": "{0} questions",
-        "hours": "{0} hours",
-        "passingPercentage": "{0}% to pass"
+        "testResults": "@:test @:results",
+        "totalQuestions": "{0} @:questions",
+        "hours": "{0} @:hours",
+        "passingPercentage": "{0}% to @:pass",
+        "reviewQuestions": "Review @.capitalize:questions"
     }
 }
 </i18n>

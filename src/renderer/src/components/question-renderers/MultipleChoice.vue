@@ -1,5 +1,5 @@
 <template>
-    <div class="block">
+    <div class="content block">
         <!-- prettier-ignore -->
         <MdPreview 
             :modelValue="props.questionContent" 
@@ -10,7 +10,7 @@
         />
     </div>
     <div class="block">
-        <div v-for="opt in options" class="block">
+        <div v-for="opt in options" class="block has-border-1 is-grey-darker-border">
             <div
                 class="field p-2 m-0"
                 :class="{
@@ -23,7 +23,7 @@
                     :key="opt.uuid"
                     class="is-checkradio"
                     type="radio"
-                    name="option"
+                    :name="`${props.questionRef}-option`"
                     :value="opt.uuid"
                     v-model="model"
                     :disabled="props.revealAnswer"
@@ -71,17 +71,13 @@
 <script setup lang="ts">
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Option } from '@renderer/db/models/option';
-import { onBeforeMount } from 'vue';
-import { ref, watch } from 'vue';
-import { MdPreview } from 'md-editor-v3';
-import { RendererBaseProps } from './renderer-base-props';
 import { MULTIPLE_CHOICE_EVALUATOR } from '@renderer/store/test-delivery-store/question-evaluators/multiple-choice-evaluator';
+import { MdPreview } from 'md-editor-v3';
+import { onBeforeMount, ref, watch } from 'vue';
+import { RendererBaseProps } from './renderer-base-props';
 
 export interface MultipleChoiceProps extends RendererBaseProps {
-    questionContent: string;
     correctResponse: string;
-    successFeedback?: string;
-    failureFeedback?: string;
     options: Array<Option>;
 }
 

@@ -29,8 +29,8 @@ export default defineConfig({
     renderer: {
         resolve: {
             alias: {
-                '@renderer': resolve('src/renderer/src'),
-                '~': resolve('node_modules'),
+                '@renderer': resolve(__dirname, 'src/renderer/src'),
+                '~': resolve(__dirname, 'node_modules'),
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
             },
         },
