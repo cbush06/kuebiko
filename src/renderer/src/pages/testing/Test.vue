@@ -26,7 +26,7 @@
         </div>
     </nav>
 
-    <div class="container is-max-widescreen">
+    <div class="container is-max-widescreen mt-4">
         <router-view />
     </div>
 
