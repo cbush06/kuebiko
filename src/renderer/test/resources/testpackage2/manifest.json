@@ -1,6 +1,7 @@
 {
     "uuid": "61bee790-1a82-4ca5-a7b9-16e6c7b0c720",
     "title": "AWS Solutions Architect - Associate (SAA-C03)",
+    "allowedTime": 5400000,
     "descriptionRef": "e7694e35-b30d-4dcc-a61f-784ab97e91da",
     "authors": [
         {
@@ -89,7 +90,8 @@
                             "uuid": "cb9ac5fa-04b0-4a31-b920-13b787469bc5",
                             "contentText": "Create an IAM role with permissions to access the table, and launch all instances with the new role."
                         }
-                    ]
+                    ],
+                    "categories": ["Security", "Availability", "S3", "IAM"]
                 },
                 {
                     "uuid": "1cbbf5ac-d97d-40a3-8662-c40c064283ac",
@@ -117,7 +119,8 @@
                             "uuid": "268d10f4-99ec-4ca0-991f-3fd86892c84c",
                             "contentText": "Storage Gateway"
                         }
-                    ]
+                    ],
+                    "categories": ["Caching", "Availability", "Sessions", "IAM"]
                 }
             ]
         },
@@ -149,7 +152,8 @@
                             "uuid": "130a8cfc-1ce4-4a3a-b31c-3edfdb57ce08",
                             "contentText": "Store data on EC2 instance storage."
                         }
-                    ]
+                    ],
+                    "categories": ["Storage", "Availability", "S3", "EBS"]
                 },
                 {
                     "uuid": "b22bdaa8-a473-4438-a7f3-fc43fc747005",
@@ -173,7 +177,8 @@
                             "uuid": "b68fe1ca-1523-44b5-bbd4-9702b9de97eb",
                             "contentText": "Amazon Redshift"
                         }
-                    ]
+                    ],
+                    "categories": ["Storage", "DynamoDB", "S3", "Aurora", "Redshift"]
                 }
             ]
         }

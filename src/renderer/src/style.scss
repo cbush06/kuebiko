@@ -1,6 +1,7 @@
 @import './scss/fontawesome.scss';
 @import './scss/bulma-customizations.scss';
-@import '../node_modules/bulma/bulma.sass';
+@import '~/bulma-slider/src/sass/index';
 @import './scss/bulma-ribbon.scss';
-@import '../node_modules/bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
+@import '~/bulma/bulma.sass';
+@import '~/bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
 @import '~/bulma-multiselect/sass/multiselect';

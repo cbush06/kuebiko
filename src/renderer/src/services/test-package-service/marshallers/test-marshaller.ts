@@ -1,12 +1,12 @@
+import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
+import JSZip from 'jszip';
+import { MarshallingDbError } from '../errors/marshalling-db-error';
 import { Manifest } from '../model/manifest';
 import { AbstractMarshaller } from './abstract-marshaller';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
-import JSZip from 'jszip';
 import { AuthorMarshaller } from './author-marshaller';
 import { ResourceMarshaller } from './resource-marshaller';
 import { SectionMarshaller } from './section-marshaller';
-import { MarshallingDbError } from '../errors/marshalling-db-error';
 
 export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
     constructor(
@@ -38,6 +38,7 @@ export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
             resourceRefs: resources.map((r) => r.uuid),
             sections,
             tags: o.tags,
+            allowedTime: o.allowedTime,
         } as Test;
 
         try {

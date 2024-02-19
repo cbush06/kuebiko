@@ -10,7 +10,7 @@ import { QuestionDeliveryItem } from './delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from './delivery-item/section-delivery-item';
 import { NotEnoughQuestionsErrors } from './errors/not-enough-questions-error';
 import { AbstractQuestionFilter } from './question-filter/abstract-question-filter';
-import { MATCH_ALL_QUESTION_FILTER } from './question-filter/match-all-question-filter';
+import { MatchAllQuestionFilter } from './question-filter/match-all-question-filter';
 import { DeliveryFormat } from './types/delivery-format';
 
 export type QuestionOrder = 'ORIGINAL' | 'RANDOM' | 'RANDOM_BY_SECTION';
@@ -20,18 +20,21 @@ export interface TestEngineOptions {
     order: QuestionOrder;
     maxQuestions?: number;
     format?: DeliveryFormat;
+    duration?: number;
 }
 
-export const DEFAULT_OPTIONS: Readonly<TestEngineOptions> = {
-    filter: MATCH_ALL_QUESTION_FILTER,
-    order: 'ORIGINAL',
-    format: 'PREPARE',
-};
+export const DEFAULT_OPTIONS = (test: Test) =>
+    ({
+        filter: new MatchAllQuestionFilter(test),
+        order: 'ORIGINAL',
+        format: 'PREPARE',
+        duration: 0,
+    }) as Readonly<TestEngineOptions>;
 
 export class TestDeliveryStoreInitializer {
     private constructor() {}
 
-    static async initializeTestDeliveryStore(test: Test, options: TestEngineOptions = DEFAULT_OPTIONS) {
+    static async initializeTestDeliveryStore(test: Test, options: TestEngineOptions = DEFAULT_OPTIONS(test)) {
         const testStore = useTestDeliveryStore();
         testStore.initialized = true;
         testStore.test = test;

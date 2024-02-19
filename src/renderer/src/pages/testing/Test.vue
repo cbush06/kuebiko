@@ -14,7 +14,7 @@
             <div class="level has-text-white">
                 <i class="fa-solid fa-clock"></i>
                 <span class="timer is-size-5 ml-2 has-text-weight-semibold">
-                    <TimerVue :duration="0" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
+                    <TimerVue :duration="timerValue" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
                 </span>
             </div>
         </div>
@@ -86,20 +86,21 @@
 import TimerVue from '@renderer/components/Timer.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
+import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
-import { DEFAULT_OPTIONS, TestDeliveryStoreInitializer, TestEngineOptions } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
+import { TestDeliveryStoreInitializer, TestEngineOptions } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
-import { inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
+import { computed, inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
 
 const router = useRouter();
 const route = useRoute();
+const testConfigurationStore = useTestConfigurationStore();
 const testDeliveryStore = useTestDeliveryStore();
 const test = ref<Test | undefined>();
-const testEngineOptions = ref<TestEngineOptions>(DEFAULT_OPTIONS);
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
@@ -127,9 +128,15 @@ watch(
     },
 );
 
+const timerValue = computed(() => {
+    if (testConfigurationStore.format === 'SIMULATE') return testConfigurationStore.duration ?? 0;
+    return 0;
+});
+
 const initializeTest = async () => {
     if (test.value) {
-        await TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value, testEngineOptions.value);
+        await TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value, testConfigurationStore.$state as TestEngineOptions);
+        testConfigurationStore.reset();
         router.push(`/test/${test.value.uuid}/intro`);
     }
 };

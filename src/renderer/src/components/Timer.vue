@@ -4,12 +4,11 @@
 
 <script setup lang="ts">
 import { hoursToMilliseconds, millisecondsToHours, millisecondsToMinutes, millisecondsToSeconds, minutesToMilliseconds } from 'date-fns';
-import { watch } from 'vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 export interface TimerProps {
     /**
-     * Duration to count down from. If set to 0, Timer acts as a stopwatch.
+     * Duration to count down from. If set to 0, Timer acts as a stopwatch. Interpreted as milliseconds.
      */
     duration: number;
     ticking?: boolean;

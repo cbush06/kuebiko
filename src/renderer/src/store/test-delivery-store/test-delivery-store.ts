@@ -34,20 +34,6 @@ export interface TestDeliveryStoreState {
     totalQuestions: number;
 }
 
-const emptyState: Partial<TestDeliveryStoreState> = {
-    initialized: false,
-    test: undefined,
-    attempt: undefined,
-    deliveryItems: [],
-    description: undefined,
-    deliveryItem: undefined,
-    deliveryItemIndex: -1,
-    section: undefined,
-    format: undefined,
-    inProgress: false,
-    completed: false,
-};
-
 export const useTestDeliveryStore = defineStore('test-delivery', {
     state: () =>
         ({
@@ -143,7 +129,19 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             }
         },
         reset() {
-            // this.$state = structuredClone(emptyState) as TestDeliveryStoreState;
+            this.$state = {
+                initialized: false,
+                test: undefined,
+                attempt: undefined,
+                deliveryItems: [],
+                description: undefined,
+                deliveryItem: undefined,
+                deliveryItemIndex: -1,
+                section: undefined,
+                format: undefined,
+                inProgress: false,
+                completed: false,
+            } as unknown as TestDeliveryStoreState;
         },
     },
 });

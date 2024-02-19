@@ -5,5 +5,3 @@ export class MatchAllQuestionFilter extends AbstractQuestionFilter {
         return true;
     }
 }
-
-export const MATCH_ALL_QUESTION_FILTER = new MatchAllQuestionFilter();
