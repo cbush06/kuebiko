@@ -9,7 +9,7 @@
             <div class="column is-one-third">
                 <div v-if="test?.allowedTime">
                     <i class="fa-solid fa-clock mr-2"></i>
-                    {{ t('hours', [allowedTime]) }}
+                    {{ t('hoursAllowed', [allowedTime]) }}
                 </div>
             </div>
             <div class="column is-one-third">
@@ -99,6 +99,7 @@ import { QuestionResponse } from '@renderer/db/models/question-response';
 import { Test } from '@renderer/db/models/test';
 import { AttemptsService } from '@renderer/services/attempts-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
+import { millisToHours } from '@renderer/utils/datetime-utils';
 import { useMemoize } from '@vueuse/core';
 import { useObservable } from '@vueuse/rxjs';
 import {
@@ -156,7 +157,12 @@ watch(
 );
 
 const totalQuestions = computed(() => test.value?.sections.reduce((cnt, s) => cnt + s.questionRefs.length, 0));
-const allowedTime = computed(() => ((test.value?.allowedTime ?? 0) / 60).toFixed(2).toString().padStart(1, '0'));
+const allowedTime = computed(() =>
+    millisToHours(test.value?.allowedTime ?? 0)
+        .toFixed(1)
+        .toString()
+        .padStart(1, '0'),
+);
 const passingPercentage = computed(() => test.value?.passingPercentage ?? 75);
 const completionDate = computed(() => (attempt.value?.completed ? format(attempt.value?.completed, 'MMMM do, h:mm aa') : ''));
 const attempts = useObservable(AttemptsService.fetchAttemptHistoryForTest(route.params['testUuid'] as string));
@@ -382,7 +388,7 @@ const sectionScoringBreakdownChartData = useMemoize(
     "en": {
         "resultsForTest": "@:results :: {0} :: {1}",
         "totalQuestions": "{0} @:questions",
-        "hours": "{0} @:hours",
+        "hoursAllowed": "{0} @:hours",
         "passingPercentage": "{0}% to @:pass"
     }
 }

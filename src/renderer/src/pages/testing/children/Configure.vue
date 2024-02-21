@@ -87,59 +87,63 @@
             </div>
         </div>
 
-        <div class="subtitle">{{ t('filterQuestions') }}</div>
-        <div class="block ml-5">
-            <div class="level">
-                <div class="level-left">
-                    <label class="level-item">By Section</label>
-                    <Multiselect
-                        class="level-item is-block"
-                        style="min-width: 30rem"
-                        v-model="filterBySection"
-                        :options="sectionOptions"
-                        track-by="uuid"
-                        :multiple="true"
-                        :close-on-select="false"
-                        :clear-on-select="false"
-                        label="title"
-                    />
+        <!-- OPTIONS BELOW ARE ONLY ALLOWED FOR RANDOM & RANDOM_PER_SECTION ORDERING -->
+        <div v-if="testConfigurationStore.order !== 'ORIGINAL'" class="block">
+            <div class="subtitle">{{ t('filterQuestions') }}</div>
+            <div class="block ml-5">
+                <div class="level">
+                    <div class="level-left">
+                        <label class="level-item">By Section</label>
+                        <Multiselect
+                            class="level-item is-block"
+                            style="min-width: 30rem"
+                            v-model="filterBySection"
+                            :options="sectionOptions"
+                            track-by="uuid"
+                            :multiple="true"
+                            :close-on-select="false"
+                            :clear-on-select="false"
+                            label="title"
+                        />
+                    </div>
+                </div>
+                <div class="level">
+                    <div class="level-left">
+                        <label class="level-item">By Category</label>
+                        <Multiselect
+                            class="level-item is-block"
+                            style="min-width: 30rem"
+                            v-model="filterByCategory"
+                            :options="categoryOptions"
+                            :multiple="true"
+                            :close-on-select="false"
+                            :clear-on-select="false"
+                        />
+                    </div>
                 </div>
             </div>
-            <div class="level">
-                <div class="level-left">
-                    <label class="level-item">By Category</label>
-                    <Multiselect
-                        class="level-item is-block"
-                        style="min-width: 30rem"
-                        v-model="filterByCategory"
-                        :options="categoryOptions"
-                        :multiple="true"
-                        :close-on-select="false"
-                        :clear-on-select="false"
-                    />
-                </div>
-            </div>
-        </div>
 
-        <div class="subtitle">{{ t('maximumQuestions') }}</div>
-        <div class="block ml-5">
-            <div class="field is-grouped">
-                <div class="control is-expanded">
-                    <input
-                        type="range"
-                        class="slider is-fullwidth is-primary"
-                        min="0"
-                        v-model="testConfigurationStore.maxQuestions"
-                        :max="availableQuestions"
-                    />
-                </div>
-                <div class="control is-flex is-flex-direction-row is-align-content-center is-flex-wrap-wrap" style="width: 5rem">
-                    <input
-                        type="text"
-                        class="input has-text-white has-background-dark has-text-centered is-unselectable"
-                        :value="testConfigurationStore.maxQuestions"
-                        disabled
-                    />
+            <div class="subtitle">{{ t('maximumQuestions') }}</div>
+            <div class="block ml-5">
+                <div class="field is-grouped">
+                    <div class="control is-expanded">
+                        <input
+                            type="range"
+                            class="slider is-fullwidth is-primary"
+                            min="0"
+                            :value="testConfigurationStore.maxQuestions"
+                            @input="testConfigurationStore.maxQuestions = parseInt(($event.target! as HTMLInputElement).value)"
+                            :max="availableQuestions"
+                        />
+                    </div>
+                    <div class="control is-flex is-flex-direction-row is-align-content-center is-flex-wrap-wrap" style="width: 5rem">
+                        <input
+                            type="text"
+                            class="input has-text-white has-background-dark has-text-centered is-unselectable"
+                            :value="testConfigurationStore.maxQuestions"
+                            disabled
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -159,6 +163,7 @@ import { clockFormatToDuration, durationToClockFormat } from '@renderer/utils/da
 import { nextTick, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 // import { IMaskDirective as vImask } from 'vue-imask';
+import { AbstractQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/abstract-question-filter';
 import { createMask } from 'imask';
 import { IMaskComponent as VueMask } from 'vue-imask';
 import { Multiselect } from 'vue-multiselect';
@@ -215,6 +220,13 @@ const updateTestConfigurationDuration = (v: string) => {
 };
 
 watch(
+    () => testConfigurationStore.format,
+    (newFormat) => {
+        if (newFormat === 'SIMULATE') testConfigurationStore.duration = test.value?.allowedTime;
+    },
+);
+
+watch(
     () => filterBySection,
     async (selectedSections) => {
         const selectedSectionUuids = selectedSections.value.map((s) => s.uuid);
@@ -263,6 +275,27 @@ const getUniqueCategoriesFromQuestions = (questions: Question[]) => {
             }, new Set<string>())
     ).sort();
 };
+
+// prettier-ignore
+watch([
+        () => testConfigurationStore.order, 
+        () => testConfigurationStore.format, 
+        filterBySection, 
+        filterByCategory, 
+        () => testConfigurationStore.maxQuestions
+    ], () => {
+        const filters = new Array<AbstractQuestionFilter>();
+
+        if (filterBySection.value.length) {
+            filters.push(new SectionQuestionFilter(filterBySection.value.map(s => s.uuid), test.value!));
+        }
+
+        if (filterByCategory.value.length) {
+            filters.push(new CategoryQuestionFilter(filterByCategory.value, test.value!));
+        }
+
+        testConfigurationStore.filter = new CompoundQuestionFilter(test.value!, filters);
+    });
 </script>
 
 <style scoped lang="scss"></style>

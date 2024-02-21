@@ -23,7 +23,7 @@
                         {{ t('prepare') }}
                     </span>
                     <span v-else-if="row['format'] === 'SIMULATE'" class="tag is-info">
-                        {{ t('prepare') }}
+                        {{ t('simulate') }}
                     </span>
                 </template>
             </TableVue>

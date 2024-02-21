@@ -21,6 +21,7 @@ export interface TestDeliveryStoreState {
     description?: string;
     deliveryItem?: AbstractDeliveryItem;
     deliveryItemIndex: number;
+    duration?: number;
     section?: Section;
     format?: DeliveryFormat;
     inProgress: boolean;
@@ -44,6 +45,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
             description: undefined,
             deliveryItem: undefined,
             deliveryItemIndex: -1,
+            duration: undefined,
             section: undefined,
             format: undefined,
             inProgress: false,
@@ -137,6 +139,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                 description: undefined,
                 deliveryItem: undefined,
                 deliveryItemIndex: -1,
+                duration: undefined,
                 section: undefined,
                 format: undefined,
                 inProgress: false,

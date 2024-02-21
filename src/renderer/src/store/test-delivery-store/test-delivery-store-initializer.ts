@@ -44,6 +44,7 @@ export class TestDeliveryStoreInitializer {
         testStore.description = undefined;
         testStore.deliveryItem = undefined;
         testStore.deliveryItemIndex = -1;
+        testStore.duration = options.duration;
         testStore.section = undefined;
         testStore.format = options.format;
         testStore.inProgress = false;
@@ -75,18 +76,25 @@ export class TestDeliveryStoreInitializer {
             }
         }
 
-        const totalQuestions = Array.from(eligibleQuestionsBySection.values()).reduce((runningTotal, next) => runningTotal + next.length, 0);
+        const availableQuestions = Array.from(eligibleQuestionsBySection.values()).reduce((runningTotal, next) => runningTotal + next.length, 0);
+        const totalQuestionsRequired = options.maxQuestions ?? availableQuestions;
         const fractionPerSection = new Map<Section, number>(
-            Array.from(eligibleQuestionsBySection.entries()).map(([section, sectionQuestions]) => [section, sectionQuestions.length / totalQuestions]),
+            Array.from(eligibleQuestionsBySection.entries()).map(([section, sectionQuestions]) => [section, sectionQuestions.length / totalQuestionsRequired]),
         );
 
         switch (options.order) {
             case 'ORIGINAL':
                 return TestDeliveryStoreInitializer.buildInOriginalOrder(test, attempt, eligibleQuestionsBySection);
             case 'RANDOM':
-                return TestDeliveryStoreInitializer.buildInRandomOrder(test, attempt, eligibleQuestionsBySection, totalQuestions, fractionPerSection);
+                return TestDeliveryStoreInitializer.buildInRandomOrder(test, attempt, eligibleQuestionsBySection, totalQuestionsRequired, fractionPerSection);
             case 'RANDOM_BY_SECTION':
-                return TestDeliveryStoreInitializer.buildInRandomPerSectionOrder(test, attempt, eligibleQuestionsBySection, totalQuestions, fractionPerSection);
+                return TestDeliveryStoreInitializer.buildInRandomPerSectionOrder(
+                    test,
+                    attempt,
+                    eligibleQuestionsBySection,
+                    totalQuestionsRequired,
+                    fractionPerSection,
+                );
         }
     }
 
@@ -131,10 +139,12 @@ export class TestDeliveryStoreInitializer {
 
         const deliveryItems = new Array<AbstractDeliveryItem>();
         for (const [section, sectionQuestions] of questionsBySection.entries()) {
-            const questionsPerThisSection = Math.min(sectionQuestions.length, Math.round(totalQuestionsRequired * fractionPerSection.get(section)!));
+            const questionsPerThisSection = Math.min(sectionQuestions.length, Math.floor(totalQuestionsRequired * fractionPerSection.get(section)!));
             const questionsSlice = Array.from(sectionQuestions);
 
             for (let remainingQuestionsToTake = questionsPerThisSection; remainingQuestionsToTake > 0; remainingQuestionsToTake--) {
+                if (selectedQuestionRefs.length === totalQuestionsRequired) continue;
+
                 const randomQuestion = ArrayUtils.randomEntryWithRemoval(questionsSlice);
                 selectedQuestionRefs.push(randomQuestion.uuid);
                 attempt.questionResponses.push({
@@ -191,12 +201,14 @@ export class TestDeliveryStoreInitializer {
         }
 
         for (const [section, sectionQuestions] of questionsBySection.entries()) {
-            const questionsPerThisSection = Math.min(sectionQuestions.length, Math.round(totalQuestionsRequired * fractionPerSection.get(section)!));
+            const questionsPerThisSection = Math.min(sectionQuestions.length, Math.floor(totalQuestionsRequired * fractionPerSection.get(section)!));
             const questionsSlice = Array.from(sectionQuestions);
 
             if (!selectedQuestionRefsBySection.has(section.uuid)) selectedQuestionRefsBySection.set(section.uuid, []);
 
             for (let remainingQuestionsToTake = questionsPerThisSection; remainingQuestionsToTake > 0; remainingQuestionsToTake--) {
+                if (selectedQuestionRefs.length === totalQuestionsRequired) continue;
+
                 const randomQuestion = ArrayUtils.randomEntryWithRemoval(questionsSlice);
 
                 selectedQuestionRefs.push(randomQuestion.uuid);

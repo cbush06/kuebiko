@@ -17,7 +17,7 @@ export interface TimerProps {
 const props = defineProps<TimerProps>();
 const emit = defineEmits(['expired']);
 
-const elapsed = ref<number>(props.duration);
+const elapsed = ref<number>(0);
 const timer = ref<number>();
 
 const mode = computed<'TIMER' | 'STOPWATCH'>(() => {
@@ -50,7 +50,9 @@ watch(
     () => props.ticking,
     (isTicking, oldIsTicking) => {
         if (isTicking === oldIsTicking) return;
-        if (isTicking && ((mode.value === 'TIMER' && elapsed.value > 0) || mode.value === 'STOPWATCH')) {
+        if (isTicking && ((mode.value === 'TIMER' && props.duration > 0) || mode.value === 'STOPWATCH')) {
+            if (mode.value === 'TIMER') elapsed.value = props.duration;
+
             timer.value = window.setInterval(() => {
                 if (mode.value === 'TIMER') elapsed.value -= 1000;
                 else elapsed.value += 1000;

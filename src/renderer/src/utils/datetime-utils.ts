@@ -32,3 +32,7 @@ export const clockFormatToDuration = (clockFormat: string) => {
         (hasHour ? parseInt(tokens[2]) : parseInt(tokens[1])) * MILLIS_IN_SECOND
     );
 };
+
+export const millisToHours = (millis: number) => {
+    return millis / MILLIS_IN_HOUR;
+};

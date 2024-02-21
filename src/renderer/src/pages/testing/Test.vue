@@ -129,7 +129,7 @@ watch(
 );
 
 const timerValue = computed(() => {
-    if (testConfigurationStore.format === 'SIMULATE') return testConfigurationStore.duration ?? 0;
+    if (testDeliveryStore.format === 'SIMULATE') return testDeliveryStore.duration ?? 0;
     return 0;
 });
 
@@ -142,6 +142,7 @@ const initializeTest = async () => {
 };
 
 const goHome = () => {
+    testConfigurationStore.reset();
     testDeliveryStore.reset();
     router.push('/');
 };

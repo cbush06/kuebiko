@@ -6,7 +6,9 @@ export const useTestConfigurationStore = defineStore('test-configuration', {
         ({
             format: 'SIMULATE',
             order: 'ORIGINAL',
+            filter: undefined,
             duration: 0,
+            maxQuestions: undefined,
         }) as Partial<TestEngineOptions>,
     getters: {},
     actions: {

@@ -9,7 +9,7 @@
             <div class="column is-one-third">
                 <div v-if="testDeliveryStore.test?.allowedTime">
                     <i class="fa-solid fa-clock mr-2"></i>
-                    {{ t('hours', [allowedTime]) }}
+                    {{ t('allowedHours', [allowedTime]) }}
                 </div>
             </div>
             <div class="column is-one-third">
@@ -57,10 +57,13 @@ import { DistributiveArray } from 'chart.js/dist/types/utils';
 // see https://chartjs-plugin-datalabels.netlify.app/
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
+import { millisToHours } from '@renderer/utils/datetime-utils';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const testDeliveryStore = useTestDeliveryStore();
+const testConfigurationStore = useTestConfigurationStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 
 const gradeColorClass = computed(() => {
@@ -70,7 +73,12 @@ const gradeColorClass = computed(() => {
     return 'has-text-success';
 });
 
-const allowedTime = computed(() => ((testDeliveryStore.test?.allowedTime ?? 0) / 60).toFixed(2).toString().padStart(1, '0'));
+const allowedTime = computed(() =>
+    millisToHours(testDeliveryStore.test?.allowedTime ?? 0)
+        .toFixed(1)
+        .toString()
+        .padStart(1, '0'),
+);
 const completionDate = computed(() => (testDeliveryStore.attempt?.completed ? format(testDeliveryStore.attempt?.completed, 'MMMM do, h:mm aa') : ''));
 const duration = computed(() => {
     if (!testDeliveryStore.attempt?.completed) return 0;
@@ -129,8 +137,9 @@ const chartData = computed(
 );
 
 const reviewQuestions = () => {
-    testDeliveryStore.reset();
     router.push(`/attempts/${testDeliveryStore.test?.uuid}/${testDeliveryStore.attempt?.uuid}`);
+    testConfigurationStore.reset();
+    testDeliveryStore.reset();
 };
 </script>
 
@@ -141,7 +150,7 @@ const reviewQuestions = () => {
     "en": {
         "testResults": "@:test @:results",
         "totalQuestions": "{0} @:questions",
-        "hours": "{0} @:hours",
+        "allowedHours": "{0} @:hours",
         "passingPercentage": "{0}% to @:pass",
         "reviewQuestions": "Review @.capitalize:questions"
     }
