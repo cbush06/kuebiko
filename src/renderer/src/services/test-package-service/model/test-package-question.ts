@@ -1,14 +1,16 @@
 import { TestPackageOption } from './test-package-option';
 import { TestPackagePoint } from './test-package-point';
 
-export type TestPackageQuestionType = 'MULTIPLE' | 'MANY' | 'POINT' | 'FILL' | 'SHORT' | 'LONG';
-export type TestPackageAnswerType = string | string[] | TestPackagePoint | TestPackagePoint[];
+export type TestPackageQuestionType = 'MULTIPLE' | 'MANY' | 'POINT' | 'FILL' | 'TEXT' | 'DRAGNDROP' | 'HOTAREA';
+export type TestPackageAnswerType = string | string[] | TestPackagePoint[];
 
 export interface TestPackageQuestion {
     uuid: string;
     type: TestPackageQuestionType;
     contentRef?: string;
     contentText?: string;
+    subjectImageRef?: string;
+    dropZones?: TestPackagePoint[];
     answer?: TestPackageAnswerType;
     options: TestPackageOption[];
     successFeedbackText?: string;

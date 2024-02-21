@@ -1,14 +1,14 @@
-import { Question, QuestionType } from '@renderer/db/models/question';
-import { TestPackageQuestion } from '../model/test-package-question';
-import { AbstractMarshaller } from './abstract-marshaller';
+import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { AnswerType } from '@renderer/db/models/answer';
 import { Point } from '@renderer/db/models/point';
-import { TestPackagePoint } from '../model/test-package-point';
+import { Question, QuestionType } from '@renderer/db/models/question';
 import JSZip from 'jszip';
-import { Manifest } from '../model/manifest';
-import { OptionMarshaller } from './option-marshaller';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { MarshallingDbError } from '../errors/marshalling-db-error';
+import { Manifest } from '../model/manifest';
+import { TestPackagePoint } from '../model/test-package-point';
+import { TestPackageQuestion } from '../model/test-package-question';
+import { AbstractMarshaller } from './abstract-marshaller';
+import { OptionMarshaller } from './option-marshaller';
 
 export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackageQuestion> {
     constructor(
@@ -29,22 +29,14 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
         let marshalledAnswer: AnswerType;
 
         if (o.type === 'POINT') {
-            if (Array.isArray(o.answer)) {
-                const testPackagePoints = o.answer as TestPackagePoint[];
-                marshalledAnswer = testPackagePoints.map(
-                    (p) =>
-                        ({
-                            x: p.x,
-                            y: p.y,
-                        }) as Point,
-                );
-            } else {
-                const testPackagePoint = o.answer as TestPackagePoint;
-                marshalledAnswer = {
-                    x: testPackagePoint.x,
-                    y: testPackagePoint.y,
-                } as Point;
-            }
+            const testPackagePoints = o.answer as TestPackagePoint[];
+            marshalledAnswer = testPackagePoints.map(
+                (p) =>
+                    ({
+                        x: p.x,
+                        y: p.y,
+                    }) as Point,
+            );
         } else {
             marshalledAnswer = o.answer as string | string[];
         }

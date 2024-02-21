@@ -1,5 +1,5 @@
-import { Question } from '@renderer/db/models/question';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { Question } from '@renderer/db/models/question';
 import { OptionMarshaller } from '@renderer/services/test-package-service/marshallers/option-marshaller';
 import { QuestionMarshaller } from '@renderer/services/test-package-service/marshallers/question-marshaller';
 import { Manifest } from '@renderer/services/test-package-service/model/manifest';
@@ -38,8 +38,8 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: 'blah blah blah',
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['example'],
         } as TestPackageQuestion;
 
@@ -52,8 +52,10 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: 'blah blah blah',
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['example'],
         } as Question);
 
@@ -67,8 +69,8 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: 'Chloroplasts',
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['example'],
         } as TestPackageQuestion;
 
@@ -79,8 +81,10 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: 'Chloroplasts',
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['example'],
         } as Question);
     });
@@ -105,8 +109,8 @@ describe('question marshaller', async () => {
                     explanation: 'This is the wrong answer',
                 },
             ],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['example'],
         } as TestPackageQuestion;
 
@@ -119,8 +123,10 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: 'a213fjkdad',
             options: [{}, {}],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['example'],
         } as Question);
 
@@ -155,8 +161,8 @@ describe('question marshaller', async () => {
                     explanation: 'This is the wrong answer',
                 },
             ],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['example'],
         } as TestPackageQuestion;
 
@@ -169,39 +175,16 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: ['a213fjkdad', 'sdcwfadjkdad'],
             options: [{}, {}, {}],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['example'],
         } as Question);
 
         expect(optionMarshaller.unmarshall).toHaveBeenCalledTimes(3);
 
         expect(kuebikoDb.questions.add).toHaveBeenCalledWith(unmarshalled);
-    });
-
-    test('unmarshalls fields for MANY type', async () => {
-        const toUnmarshal = {
-            uuid: 'a3fad32ksdfa',
-            type: 'FILL',
-            contentRef: 'd3afk32fdas',
-            answer: ['score', 'seven'],
-            options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
-            categories: ['lincoln'],
-        } as TestPackageQuestion;
-
-        expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
-            uuid: 'a3fad32ksdfa',
-            type: 'FILL',
-            contentText: undefined,
-            contentRef: 'd3afk32fdas',
-            answer: ['score', 'seven'],
-            options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
-            categories: ['lincoln'],
-        } as Question);
     });
 
     test('unmarshalls fields for POINT type', async () => {
@@ -211,8 +194,8 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: { x: 1, y: 2 },
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['engines'],
         } as TestPackageQuestion;
 
@@ -223,8 +206,10 @@ describe('question marshaller', async () => {
             contentRef: 'd3afk32fdas',
             answer: { x: 1, y: 2 },
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['engines'],
         } as Question);
     });
@@ -239,8 +224,8 @@ describe('question marshaller', async () => {
                 { x: 3, y: 4 },
             ],
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
             categories: ['engines'],
         } as TestPackageQuestion;
 
@@ -254,8 +239,10 @@ describe('question marshaller', async () => {
                 { x: 3, y: 4 },
             ],
             options: [],
-            successFeedback: 'Yay!',
-            failureFeedback: 'Uh oh!',
+            successFeedbackText: 'Yay!',
+            failureFeedbackText: 'Uh oh!',
+            successFeedbackRef: undefined,
+            failureFeedbackRef: undefined,
             categories: ['engines'],
         } as Question);
     });

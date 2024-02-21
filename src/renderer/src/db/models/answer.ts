@@ -1,3 +1,3 @@
 import { Point } from './point';
 
-export type AnswerType = string | string[] | Point | Point[];
+export type AnswerType = string | string[] | Point[];
