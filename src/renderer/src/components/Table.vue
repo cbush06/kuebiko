@@ -1,5 +1,5 @@
 <template>
-    <table :class="`table is-fullwidth ${hoverable ? 'is-hoverable' : ''}`">
+    <table :class="`table is-fullwidth ${hoverable ? 'is-hoverable' : ''}`" :data-testid="id">
         <thead>
             <th
                 v-for="column in columns"
@@ -15,7 +15,13 @@
             </th>
         </thead>
         <tbody v-if="preparedData?.length">
-            <tr v-for="row in preparedData" @click="onRowClick($event, row)" :class="`${clickable ? 'is-clickable' : ''}`">
+            <tr
+                v-for="row in preparedData"
+                :data-testid="props.rowKey ? `row-${row[props.rowKey]}` : undefined"
+                :key="props.rowKey ? `row-${row[props.rowKey]}` : undefined"
+                @click="onRowClick($event, row)"
+                :class="`${clickable ? 'is-clickable' : ''}`"
+            >
                 <td v-for="column in columns">
                     <slot :name="column.key" :row="row">
                         {{ getColumnValue(column, row) }}
@@ -48,16 +54,20 @@ export interface SortBy<T> {
     computed?: TableColumn<T>['computed'];
 }
 
+export type ColumnComparator<T> = (direction: SortBy<T>['direction']) => (a: T, b: T) => number;
+
 export interface TableColumn<T> {
     key: keyof T;
     title: string;
     computed?: (v: T) => any;
     formatter: (v: any) => string;
     sortable?: boolean;
-    comparator?: (a: T, b: T) => number;
+    comparator?: ColumnComparator<T>;
 }
 
 export interface TableProps<T> {
+    id?: string;
+    rowKey?: string;
     data?: T[];
     columns: TableColumn<T>[];
     hoverable?: boolean;
@@ -74,12 +84,10 @@ const currentSort = ref(props.sort);
 const defaultComparator = <T,>(key, direction, computed?: TableColumn<T>['computed']) => {
     if (direction === 'asc') {
         if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? -1 : 1);
-        else if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
-        else return (a, b) => (a === b ? 0 : a < b ? -1 : 1);
+        return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
     }
     if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? 1 : -1);
-    else if (key) return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? 1 : -1);
-    else return (a, b) => (a === b ? 0 : a < b ? 1 : -1);
+    return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? 1 : -1);
 };
 
 const preparedData = computed(() => {
@@ -89,7 +97,7 @@ const preparedData = computed(() => {
         // prettier-ignore
         return Array
             .of(...(props.data ?? []))
-            .sort(comparator ?? defaultComparator(currentSort.value.key, currentSort.value.direction, currentSort.value.computed));
+            .sort(comparator?.(currentSort.value.direction) ?? defaultComparator(currentSort.value.key, currentSort.value.direction, currentSort.value.computed));
     }
     return props.data;
 });

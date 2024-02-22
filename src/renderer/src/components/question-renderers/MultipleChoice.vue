@@ -12,7 +12,7 @@
     <div class="block">
         <div v-for="opt in options" class="block has-border-1 is-grey-darker-border">
             <div
-                class="field p-2 m-0"
+                class="field exam-field"
                 :class="{
                     'has-background-success-light': props.revealAnswer && MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
                     'has-background-danger-light': props.revealAnswer && !MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
@@ -21,7 +21,7 @@
                 <input
                     :id="opt.uuid"
                     :key="opt.uuid"
-                    class="is-checkradio"
+                    class="is-checkradio is-flex-grow-0"
                     type="radio"
                     :name="`${props.questionRef}-option`"
                     :value="opt.uuid"
@@ -30,6 +30,7 @@
                 />
                 <label
                     :for="opt.uuid"
+                    class="exam-choice"
                     :class="{
                         'has-text-success-dark': props.revealAnswer && MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
                         'has-text-danger-dark': props.revealAnswer && !MULTIPLE_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
@@ -114,4 +115,24 @@ watch(props, updateOptions);
 onBeforeMount(() => updateOptions(props));
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import '~/bulma/bulma.sass';
+
+.exam-field {
+    @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;
+}
+
+.exam-choice {
+    @extend .is-flex-grow-1, .pr-3, .pt-3, .pb-3, .mr-0, .mt-0, .mb-0, .ml-3;
+    &::before {
+        top: 50% !important;
+        transform: translateY(-50%);
+    }
+
+    &::after {
+        top: 50% !important;
+        transform: scale(0.5) translateY(-50%) !important;
+        transform-origin: center top;
+    }
+}
+</style>

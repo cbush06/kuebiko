@@ -204,7 +204,7 @@ describe('test delivery store initializer', () => {
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
-        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInRandomPerSectionOrder'](test, attempt, questions, 13, new Map([[test.sections[0], 0.7], [test.sections[1], 0.2], [test.sections[2], 0.1]]))
+        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInRandomPerSectionOrder'](test, attempt, questions, 13, new Map([[test.sections[0], 0.7], [test.sections[1], 0.3], [test.sections[2], 0.2]]))
             .map((d) => deliveryItemToUuidMapper(d));
 
         expect(actualDeliveryItemUuids).toHaveLength(16); // 3 of these are section uuids

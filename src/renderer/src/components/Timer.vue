@@ -66,6 +66,7 @@ watch(
         }
         stopTimer();
     },
+    { immediate: true },
 );
 </script>
 

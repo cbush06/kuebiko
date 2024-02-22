@@ -12,7 +12,7 @@
     <div class="block">
         <div v-for="opt in options" class="block has-border-1 is-grey-darker-border">
             <div
-                class="field p-2 m-0"
+                class="field"
                 :class="{
                     'has-background-success-light': props.revealAnswer && MANY_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
                     'has-background-danger-light': props.revealAnswer && !MANY_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
@@ -30,6 +30,7 @@
                 />
                 <label
                     :for="opt.uuid"
+                    class="exam-choice"
                     :class="{
                         'has-text-success-dark': props.revealAnswer && MANY_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
                         'has-text-danger-dark': props.revealAnswer && !MANY_CHOICE_EVALUATOR.isSingleResponseCorrect(props.correctResponse, opt.uuid),
@@ -108,4 +109,24 @@ watch(props, updateOptions);
 onBeforeMount(() => updateOptions(props));
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import '~/bulma/bulma.sass';
+
+.field {
+    @extend .field, .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;
+}
+
+.exam-choice {
+    @extend .is-flex-grow-1, .pr-3, .pt-3, .pb-3, .mr-0, .mt-0, .mb-0, .ml-3;
+    &::before {
+        top: 50% !important;
+        transform: translateY(-50%);
+    }
+
+    &::after {
+        top: 50% !important;
+        transform: rotate(45deg) translateY(-50%) !important;
+        transform-origin: center top;
+    }
+}
+</style>
