@@ -29,7 +29,7 @@ export default defineConfig({
     renderer: {
         resolve: {
             alias: {
-                '@renderer': resolve(__dirname, 'src/renderer/src'),
+                '@renderer': resolve(__dirname, 'src/renderer/src/main'),
                 '~': resolve(__dirname, 'node_modules'),
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
             },
@@ -40,7 +40,7 @@ export default defineConfig({
                 targets: [
                     {
                         src: normalizePath(resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*')),
-                        dest: normalizePath(resolve(__dirname, 'src/renderer/src/assets/public/webfonts')),
+                        dest: normalizePath(resolve(__dirname, 'src/renderer/src/main/assets/public/webfonts')),
                     },
                     {
                         src: normalizePath(resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*')),

@@ -4,4 +4,4 @@ pnpm-lock.yaml
 LICENSE.md
 tsconfig.json
 tsconfig.*.json
-src/renderer/src/vue-config/i18n/*.msg.ts
+src/renderer/src/main/vue-config/i18n/*.msg.ts

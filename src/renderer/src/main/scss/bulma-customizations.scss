@@ -1,0 +1,78 @@
+@import '~/bulma/sass/utilities/derived-variables.sass';
+@import '~/bulma/sass/elements/box.sass';
+
+// Navbar
+$navbar-height: 3.75rem;
+$navbar-item-img-max-height: 2.5rem;
+$navbar-breakpoint: 0;
+
+// Flex Gap
+$spacing-values: (
+    '0': 0,
+    '1': 0.25rem,
+    '2': 0.5rem,
+    '3': 0.75rem,
+    '4': 1rem,
+    '5': 1.5rem,
+    '6': 3rem,
+) !default;
+
+@each $name, $pair in $spacing-values {
+    .is-flex-gap-#{$name} {
+        gap: $pair !important;
+    }
+}
+
+// Darken table rows on hover
+$table-row-hover-background-color: #ccc;
+
+.text-center {
+    text-align: center;
+}
+
+// Borders
+@each $name, $pair in $colors {
+    .is-#{$name}-border {
+        border-color: nth($pair, 1) !important;
+    }
+}
+
+@each $name, $color in $shades {
+    .is-#{$name}-border {
+        border-color: $color !important;
+    }
+}
+
+@for $i from 1 through 4 {
+    .has-top-border-#{$i} {
+        border-top-width: #{$i}px;
+        border-top-style: solid;
+        border-color: #000;
+    }
+    .has-right-border-#{$i} {
+        border-right-width: #{$i}px;
+        border-right-style: solid;
+        border-color: #000;
+    }
+    .has-bottom-border-#{$i} {
+        border-bottom-width: #{$i}px;
+        border-bottom-style: solid;
+        border-color: #000;
+    }
+    .has-left-border-#{$i} {
+        border-left-width: #{$i}px;
+        border-left-style: solid;
+        border-color: #000;
+    }
+    .has-border-#{$i} {
+        border-width: #{$i}px;
+        border-style: solid;
+        border-color: #000;
+    }
+}
+
+// Fills Box Width
+.is-full-box-width {
+    margin-left: -#{$box-padding};
+    margin-right: -#{$box-padding};
+}
