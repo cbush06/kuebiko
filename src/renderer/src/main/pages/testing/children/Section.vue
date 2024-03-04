@@ -26,7 +26,9 @@ const updateSectionContent = async (newSection: SectionDeliveryItem) => {
     sectionContent.value =
         newSection?.getContentText() ??
         sectionDescriptionResource ??
-        t('defaultSectionIntro', { sectionTitle: testDeliveryStore.section?.title ?? 'Unknown Section' });
+        t('defaultSectionIntro', {
+            sectionTitle: testDeliveryStore.section?.title ?? 'Unknown Section',
+        });
 };
 
 onBeforeMount(() => updateSectionContent(testDeliveryStore.deliveryItem as SectionDeliveryItem));

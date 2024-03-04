@@ -41,7 +41,9 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             marshalledAnswer = o.answer as string | string[];
         }
 
-        const marshalledOptions = await Promise.all(o.options.map((opt) => this.optionMarshaller.unmarshall(opt)));
+        const marshalledOptions = await Promise.all(
+            o.options.map((opt) => this.optionMarshaller.unmarshall(opt)),
+        );
 
         const q = {
             uuid: o.uuid,
@@ -60,7 +62,9 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
         try {
             await this.db.questions.add(q);
         } catch (e) {
-            throw new MarshallingDbError(`Failed to write object of type [Question] with UUID [${q.uuid}] to the database: ${e}`);
+            throw new MarshallingDbError(
+                `Failed to write object of type [Question] with UUID [${q.uuid}] to the database: ${e}`,
+            );
         }
 
         return q;

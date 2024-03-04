@@ -24,7 +24,12 @@ describe('section marshaller', async () => {
         unmarshall: vi.fn(() => ({ uuid: 'dskd83rlk' })),
     } as unknown as QuestionMarshaller;
 
-    let sectionMarshaller = new SectionMarshaller({} as JSZip, {} as unknown as Manifest, new KuebikoDb(), questionMarshaller);
+    let sectionMarshaller = new SectionMarshaller(
+        {} as JSZip,
+        {} as unknown as Manifest,
+        new KuebikoDb(),
+        questionMarshaller,
+    );
 
     const toUnmarshal = {
         uuid: 'ab3ac23vfkjf',

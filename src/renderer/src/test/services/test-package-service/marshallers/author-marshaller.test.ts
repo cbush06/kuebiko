@@ -7,7 +7,11 @@ import JSZip from 'jszip';
 import { describe, expect, test } from 'vitest';
 
 describe('author marshaller', async () => {
-    let authorMarshaller = new AuthorMarshaller({} as JSZip, {} as unknown as Manifest, {} as KuebikoDb);
+    let authorMarshaller = new AuthorMarshaller(
+        {} as JSZip,
+        {} as unknown as Manifest,
+        {} as KuebikoDb,
+    );
     const toUnmarshal = {
         name: 'Bob Marley',
         email: 'bob@marley.com',

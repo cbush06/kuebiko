@@ -8,9 +8,8 @@ import { BulmaToastPlugin } from './vue-config/bulma-toast/bulma-toast';
 
 import ResourceRequestInterceptor from '@renderer/services/resource-request-interceptor/resource-request-interceptor?worker&url';
 import { createPinia } from 'pinia';
-import { createI18n } from 'vue-i18n';
-import en from './localization/en';
 import { HelmetStoreState, useHelmetStore } from './store/helmet-store/helmet-store';
+import { VueI18n } from './vue-config/vuei18n/vuei18n';
 
 // Register service worker
 navigator.serviceWorker.register(ResourceRequestInterceptor, {
@@ -29,7 +28,7 @@ createApp(App)
     .use(router)
     .use(BulmaToastPlugin)
     .use(pinia)
-    .use(createI18n({ locale: 'en', messages: { en }, fallbackWarn: false, missingWarn: false }))
+    .use(VueI18n)
     .mount('#app')
     .$nextTick(() => {
         // Remove Preload scripts loading

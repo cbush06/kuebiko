@@ -28,6 +28,13 @@ export class TestPackageMarshaller {
         const questionMarshaller = new QuestionMarshaller(zip, manifest, db, optionMarshaller);
         const sectionMarshaller = new SectionMarshaller(zip, manifest, db, questionMarshaller);
 
-        return await new TestMarshaller(zip, manifest, db, authorMarshaller, resourceMarshaller, sectionMarshaller).unmarshall(manifest);
+        return await new TestMarshaller(
+            zip,
+            manifest,
+            db,
+            authorMarshaller,
+            resourceMarshaller,
+            sectionMarshaller,
+        ).unmarshall(manifest);
     }
 }

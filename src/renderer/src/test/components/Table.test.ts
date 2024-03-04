@@ -110,7 +110,9 @@ describe('table component', () => {
 
         // Confirm sort occurred
         expect(getByText('Breed', { selector: 'th' })).toHaveClass('asc');
-        let breedColumnValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(1)')).map((e) => e.textContent);
+        let breedColumnValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(1)'),
+        ).map((e) => e.textContent);
         expect(breedColumnValues).toEqual(['Aussie', 'Border Collie', 'Pug']);
 
         // Sort DESC by Breed
@@ -118,7 +120,9 @@ describe('table component', () => {
 
         // Confirm sort occurred
         expect(getByText('Breed', { selector: 'th' })).toHaveClass('desc');
-        breedColumnValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(1)')).map((e) => e.textContent);
+        breedColumnValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(1)'),
+        ).map((e) => e.textContent);
         expect(breedColumnValues).toEqual(['Pug', 'Border Collie', 'Aussie']);
 
         // Sort ASC by Name
@@ -127,7 +131,9 @@ describe('table component', () => {
         // Confirm sort occurred
         expect(getByText('Breed', { selector: 'th' })).not.toHaveClass('asc', 'desc');
         expect(getByText('Age', { selector: 'th' })).toHaveClass('asc');
-        let nameColumnValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(2)')).map((e) => e.textContent);
+        let nameColumnValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(2)'),
+        ).map((e) => e.textContent);
         expect(nameColumnValues).toEqual(['1', '4', '5']);
     });
 
@@ -166,7 +172,9 @@ describe('table component', () => {
 
         // Confirm sorted ascending
         expect(getByText('Dog Years', { selector: 'th' })).toHaveClass('asc');
-        let dogYearsValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody tr td:nth-child(3)')).map((e) => e.textContent);
+        let dogYearsValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody tr td:nth-child(3)'),
+        ).map((e) => e.textContent);
         expect(dogYearsValues).toEqual(['7', '28', '35']);
 
         // Sort desc
@@ -174,7 +182,9 @@ describe('table component', () => {
 
         // Confirm sorted descending
         expect(getByText('Dog Years', { selector: 'th' })).toHaveClass('desc');
-        dogYearsValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody tr td:nth-child(3)')).map((e) => e.textContent);
+        dogYearsValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody tr td:nth-child(3)'),
+        ).map((e) => e.textContent);
         expect(dogYearsValues).toEqual(['35', '28', '7']);
     });
 
@@ -230,14 +240,18 @@ describe('table component', () => {
         await user.click(getByText('Demeanor', { selector: 'th' }));
 
         // Confirm sort asc
-        let demeanorValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(4)')).map((e) => e.textContent);
+        let demeanorValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(4)'),
+        ).map((e) => e.textContent);
         expect(demeanorValues).toEqual(['Lapdog', 'Protective', 'Aggressive']);
 
         // Sort demeanor ascending
         await user.click(getByText('Demeanor', { selector: 'th' }));
 
         // Confirm sort desc
-        demeanorValues = Array.from(getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(4)')).map((e) => e.textContent);
+        demeanorValues = Array.from(
+            getByTestId('dogs-table').querySelectorAll('tbody > tr > td:nth-child(4)'),
+        ).map((e) => e.textContent);
         expect(demeanorValues).toEqual(['Aggressive', 'Protective', 'Lapdog']);
     });
 

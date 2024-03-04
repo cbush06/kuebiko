@@ -5,18 +5,19 @@ import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/vue';
 
 vi.mock('@renderer/services/resources-service.ts', () => {
-    const fetchResource = vi.fn().mockImplementation(() => {
-        return Promise.resolve({
-            uuid: '6086fd81-2087-49de-a151-73cffecf63ee',
-            name: '',
-            type: 'MARKDOWN',
-            mime: '',
-            sha256: '',
-            data: '**∛8 = 2**',
-        } as Resource);
-    });
     return {
-        fetchResource,
+        ResourcesService: {
+            fetchResource: vi.fn().mockImplementation(() =>
+                Promise.resolve({
+                    uuid: '6086fd81-2087-49de-a151-73cffecf63ee',
+                    name: '',
+                    type: 'MARKDOWN',
+                    mime: '',
+                    sha256: '',
+                    data: '**∛8 = 2**',
+                } as Resource),
+            ),
+        },
     };
 });
 
@@ -39,7 +40,10 @@ describe('many choice component', () => {
         },
     ] as Option[];
 
-    const correctResponse = ['36973a42-dba8-40e8-aa6a-6d9f71dffacf', '63551a06-08fd-4c08-a11e-337e728bb1cf'];
+    const correctResponse = [
+        '36973a42-dba8-40e8-aa6a-6d9f71dffacf',
+        '63551a06-08fd-4c08-a11e-337e728bb1cf',
+    ];
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -61,7 +65,9 @@ describe('many choice component', () => {
         // Advance timers so async methods are executed and options are rendered
         await vi.runAllTimersAsync();
 
-        expect(getByText('Select all valid statements.', { selector: '.content *' })).toBeInTheDocument();
+        expect(
+            getByText('Select all valid statements.', { selector: '.content *' }),
+        ).toBeInTheDocument();
         expect(getByText('√4 = 2', { selector: 'label *' })).toBeInTheDocument();
         expect(getByText('∛8 = 2', { selector: 'label *' })).toBeInTheDocument();
         expect(getByText('∛125 = 6', { selector: 'label *' })).toBeInTheDocument();
@@ -115,7 +121,10 @@ describe('many choice component', () => {
                 questionContent: 'Select all valid statements:',
                 revealAnswer: true,
                 successFeedback: 'Great job!',
-                modelValue: ['36973a42-dba8-40e8-aa6a-6d9f71dffacf', '63551a06-08fd-4c08-a11e-337e728bb1cf'],
+                modelValue: [
+                    '36973a42-dba8-40e8-aa6a-6d9f71dffacf',
+                    '63551a06-08fd-4c08-a11e-337e728bb1cf',
+                ],
             },
         });
 

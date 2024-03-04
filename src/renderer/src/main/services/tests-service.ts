@@ -9,6 +9,14 @@ const fetchAllTests = () => from(
     )
 );
 
+// prettier-ignore
+const fetchTest = async (testUuid: string) => 
+    await KuebikoDb.INSTANCE.tests
+        .where('uuid')
+        .equals(testUuid)
+        .first();
+
 export const TestsService = {
     fetchAllTests,
+    fetchTest,
 };

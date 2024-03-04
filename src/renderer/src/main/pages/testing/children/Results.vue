@@ -23,7 +23,9 @@
                     <Doughnut :data="chartData" :options="chartOptions" />
                 </div>
                 <div class="column is-half text-center">
-                    <div :class="`is-size-1 has-text-weight-semibold ${gradeColorClass}`">{{ Math.round((testDeliveryStore.attempt?.score ?? 0) * 100) }}%</div>
+                    <div :class="`is-size-1 has-text-weight-semibold ${gradeColorClass}`">
+                        {{ Math.round((testDeliveryStore.attempt?.score ?? 0) * 100) }}%
+                    </div>
                     <div class="is-size-4">
                         {{ completionDate }}
                     </div>
@@ -33,7 +35,9 @@
                 </div>
             </div>
         </div>
-        <div class="block is-flex is-flex-direction-row is-justify-content-center is-align-items-center">
+        <div
+            class="block is-flex is-flex-direction-row is-justify-content-center is-align-items-center"
+        >
             <button class="button is-info" @click="reviewQuestions()">
                 <i class="fa-solid fa-chart-column mr-2"></i>
                 {{ t('reviewQuestions') }}
@@ -51,7 +55,16 @@ import { Doughnut } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
 
 // see https://www.chartjs.org/docs/latest/getting-started/integration.html
-import { ArcElement, ChartData, Chart as ChartJS, ChartOptions, DoughnutDataPoint, Legend, PieController, Tooltip } from 'chart.js';
+import {
+    ArcElement,
+    ChartData,
+    Chart as ChartJS,
+    ChartOptions,
+    DoughnutDataPoint,
+    Legend,
+    PieController,
+    Tooltip,
+} from 'chart.js';
 import { DistributiveArray } from 'chart.js/dist/types/utils';
 
 // see https://chartjs-plugin-datalabels.netlify.app/
@@ -67,7 +80,10 @@ const testConfigurationStore = useTestConfigurationStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 
 const gradeColorClass = computed(() => {
-    if ((testDeliveryStore.attempt?.score ?? 0) < (testDeliveryStore.test?.passingPercentage ?? 0.75)) {
+    if (
+        (testDeliveryStore.attempt?.score ?? 0) <
+        (testDeliveryStore.test?.passingPercentage ?? 0.75)
+    ) {
         return 'has-text-danger';
     }
     return 'has-text-success';
@@ -79,12 +95,25 @@ const allowedTime = computed(() =>
         .toString()
         .padStart(1, '0'),
 );
-const completionDate = computed(() => (testDeliveryStore.attempt?.completed ? format(testDeliveryStore.attempt?.completed, 'MMMM do, h:mm aa') : ''));
+const completionDate = computed(() =>
+    testDeliveryStore.attempt?.completed
+        ? format(testDeliveryStore.attempt?.completed, 'MMMM do, h:mm aa')
+        : '',
+);
 const duration = computed(() => {
     if (!testDeliveryStore.attempt?.completed) return 0;
-    const hours = differenceInHours(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
-    const minutes = differenceInMinutes(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
-    const seconds = differenceInSeconds(testDeliveryStore.attempt.completed, testDeliveryStore.attempt.started!);
+    const hours = differenceInHours(
+        testDeliveryStore.attempt.completed,
+        testDeliveryStore.attempt.started!,
+    );
+    const minutes = differenceInMinutes(
+        testDeliveryStore.attempt.completed,
+        testDeliveryStore.attempt.started!,
+    );
+    const seconds = differenceInSeconds(
+        testDeliveryStore.attempt.completed,
+        testDeliveryStore.attempt.started!,
+    );
     if (hours) {
         return `${hours} ${t('hours')}, ${minutes} ${t('minutes')}, ${seconds} ${t('seconds')}`;
     }
@@ -92,8 +121,12 @@ const duration = computed(() => {
 });
 const scoringBreakdown = computed(() => ({
     correct: testDeliveryStore.attempt?.questionResponses.filter((r) => r.credit === 1).length,
-    incorrect: testDeliveryStore.attempt?.questionResponses.filter((r) => !!r.response && r.credit < 1).length,
-    skipped: testDeliveryStore.attempt?.questionResponses.filter((r) => !r.response && r.credit === 0).length,
+    incorrect: testDeliveryStore.attempt?.questionResponses.filter(
+        (r) => !!r.response && r.credit < 1,
+    ).length,
+    skipped: testDeliveryStore.attempt?.questionResponses.filter(
+        (r) => !r.response && r.credit === 0,
+    ).length,
 }));
 
 ChartJS.register(PieController, ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -121,13 +154,19 @@ const chartData = computed(
             labels: [t('correct'), t('incorrect'), t('skipped')],
             datasets: [
                 {
-                    data: [scoringBreakdown.value.correct, scoringBreakdown.value.incorrect, scoringBreakdown.value.skipped],
+                    data: [
+                        scoringBreakdown.value.correct,
+                        scoringBreakdown.value.incorrect,
+                        scoringBreakdown.value.skipped,
+                    ],
                     datalabels: {
                         anchor: 'center',
                         backgroundColor: null,
                         borderWidth: 0,
                         display: function (ctx: any) {
-                            return ctx.dataset.data[ctx.dataIndex] > 0 ? ctx.dataset.data[ctx.dataIndex] : '';
+                            return ctx.dataset.data[ctx.dataIndex] > 0
+                                ? ctx.dataset.data[ctx.dataIndex]
+                                : '';
                         },
                     },
                     backgroundColor: ['#84E0A3', '#FFAFA3', '#E6E6E6'],

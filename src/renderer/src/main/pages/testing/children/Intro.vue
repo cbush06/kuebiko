@@ -1,7 +1,10 @@
 <template>
     <div class="section content">
         <MdPreview
-            :modelValue="testDeliveryStore.description ?? t('defaultTestIntro', { testName: testDeliveryStore.test?.title ?? 'Unknown Test' })"
+            :modelValue="
+                testDeliveryStore.description ??
+                t('defaultTestIntro', { testName: testDeliveryStore.test?.title ?? 'Unknown Test' })
+            "
             noMermaid
             noKatex
             noHighlight

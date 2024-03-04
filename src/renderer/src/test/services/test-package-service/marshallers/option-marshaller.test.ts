@@ -7,7 +7,11 @@ import JSZip from 'jszip';
 import { describe, expect, test } from 'vitest';
 
 describe('option marshaller', async () => {
-    let optionMarshaller = new OptionMarshaller({} as JSZip, {} as unknown as Manifest, {} as KuebikoDb);
+    let optionMarshaller = new OptionMarshaller(
+        {} as JSZip,
+        {} as unknown as Manifest,
+        {} as KuebikoDb,
+    );
     const toUnmarshal = {
         uuid: 'ad3sdf3adcklja3!53',
         contentText: 'Option A',

@@ -52,7 +52,10 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
             .equals(newDeliveryItem?.getContentRef() ?? 'nonce')
             .first()
     )?.data as string;
-    questionContent.value = questionDeliveryItem.value?.getContentText() ?? questionContentResource ?? t('noQuestionContent');
+    questionContent.value =
+        questionDeliveryItem.value?.getContentText() ??
+        questionContentResource ??
+        t('noQuestionContent');
 
     const successFeedbackContentResource = (
         await KuebikoDb.INSTANCE.resources
@@ -60,7 +63,8 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
             .equals(newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce')
             .first()
     )?.data as string;
-    successFeedbackContent.value = questionDeliveryItem.value?.getSuccessFeedbackText() ?? successFeedbackContentResource;
+    successFeedbackContent.value =
+        questionDeliveryItem.value?.getSuccessFeedbackText() ?? successFeedbackContentResource;
 
     const failureFeedbackContentResource = (
         await KuebikoDb.INSTANCE.resources
@@ -68,7 +72,8 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
             .equals(newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce')
             .first()
     )?.data as string;
-    failureFeedbackContent.value = questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;
+    failureFeedbackContent.value =
+        questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;
 
     questionDeliveryItem.value = newDeliveryItem as QuestionDeliveryItem;
     selection.value = questionDeliveryItem.value?.getModel().response;
@@ -77,7 +82,9 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
 onBeforeMount(() => updateQuestionDetails(testDeliveryStore.deliveryItem as QuestionDeliveryItem));
 watch(
     () => testDeliveryStore.deliveryItem as QuestionDeliveryItem,
-    (newDeliveryItem) => testDeliveryStore.deliveryItem instanceof QuestionDeliveryItem && updateQuestionDetails(newDeliveryItem),
+    (newDeliveryItem) =>
+        testDeliveryStore.deliveryItem instanceof QuestionDeliveryItem &&
+        updateQuestionDetails(newDeliveryItem),
 );
 watch(
     () => testDeliveryStore.deliveryItem?.isRevealed(),

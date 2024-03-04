@@ -33,7 +33,9 @@
             <tr>
                 <td :colspan="columns.length">
                     <div class="container">
-                        <div class="notification is-info is-light is-flex is-justify-content-center">
+                        <div
+                            class="notification is-info is-light is-flex is-justify-content-center"
+                        >
                             {{ emptyTableMessage }}
                         </div>
                     </div>
@@ -83,16 +85,19 @@ const currentSort = ref(props.sort);
 
 const defaultComparator = <T,>(key, direction, computed?: TableColumn<T>['computed']) => {
     if (direction === 'asc') {
-        if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? -1 : 1);
+        if (computed)
+            return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? -1 : 1);
         return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? -1 : 1);
     }
-    if (computed) return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? 1 : -1);
+    if (computed)
+        return (a, b) => (computed(a) === computed(b) ? 0 : computed(a) < computed(b) ? 1 : -1);
     return (a, b) => (a[key] === b[key] ? 0 : a[key] < b[key] ? 1 : -1);
 };
 
 const preparedData = computed(() => {
     if (currentSort.value) {
-        const comparator = props.columns.filter((c) => c.key === currentSort.value?.key)?.[0]?.comparator;
+        const comparator = props.columns.filter((c) => c.key === currentSort.value?.key)?.[0]
+            ?.comparator;
 
         // prettier-ignore
         return Array
@@ -104,7 +109,8 @@ const preparedData = computed(() => {
 
 const emptyTableMessage = computed(() => {
     if (!props.data?.length) return props.noDataMessage ?? 'There is no data to display.';
-    if (!preparedData.value?.length) return props.noFilterResultsMessage ?? 'No results match your filter criteria.';
+    if (!preparedData.value?.length)
+        return props.noFilterResultsMessage ?? 'No results match your filter criteria.';
     return '';
 });
 

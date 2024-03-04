@@ -14,15 +14,24 @@
             <div class="level has-text-white">
                 <i class="fa-solid fa-clock"></i>
                 <span class="timer is-size-5 ml-2 has-text-weight-semibold">
-                    <TimerVue :duration="timerValue" :ticking="testDeliveryStore.inProgress" @expired="outOfTime()" />
+                    <TimerVue
+                        :duration="timerValue"
+                        :ticking="testDeliveryStore.inProgress"
+                        @expired="outOfTime()"
+                    />
                 </span>
             </div>
         </div>
     </nav>
 
-    <nav class="navbar navbar-section-header is-primary" v-if="testDeliveryStore.section && !testDeliveryStore.section.default">
+    <nav
+        class="navbar navbar-section-header is-primary"
+        v-if="testDeliveryStore.section && !testDeliveryStore.section.default"
+    >
         <div class="navbar-item">
-            <span class="subtitle has-text-white has-text-weight-semibold">{{ testDeliveryStore.section?.title }}</span>
+            <span class="subtitle has-text-white has-text-weight-semibold">{{
+                testDeliveryStore.section?.title
+            }}</span>
         </div>
     </nav>
 
@@ -34,7 +43,11 @@
         <div class="prev-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed" class="button is-link" @click="goHome()">
+                    <button
+                        v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed"
+                        class="button is-link"
+                        @click="goHome()"
+                    >
                         <i class="fa-solid fa-house mr-2"></i> Home
                     </button>
                     <button
@@ -49,7 +62,10 @@
             </div>
         </div>
         <div class="item-count-container">
-            <span v-if="testDeliveryStore.currentQuestionNumber > 0 && !testDeliveryStore.completed" class="is-size-5 has-text-weight-semibold">
+            <span
+                v-if="testDeliveryStore.currentQuestionNumber > 0 && !testDeliveryStore.completed"
+                class="is-size-5 has-text-weight-semibold"
+            >
                 <i class="fa-solid fa-hashtag"></i>
                 {{ testDeliveryStore.currentQuestionNumber }}
                 of
@@ -59,23 +75,41 @@
         <div class="next-button-container">
             <div class="navbar-item">
                 <div class="buttons">
-                    <button v-if="!testDeliveryStore.initialized" class="button is-primary" @click="initializeTest()">
+                    <button
+                        v-if="!testDeliveryStore.initialized"
+                        class="button is-primary"
+                        @click="initializeTest()"
+                    >
                         Begin <i class="fa-solid fa-play ml-2"></i>
                     </button>
-                    <button v-else-if="testDeliveryStore.completed" class="button is-success" @click="goHome()">
+                    <button
+                        v-else-if="testDeliveryStore.completed"
+                        class="button is-success"
+                        @click="goHome()"
+                    >
                         Go Home <i class="fas fa-house ml-2"></i>
                     </button>
                     <button
-                        v-else-if="testDeliveryStore.format === 'PREPARE' && testDeliveryStore.deliveryItem && !testDeliveryStore.deliveryItem?.isRevealed()"
+                        v-else-if="
+                            testDeliveryStore.format === 'PREPARE' &&
+                            testDeliveryStore.deliveryItem &&
+                            !testDeliveryStore.deliveryItem?.isRevealed()
+                        "
                         class="button is-success"
                         @click="testDeliveryStore.deliveryItem?.setRevealed()"
                     >
                         Grade <i class="fa-solid fa-file-circle-check ml-2"></i>
                     </button>
-                    <button v-else-if="testDeliveryStore.canGoForward" class="button is-link" @click="testDeliveryStore.forward()">
+                    <button
+                        v-else-if="testDeliveryStore.canGoForward"
+                        class="button is-link"
+                        @click="testDeliveryStore.forward()"
+                    >
                         Next <i class="fas fa-arrow-right ml-2"></i>
                     </button>
-                    <button v-else class="button is-success" @click="finishTest()">Finish <i class="fas fa-check ml-2"></i></button>
+                    <button v-else class="button is-success" @click="finishTest()">
+                        Finish <i class="fas fa-check ml-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -90,7 +124,10 @@ import { useTestConfigurationStore } from '@renderer/store/test-configuration-st
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
-import { TestDeliveryStoreInitializer, TestEngineOptions } from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
+import {
+    TestDeliveryStoreInitializer,
+    TestEngineOptions,
+} from '@renderer/store/test-delivery-store/test-delivery-store-initializer';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { computed, inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -135,7 +172,10 @@ const timerValue = computed(() => {
 
 const initializeTest = async () => {
     if (test.value) {
-        await TestDeliveryStoreInitializer.initializeTestDeliveryStore(test.value, testConfigurationStore.$state as TestEngineOptions);
+        await TestDeliveryStoreInitializer.initializeTestDeliveryStore(
+            test.value,
+            testConfigurationStore.$state as TestEngineOptions,
+        );
         testConfigurationStore.reset();
         router.push(`/test/${test.value.uuid}/intro`);
     }
@@ -174,7 +214,9 @@ const finishTest = async () => {
         await saveAttempt();
         router.push(`/test/${route.params['testUuid']}/results`);
     } catch (e) {
-        $toast.danger({ message: 'Uh oh! Something went wrong and your attempt results cannot be saved.' });
+        $toast.danger({
+            message: 'Uh oh! Something went wrong and your attempt results cannot be saved.',
+        });
         console.error(e);
     }
 };

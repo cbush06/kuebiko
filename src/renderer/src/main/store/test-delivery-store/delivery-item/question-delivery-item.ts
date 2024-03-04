@@ -24,7 +24,10 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
     set value(v: AnswerType | undefined) {
         this.response.response = v;
         if (v) {
-            this.response.credit = getQuestionEvaluator(this.question.type).evaluate(this.question, v);
+            this.response.credit = getQuestionEvaluator(this.question.type).evaluate(
+                this.question,
+                v,
+            );
         }
     }
 

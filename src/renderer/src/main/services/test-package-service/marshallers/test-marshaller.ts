@@ -25,9 +25,15 @@ export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
     }
 
     async unmarshall(o: Manifest): Promise<Test> {
-        const authors = await Promise.all(o.authors.map((a) => this.authorMarshaller.unmarshall(a)));
-        const resources = await Promise.all(o.resources.map((r) => this.resourceMarshaller.unmarshall(r)));
-        const sections = await Promise.all(o.sections.map((s) => this.sectionMarshaller.unmarshall(s)));
+        const authors = await Promise.all(
+            o.authors.map((a) => this.authorMarshaller.unmarshall(a)),
+        );
+        const resources = await Promise.all(
+            o.resources.map((r) => this.resourceMarshaller.unmarshall(r)),
+        );
+        const sections = await Promise.all(
+            o.sections.map((s) => this.sectionMarshaller.unmarshall(s)),
+        );
 
         const t = {
             uuid: o.uuid,
@@ -44,7 +50,9 @@ export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
         try {
             await this.db.tests.add(t);
         } catch (e) {
-            throw new MarshallingDbError(`Failed to write object of type [Test] with UUID [${t.uuid}] to the database: ${e}`);
+            throw new MarshallingDbError(
+                `Failed to write object of type [Test] with UUID [${t.uuid}] to the database: ${e}`,
+            );
         }
 
         return t;

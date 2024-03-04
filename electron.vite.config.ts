@@ -39,11 +39,23 @@ export default defineConfig({
             viteStaticCopy({
                 targets: [
                     {
-                        src: normalizePath(resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*')),
-                        dest: normalizePath(resolve(__dirname, 'src/renderer/src/main/assets/public/webfonts')),
+                        src: normalizePath(
+                            resolve(
+                                __dirname,
+                                'node_modules/@fortawesome/fontawesome-free/webfonts/*',
+                            ),
+                        ),
+                        dest: normalizePath(
+                            resolve(__dirname, 'src/renderer/src/main/assets/public/webfonts'),
+                        ),
                     },
                     {
-                        src: normalizePath(resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*')),
+                        src: normalizePath(
+                            resolve(
+                                __dirname,
+                                'node_modules/@fortawesome/fontawesome-free/webfonts/*',
+                            ),
+                        ),
                         dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
                     },
                 ],
@@ -51,6 +63,8 @@ export default defineConfig({
             VueI18nPlugin({
                 include: 'json',
                 jitCompilation: true,
+                runtimeOnly: true,
+                compositionOnly: true,
             }),
         ],
         build: {

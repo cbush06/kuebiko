@@ -22,7 +22,9 @@ export class SectionMarshaller extends AbstractMarshaller<Section, TestPackageSe
 
     async unmarshall(o: TestPackageSection): Promise<Section> {
         // Unmarshal the questions
-        const questions = await Promise.all(o.questions.map(async (q) => await this.questionMarshaller.unmarshall(q)));
+        const questions = await Promise.all(
+            o.questions.map(async (q) => await this.questionMarshaller.unmarshall(q)),
+        );
 
         return {
             uuid: o.uuid,

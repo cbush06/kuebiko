@@ -43,7 +43,14 @@ describe('test marshaller', async () => {
         })),
     } as unknown as SectionMarshaller;
 
-    const testMarshaller = new TestMarshaller({} as JSZip, {} as Manifest, kuebikoDb, authorMarshaller, resourceMarshaller, sectionMarshaller);
+    const testMarshaller = new TestMarshaller(
+        {} as JSZip,
+        {} as Manifest,
+        kuebikoDb,
+        authorMarshaller,
+        resourceMarshaller,
+        sectionMarshaller,
+    );
 
     const toUnmarshal = {
         uuid: 'a3fadkads3',

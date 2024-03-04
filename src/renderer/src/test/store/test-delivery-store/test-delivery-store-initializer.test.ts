@@ -58,7 +58,11 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { defaultSection: true });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation(() => test.sections[0].questionRefs.map((q) => questionFactory.build({ uuid: q }))),
+            get: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections[0].questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -66,7 +70,11 @@ describe('test delivery store initializer', () => {
             test.sections[0].uuid,
             ...test.sections[0].questionRefs
         ];
-        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInOriginalOrder'](test, attempt, questions).map((d) => deliveryItemToUuidMapper(d));
+        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInOriginalOrder'](
+            test,
+            attempt,
+            questions,
+        ).map((d) => deliveryItemToUuidMapper(d));
 
         expect(expectedDeliveryItemUuids).toEqual(actualDeliveryItemUuids);
     });
@@ -75,7 +83,11 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { defaultSection: false });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -83,7 +95,11 @@ describe('test delivery store initializer', () => {
             s.uuid,
             ...s.questionRefs
         ]);
-        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInOriginalOrder'](test, attempt, questions).map((d) => deliveryItemToUuidMapper(d));
+        const actualDeliveryItemUuids = TestDeliveryStoreInitializer['buildInOriginalOrder'](
+            test,
+            attempt,
+            questions,
+        ).map((d) => deliveryItemToUuidMapper(d));
 
         expect(actualDeliveryItemUuids).toEqual(expectedDeliveryItemUuids);
     });
@@ -92,9 +108,26 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { defaultSection: true, questionsPerSection: 10 });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -111,9 +144,26 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { defaultSection: true, questionsPerSection: 10 });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -124,12 +174,32 @@ describe('test delivery store initializer', () => {
     });
 
     test('buildInRandomOrder 3 sections fraction of questions', () => {
-        const test = testFactory.build({}, { defaultSection: false, sectionCount: 3, questionsPerSection: 10 });
+        const test = testFactory.build(
+            {},
+            { defaultSection: false, sectionCount: 3, questionsPerSection: 10 },
+        );
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -140,12 +210,32 @@ describe('test delivery store initializer', () => {
     });
 
     test('buildInRandomOrder 3 sections fraction of questions requiring randomized backfilling', () => {
-        const test = testFactory.build({}, { defaultSection: false, sectionCount: 3, questionsPerSection: 10 });
+        const test = testFactory.build(
+            {},
+            { defaultSection: false, sectionCount: 3, questionsPerSection: 10 },
+        );
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -159,9 +249,26 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { questionsPerSection: 10 });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -181,9 +288,26 @@ describe('test delivery store initializer', () => {
         const test = testFactory.build({}, { defaultSection: true, questionsPerSection: 10 });
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore
@@ -195,12 +319,32 @@ describe('test delivery store initializer', () => {
     });
 
     test('buildInRandomPerSectionOrder 3 sections fraction of questions', () => {
-        const test = testFactory.build({}, { defaultSection: false, sectionCount: 3, questionsPerSection: 10 });
+        const test = testFactory.build(
+            {},
+            { defaultSection: false, sectionCount: 3, questionsPerSection: 10 },
+        );
         const attempt = TestDeliveryStoreInitializer['buildAttempt'](test, 'PREPARE');
         const questions = {
-            get: vi.fn().mockImplementation((s: Section) => s.questionRefs.map((q) => questionFactory.build({ uuid: q }))),
-            values: vi.fn().mockImplementation(() => test.sections.map((s) => s.questionRefs.map((q) => questionFactory.build({ uuid: q })))),
-            entries: vi.fn().mockImplementation(() => test.sections.map((s) => [s, s.questionRefs.map((q) => questionFactory.build({ uuid: q }))])),
+            get: vi
+                .fn()
+                .mockImplementation((s: Section) =>
+                    s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                ),
+            values: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) =>
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ),
+                ),
+            entries: vi
+                .fn()
+                .mockImplementation(() =>
+                    test.sections.map((s) => [
+                        s,
+                        s.questionRefs.map((q) => questionFactory.build({ uuid: q })),
+                    ]),
+                ),
         } as unknown as Map<Section, Question[]>;
 
         // prettier-ignore

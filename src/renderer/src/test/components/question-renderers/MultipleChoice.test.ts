@@ -5,18 +5,19 @@ import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/vue';
 
 vi.mock('@renderer/services/resources-service.ts', () => {
-    const fetchResource = vi.fn().mockImplementation(() => {
-        return Promise.resolve({
-            uuid: '6086fd81-2087-49de-a151-73cffecf63ee',
-            name: '',
-            type: 'MARKDOWN',
-            mime: '',
-            sha256: '',
-            data: '**∛8 = 2**',
-        } as Resource);
-    });
     return {
-        fetchResource,
+        ResourcesService: {
+            fetchResource: vi.fn().mockImplementation(() =>
+                Promise.resolve({
+                    uuid: '6086fd81-2087-49de-a151-73cffecf63ee',
+                    name: '',
+                    type: 'MARKDOWN',
+                    mime: '',
+                    sha256: '',
+                    data: '**∛8 = 2**',
+                } as Resource),
+            ),
+        },
     };
 });
 
@@ -61,7 +62,9 @@ describe('multiple choice component', () => {
         // Advance timers so async methods are executed and options are rendered
         await vi.runAllTimersAsync();
 
-        expect(getByText('Select the valid statement.', { selector: '.content *' })).toBeInTheDocument();
+        expect(
+            getByText('Select the valid statement.', { selector: '.content *' }),
+        ).toBeInTheDocument();
         expect(getByText('√4 = 3', { selector: 'label *' })).toBeInTheDocument();
         expect(getByText('∛8 = 2', { selector: 'label *' })).toBeInTheDocument();
         expect(getByText('∛125 = 6', { selector: 'label *' })).toBeInTheDocument();
@@ -123,8 +126,12 @@ describe('multiple choice component', () => {
         await vi.runAllTimersAsync();
 
         // expect correct answers to be styled in green
-        expect(getByTestId(`field-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass('has-background-success-light');
-        expect(getByTestId(`label-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass('has-text-success-dark');
+        expect(getByTestId(`field-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass(
+            'has-background-success-light',
+        );
+        expect(getByTestId(`label-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass(
+            'has-text-success-dark',
+        );
 
         // expect other answers to be styled in red
         options
@@ -157,8 +164,12 @@ describe('multiple choice component', () => {
         await vi.runAllTimersAsync();
 
         // expect correct answers to be styled in green
-        expect(getByTestId(`field-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass('has-background-success-light');
-        expect(getByTestId(`label-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass('has-text-success-dark');
+        expect(getByTestId(`field-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass(
+            'has-background-success-light',
+        );
+        expect(getByTestId(`label-63551a06-08fd-4c08-a11e-337e728bb1cf`)).toHaveClass(
+            'has-text-success-dark',
+        );
 
         // expect other answers to be styled in red
         options

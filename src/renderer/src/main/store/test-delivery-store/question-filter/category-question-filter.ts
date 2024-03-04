@@ -11,6 +11,9 @@ export class CategoryQuestionFilter extends AbstractQuestionFilter {
     }
 
     match(question: Question): boolean {
-        return this.categories.length < 1 || question.categories.filter((c) => this.categories.includes(c)).length > 0;
+        return (
+            this.categories.length < 1 ||
+            question.categories.filter((c) => this.categories.includes(c)).length > 0
+        );
     }
 }

@@ -11,7 +11,8 @@ const MILLIS_IN_SECOND = 1000;
 export const durationToClockFormat = (duration: number) => {
     const { hours, minutes, seconds } = intervalToDuration({ start: 0, end: duration });
     return (
-        (hours ? `${hours.toString().padStart(2, '0')}:` : '') + `${(minutes ?? 0).toString().padStart(2, '0')}:${(seconds ?? 0).toString().padStart(2, '0')}`
+        (hours ? `${hours.toString().padStart(2, '0')}:` : '') +
+        `${(minutes ?? 0).toString().padStart(2, '0')}:${(seconds ?? 0).toString().padStart(2, '0')}`
     );
 };
 
@@ -22,7 +23,10 @@ export const durationToClockFormat = (duration: number) => {
 export const clockFormatToDuration = (clockFormat: string) => {
     const tokens = clockFormat.split(':');
 
-    if (tokens.length < 2 || tokens.length > 3) throw new Error(`${clockFormat} is not a valid clock format duration. Expected mm:ss or hh:mm:ss.`);
+    if (tokens.length < 2 || tokens.length > 3)
+        throw new Error(
+            `${clockFormat} is not a valid clock format duration. Expected mm:ss or hh:mm:ss.`,
+        );
 
     const hasHour = tokens.length === 3;
 

@@ -10,7 +10,9 @@ export class SectionQuestionFilter extends AbstractQuestionFilter {
         test: Test,
     ) {
         super(test);
-        this.includedQuestions = test.sections.filter((s) => sectionsUuids.includes(s.uuid)).flatMap((s) => s.questionRefs);
+        this.includedQuestions = test.sections
+            .filter((s) => sectionsUuids.includes(s.uuid))
+            .flatMap((s) => s.questionRefs);
     }
 
     match(question: Question): boolean {

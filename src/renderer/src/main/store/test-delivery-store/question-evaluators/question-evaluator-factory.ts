@@ -4,7 +4,9 @@ import { AbstractQuestionEvaluator } from './abstract-question-evaluator';
 import { MANY_CHOICE_EVALUATOR } from './many-choice-evaluator';
 import { MULTIPLE_CHOICE_EVALUATOR } from './multiple-choice-evaluator';
 
-export function getQuestionEvaluator(questionType: QuestionType): AbstractQuestionEvaluator<AnswerType, AnswerType> {
+export function getQuestionEvaluator(
+    questionType: QuestionType,
+): AbstractQuestionEvaluator<AnswerType, AnswerType> {
     switch (questionType) {
         case 'MULTIPLE':
             return MULTIPLE_CHOICE_EVALUATOR;

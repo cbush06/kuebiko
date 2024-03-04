@@ -97,7 +97,10 @@
                     "uuid": "1cbbf5ac-d97d-40a3-8662-c40c064283ac",
                     "type": "MANY",
                     "contentRef": "9a642af2-458e-4be6-8141-77b456b8bb79",
-                    "answer": ["43a0a68a-d659-44f2-ba84-f405fe67bd08", "7094ea4d-8e68-4c6f-b735-a3d9cb825218"],
+                    "answer": [
+                        "43a0a68a-d659-44f2-ba84-f405fe67bd08",
+                        "7094ea4d-8e68-4c6f-b735-a3d9cb825218"
+                    ],
                     "options": [
                         {
                             "uuid": "303fbe82-88f9-4ada-8134-c238e310c693",

@@ -32,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { AttemptsService } from '@renderer/services/attempts-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
@@ -42,13 +41,25 @@ import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 // see https://chartjs-plugin-datalabels.netlify.app/
-import { ChartData, Chart as ChartJS, ChartOptions, Legend, LineController, LineElement, LinearScale, PointElement, TimeScale, Tooltip } from 'chart.js';
+import {
+    ChartData,
+    Chart as ChartJS,
+    ChartOptions,
+    Legend,
+    LineController,
+    LineElement,
+    LinearScale,
+    PointElement,
+    TimeScale,
+    Tooltip,
+} from 'chart.js';
 import { DistributiveArray } from 'chart.js/dist/types/utils';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'vue-chartjs';
 
 import TableVue, { TableColumn } from '@renderer/components/Table.vue';
 import { Attempt } from '@renderer/db/models/attempt';
+import { TestsService } from '@renderer/services/tests-service';
 import { differenceInSeconds, format, intervalToDuration } from 'date-fns';
 
 const { t } = useI18n();
@@ -56,20 +67,29 @@ const route = useRoute();
 const helmetStore = useHelmetStore();
 const test = ref<Test>();
 
-const attempts = useObservable(AttemptsService.fetchAttemptHistoryForTest(route.params['testUuid'] as string));
+const attempts = useObservable(
+    AttemptsService.fetchAttemptHistoryForTest(route.params['testUuid'] as string),
+);
 
 onBeforeMount(async () => {
-    test.value = await KuebikoDb.INSTANCE.tests
-        .where('uuid')
-        .equals(route.params['testUuid'] as string)
-        .first();
+    test.value = await TestsService.fetchTest(route.params['testUuid'] as string);
     helmetStore.title = `Kuebiko :: ${t('attemptsForTest', [test.value?.title])}`;
 });
 
-ChartJS.register(LineController, LineElement, TimeScale, LinearScale, PointElement, Tooltip, Legend);
+ChartJS.register(
+    LineController,
+    LineElement,
+    TimeScale,
+    LinearScale,
+    PointElement,
+    Tooltip,
+    Legend,
+);
 const formatDuration = (intervalMs: number) => {
     const duration = intervalToDuration({ start: 0, end: intervalMs });
-    return duration.hours ? `${duration.hours}h ${duration.minutes}m ${duration.seconds}s` : `${duration.minutes ?? 0}m ${duration.seconds ?? 0}s`;
+    return duration.hours
+        ? `${duration.hours}h ${duration.minutes}m ${duration.seconds}s`
+        : `${duration.minutes ?? 0}m ${duration.seconds ?? 0}s`;
 };
 
 const chartOptions = computed(
@@ -110,7 +130,6 @@ const chartOptions = computed(
                         display: true,
                     },
                     time: {
-                        minUnit: 'minute',
                         displayFormats: {
                             second: 'h:mm aa',
                             miute: 'h:mm aa',
@@ -154,6 +173,7 @@ const chartData = computed(
                 {
                     label: 'Date',
                     data: attempts.value?.map((a) => ({ x: a.completed!.toISOString() })) ?? [],
+                    parsing: false,
                     xAxisID: 'x',
                 },
                 {
@@ -201,7 +221,10 @@ const columns = computed(
                 key: 'duration',
                 sortable: true,
                 computed: (a) => {
-                    const duration = intervalToDuration({ start: 0, end: differenceInSeconds(a.completed!, a.started!) * 1000 });
+                    const duration = intervalToDuration({
+                        start: 0,
+                        end: differenceInSeconds(a.completed!, a.started!) * 1000,
+                    });
                     return (
                         (duration.hours ? `${duration.hours}:` : '') +
                         `${String(duration.minutes ?? 0).padStart(2, '0')}:${String(duration.seconds ?? 0).padStart(2, '0')}`
@@ -219,13 +242,23 @@ const columns = computed(
                 key: 'incorrect',
                 sortable: true,
                 computed: (a) =>
-                    a.questionResponses.filter((q) => q.response !== undefined && (!Array.isArray(q.response) || q.response.length > 0) && q.credit < 1).length,
+                    a.questionResponses.filter(
+                        (q) =>
+                            q.response !== undefined &&
+                            (!Array.isArray(q.response) || q.response.length > 0) &&
+                            q.credit < 1,
+                    ).length,
             },
             {
                 title: 'Skipped',
                 key: 'skipped',
                 sortable: true,
-                computed: (a) => a.questionResponses.filter((q) => q.response === undefined || (Array.isArray(q.response) && q.response.length === 0)).length,
+                computed: (a) =>
+                    a.questionResponses.filter(
+                        (q) =>
+                            q.response === undefined ||
+                            (Array.isArray(q.response) && q.response.length === 0),
+                    ).length,
             },
             {
                 title: 'Format',
@@ -249,4 +282,3 @@ const columns = computed(
     }
 }
 </i18n>
-@renderer/db/kuebiko-db@renderer/db/models/test@renderer/services/attempts-service@renderer/store/helmet-store/helmet-store@renderer/db/models/attempt

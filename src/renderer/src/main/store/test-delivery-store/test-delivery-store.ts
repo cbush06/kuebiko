@@ -53,14 +53,17 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
         }) as unknown as TestDeliveryStoreState,
     getters: {
         isNextItemNewSection(state) {
-            const isNextItemSection = state.deliveryItems[state.deliveryItemIndex + 1] instanceof SectionDeliveryItem;
+            const isNextItemSection =
+                state.deliveryItems[state.deliveryItemIndex + 1] instanceof SectionDeliveryItem;
             return this.canGoForward && isNextItemSection;
         },
-        canGoForward: (state) => !!state.test && state.deliveryItemIndex < state.deliveryItems.length - 1,
+        canGoForward: (state) =>
+            !!state.test && state.deliveryItemIndex < state.deliveryItems.length - 1,
         canGoBackward: (state) => {
             // if (!state.test) return false;
             const hasPreviousItem = state.deliveryItemIndex > 0;
-            const canRevisitPreviousItem = state.deliveryItems[state.deliveryItemIndex - 1]?.isRevisitable();
+            const canRevisitPreviousItem =
+                state.deliveryItems[state.deliveryItemIndex - 1]?.isRevisitable();
             const isThisItemSection = state.deliveryItem instanceof SectionDeliveryItem;
             return hasPreviousItem && canRevisitPreviousItem && !isThisItemSection;
         },
@@ -116,7 +119,10 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
                     if (qdi instanceof QuestionDeliveryItem) {
                         const resp = qdi.getModel() as QuestionResponse;
                         if (resp.response) {
-                            resp.credit = getQuestionEvaluator(qdi.getQuestionType()).evaluate(qdi.getCorrectResponse()!, resp.response);
+                            resp.credit = getQuestionEvaluator(qdi.getQuestionType()).evaluate(
+                                qdi.getCorrectResponse()!,
+                                resp.response,
+                            );
                         } else {
                             resp.credit = 0;
                         }

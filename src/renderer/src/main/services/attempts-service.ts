@@ -13,8 +13,16 @@ export interface AttemptTestRollup {
 const fetchAttemptRollupByTest = () =>
     from(
         liveQuery(async () => {
-            const attempts = await KuebikoDb.INSTANCE.attempts.where('status').equals('COMPLETED').toArray();
-            const tests = await Dexie.Promise.all(attempts.map(async (a) => await KuebikoDb.INSTANCE.tests.where('uuid').equals(a.testRef).first()));
+            const attempts = await KuebikoDb.INSTANCE.attempts
+                .where('status')
+                .equals('COMPLETED')
+                .toArray();
+            const tests = await Dexie.Promise.all(
+                attempts.map(
+                    async (a) =>
+                        await KuebikoDb.INSTANCE.tests.where('uuid').equals(a.testRef).first(),
+                ),
+            );
 
             return Array.from(
                 attempts
@@ -54,7 +62,15 @@ const fetchAttemptHistoryForTest = (testUuid: string) => from(
             .sortBy('completed')).reverse()
     ));
 
+// prettier-ignore
+const fetchAttempt = async (attemptUuid: string) => 
+    await KuebikoDb.INSTANCE.attempts
+            .where('uuid')
+            .equals(attemptUuid)
+            .first();
+
 export const AttemptsService = {
     fetchAttemptRollupByTest,
     fetchAttemptHistoryForTest,
+    fetchAttempt,
 };

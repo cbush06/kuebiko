@@ -11,7 +11,9 @@ export default new Factory<QuestionResponse>()
         if (n > 0.55) {
             return faker.string.uuid();
         } else if (n > 0.1) {
-            return new Array(faker.number.int({ min: 0, max: 5 })).fill(undefined).map(() => faker.string.uuid());
+            return new Array(faker.number.int({ min: 0, max: 5 }))
+                .fill(undefined)
+                .map(() => faker.string.uuid());
         } else {
             return undefined;
         }

@@ -28,7 +28,10 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
                 content = await zipObj.async('string');
         }
 
-        const hash = (globalThis.electron.ipcRenderer as unknown as IpcRenderer).sendSync('sha256', content);
+        const hash = (globalThis.electron.ipcRenderer as unknown as IpcRenderer).sendSync(
+            'sha256',
+            content,
+        );
 
         if (o.sha256 !== hash) {
             throw new InvalidResourceHashError(o.name, o.uuid);
@@ -46,7 +49,9 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
         try {
             await this.db.resources.add(r);
         } catch (e) {
-            throw new MarshallingDbError(`Failed to write object of type [Resource] with UUID [${r.uuid}] to the database: ${e}`);
+            throw new MarshallingDbError(
+                `Failed to write object of type [Resource] with UUID [${r.uuid}] to the database: ${e}`,
+            );
         }
 
         return r;

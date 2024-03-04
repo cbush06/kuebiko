@@ -1,7 +1,14 @@
 import { TestPackageOption } from './test-package-option';
 import { TestPackagePoint } from './test-package-point';
 
-export type TestPackageQuestionType = 'MULTIPLE' | 'MANY' | 'POINT' | 'FILL' | 'TEXT' | 'DRAGNDROP' | 'HOTAREA';
+export type TestPackageQuestionType =
+    | 'MULTIPLE'
+    | 'MANY'
+    | 'POINT'
+    | 'FILL'
+    | 'TEXT'
+    | 'DRAGNDROP'
+    | 'HOTAREA';
 export type TestPackageAnswerType = string | string[] | TestPackagePoint[];
 
 export interface TestPackageQuestion {

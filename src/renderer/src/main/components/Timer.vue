@@ -3,7 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import { hoursToMilliseconds, millisecondsToHours, millisecondsToMinutes, millisecondsToSeconds, minutesToMilliseconds } from 'date-fns';
+import {
+    hoursToMilliseconds,
+    millisecondsToHours,
+    millisecondsToMinutes,
+    millisecondsToSeconds,
+    minutesToMilliseconds,
+} from 'date-fns';
 import { computed, ref, watch } from 'vue';
 
 export interface TimerProps {
@@ -28,7 +34,9 @@ const mode = computed<'TIMER' | 'STOPWATCH'>(() => {
 const duration = computed(() => {
     const hours = millisecondsToHours(elapsed.value);
     const minutes = millisecondsToMinutes(elapsed.value - hoursToMilliseconds(hours));
-    const seconds = millisecondsToSeconds(elapsed.value - hoursToMilliseconds(hours) - minutesToMilliseconds(minutes));
+    const seconds = millisecondsToSeconds(
+        elapsed.value - hoursToMilliseconds(hours) - minutesToMilliseconds(minutes),
+    );
     return {
         hours,
         minutes,
@@ -50,7 +58,10 @@ watch(
     () => props.ticking,
     (isTicking, oldIsTicking) => {
         if (isTicking === oldIsTicking) return;
-        if (isTicking && ((mode.value === 'TIMER' && props.duration > 0) || mode.value === 'STOPWATCH')) {
+        if (
+            isTicking &&
+            ((mode.value === 'TIMER' && props.duration > 0) || mode.value === 'STOPWATCH')
+        ) {
             if (mode.value === 'TIMER') elapsed.value = props.duration;
 
             timer.value = window.setInterval(() => {

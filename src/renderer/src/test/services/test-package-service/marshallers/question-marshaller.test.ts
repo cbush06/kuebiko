@@ -25,7 +25,12 @@ describe('question marshaller', async () => {
         unmarshall: vi.fn(() => ({})),
     } as unknown as OptionMarshaller;
 
-    let questionMarshaller = new QuestionMarshaller({} as JSZip, {} as unknown as Manifest, kuebikoDb, optionMarshaller);
+    let questionMarshaller = new QuestionMarshaller(
+        {} as JSZip,
+        {} as unknown as Manifest,
+        kuebikoDb,
+        optionMarshaller,
+    );
 
     beforeEach(() => {
         (optionMarshaller.unmarshall as Mock).mockClear();

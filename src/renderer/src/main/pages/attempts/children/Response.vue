@@ -5,7 +5,8 @@
             :class="{
                 'is-success': props.response?.credit === 1,
                 'is-danger': (props.response?.credit ?? 0) < 1 && props.response?.response,
-                'is-grey-dark has-text-white': (props.response?.credit ?? 0) < 1 && !props.response?.response,
+                'is-grey-dark has-text-white':
+                    (props.response?.credit ?? 0) < 1 && !props.response?.response,
             }"
         >
             {{ props.questionNumber }}
@@ -42,10 +43,10 @@
 <script setup lang="ts">
 import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 import MultipleChoice from '@renderer/components/question-renderers/MultipleChoice.vue';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { AnswerType } from '@renderer/db/models/answer';
 import { Question } from '@renderer/db/models/question';
 import { QuestionResponse } from '@renderer/db/models/question-response';
+import { ResourcesService } from '@renderer/services/resources-service';
 import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -66,29 +67,27 @@ const failureFeedback = ref<string>();
 const answer = ref<AnswerType | undefined>(props.response?.response);
 
 watchEffect(async () => {
-    const questionContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(props.question?.contentRef ?? 'nonce')
-            .first()
-    )?.data as string;
-    questionContent.value = props.question?.contentText ?? questionContentResource ?? t('noQuestionContent');
+    try {
+        const questionContentResource = (
+            await ResourcesService.fetchResource(props.question?.contentRef ?? 'nonce')
+        )?.data as string;
+        questionContent.value =
+            props.question?.contentText ?? questionContentResource ?? t('noQuestionContent');
 
-    const successFeedbackContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(props.question?.successFeedbackRef ?? 'nonce')
-            .first()
-    )?.data as string;
-    successFeedback.value = props.question?.successFeedbackText ?? successFeedbackContentResource;
+        const successFeedbackContentResource = (
+            await ResourcesService.fetchResource(props.question?.successFeedbackRef ?? 'nonce')
+        )?.data as string;
+        successFeedback.value =
+            props.question?.successFeedbackText ?? successFeedbackContentResource;
 
-    const failureFeedbackContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(props.question?.failureFeedbackRef ?? 'nonce')
-            .first()
-    )?.data as string;
-    failureFeedback.value = props.question?.failureFeedbackText ?? failureFeedbackContentResource;
+        const failureFeedbackContentResource = (
+            await ResourcesService.fetchResource(props.question?.failureFeedbackRef ?? 'nonce')
+        )?.data as string;
+        failureFeedback.value =
+            props.question?.failureFeedbackText ?? failureFeedbackContentResource;
+    } catch (e) {
+        console.log(e);
+    }
 });
 </script>
 
@@ -97,4 +96,3 @@ watchEffect(async () => {
     min-height: 4rem;
 }
 </style>
-@renderer/db/kuebiko-db@renderer/db/models/answer@renderer/db/models/question@renderer/db/models/question-response

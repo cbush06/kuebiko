@@ -6,7 +6,11 @@
             <div class="box is-flex is-justify-content-flex-end p-2">
                 <div class="file is-info">
                     <label class="file-label">
-                        <input class="file-input" type="file" @input="importTestPackage($event as InputEvent)" />
+                        <input
+                            class="file-input"
+                            type="file"
+                            @input="importTestPackage($event as InputEvent)"
+                        />
                         <span class="file-cta">
                             <span class="file-icon">
                                 <i class="fa-solid fa-upload"></i>
@@ -75,7 +79,9 @@ const columns = computed(
                 title: 'Questions',
                 key: 'questions',
                 sortable: true,
-                computed: useMemoize((v: Test) => v.sections.reduce((total, next) => total + next.questionRefs.length, 0)),
+                computed: useMemoize((v: Test) =>
+                    v.sections.reduce((total, next) => total + next.questionRefs.length, 0),
+                ),
             },
             {
                 title: 'Tags',

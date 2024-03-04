@@ -7,11 +7,14 @@
                 :columns="columns"
                 :hoverable="true"
                 :clickable="true"
-                :sort="{ key: 'testTitle', direction: 'asc' }"
+                :sort="{ key: 'lastAttempt', direction: 'desc' }"
                 @row-click="handleSelection($event)"
             >
                 <template #testTitle="{ row }">
-                    <router-link :to="`/attempts/${(row as AttemptTestRollup).testUuid}`" class="is-underlined">
+                    <router-link
+                        :to="`/attempts/${(row as AttemptTestRollup).testUuid}`"
+                        class="is-underlined"
+                    >
                         {{ (row as AttemptTestRollup).testTitle }}
                     </router-link>
                 </template>
@@ -79,4 +82,3 @@ const handleSelection = (selection: AttemptTestRollup) => {
     }
 }
 </i18n>
-@renderer/services/attempts-service@renderer/store/helmet-store/helmet-store
