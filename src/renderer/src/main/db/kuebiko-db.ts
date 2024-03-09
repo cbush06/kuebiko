@@ -10,6 +10,10 @@ export class KuebikoDb extends Dexie {
     resources!: Table<Resource>;
     attempts!: Table<Attempt>;
 
+    editorTests!: Table<Test>;
+    editorQuestions!: Table<Question>;
+    editorResources!: Table<Resource>;
+
     constructor() {
         super('kuebiko');
         this.version(1).stores({
@@ -17,6 +21,9 @@ export class KuebikoDb extends Dexie {
             questions: '++uuid, *categories',
             resources: '++uuid',
             attempts: '++uuid, testRef, status',
+            editorTests: '++uuid, title, *tags',
+            editorQuestions: '++uuid, *categories',
+            editorResources: '++uuid',
         });
         this.open();
     }

@@ -84,6 +84,10 @@ const columns = computed(
                 ),
             },
             {
+                title: 'Version',
+                key: 'version',
+            },
+            {
                 title: 'Tags',
                 key: 'tags',
             },
@@ -119,4 +123,3 @@ const handleTestSelection = async (test: Test) => {
     }
 }
 </i18n>
-@renderer/db/kuebiko-db@renderer/db/models/test@renderer/services/test-package-service/test-package-marshaller@renderer/services/tests-service@renderer/store/helmet-store/helmet-store@renderer/vue-config/bulma-toast/bulma-toast

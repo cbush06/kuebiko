@@ -4,6 +4,7 @@ import { Section } from './section';
 export interface Test {
     uuid: string;
     title: string;
+    version: number;
     descriptionRef?: string;
     authors: Author[];
     created: Date;

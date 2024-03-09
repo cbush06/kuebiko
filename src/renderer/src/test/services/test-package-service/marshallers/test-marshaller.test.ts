@@ -55,6 +55,7 @@ describe('test marshaller', async () => {
     const toUnmarshal = {
         uuid: 'a3fadkads3',
         title: 'The Test',
+        version: 1,
         allowedTime: 333000,
         descriptionRef: '14669f35-7d26-4f86-97c9-2c38a6a228ed',
         authors: [
@@ -90,6 +91,7 @@ describe('test marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fadkads3',
             title: 'The Test',
+            version: 1,
             allowedTime: 333000,
             descriptionRef: '14669f35-7d26-4f86-97c9-2c38a6a228ed',
             authors: [{ name: 'Author' }],

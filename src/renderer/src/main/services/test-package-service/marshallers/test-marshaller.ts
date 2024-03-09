@@ -38,6 +38,7 @@ export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
         const t = {
             uuid: o.uuid,
             title: o.title,
+            version: o.version,
             descriptionRef: o.descriptionRef,
             authors,
             created: new Date(o.created),

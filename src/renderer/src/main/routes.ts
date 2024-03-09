@@ -3,6 +3,8 @@ import AttemptsVue from './pages/attempts/Attempts.vue';
 import AttemptsForTestVue from './pages/attempts/children/AttemptsForTest.vue';
 import AttemptsRollupVue from './pages/attempts/children/AttemptsRollup.vue';
 import ResultsForAttemptVue from './pages/attempts/children/ResultsForAttempt.vue';
+import EditorVue from './pages/editor/Editor.vue';
+import ListEditorTestsVue from './pages/editor/children/ListEditorTests.vue';
 import HomeVue from './pages/home/Home.vue';
 import TestVue from './pages/testing/Test.vue';
 import ConfigureVue from './pages/testing/children/Configure.vue';
@@ -59,5 +61,15 @@ export default [
                 component: ResultsForAttemptVue,
             },
         ] as RouteRecordSingleView[],
+    },
+    {
+        path: '/editor',
+        component: EditorVue,
+        children: [
+            {
+                path: '',
+                component: ListEditorTestsVue,
+            },
+        ],
     },
 ] as RouteRecordSingleViewWithChildren[];
