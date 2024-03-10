@@ -11,6 +11,7 @@ export interface TreeNodeStruct {
 
 export interface TreeNodeDragData {
     sourceId: string;
+    parentId: string;
 }
 
 export interface TreeNodeDropData extends TreeNodeDragData {

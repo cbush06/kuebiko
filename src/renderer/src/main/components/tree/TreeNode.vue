@@ -112,6 +112,7 @@ function onDragStart(e: DragEvent) {
         'drag-data',
         JSON.stringify({
             sourceId: props.id,
+            parentId: props.parent!.id,
         } as TreeNodeDragData),
     );
     e.dataTransfer.effectAllowed = 'move';
@@ -139,6 +140,7 @@ function onDrop(e: DragEvent, targetId?: string, afterId?: string, beforeId?: st
 
     emit('drop', {
         sourceId: dragData.sourceId,
+        parentId: dragData.parentId,
         targetId: targetId ?? props.id,
         afterId,
         beforeId,
@@ -150,12 +152,7 @@ function onDropChild(e: TreeNodeDropData) {
 }
 
 function onDropBefore(e: DragEvent) {
-    // Users may drop an item at the top of the root tree
-    if (!props.parent) {
-        onDrop(e, props.id, undefined, props.children![0].id);
-        return;
-    }
-    onDrop(e, props.parent?.id, undefined, props.children![0].id);
+    onDrop(e, props.id, undefined, props.children![0].id);
 }
 
 function onDropAfter(e: DragEvent) {

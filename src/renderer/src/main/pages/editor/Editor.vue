@@ -9,9 +9,9 @@
 <script setup lang="ts">
 import NavVue from '@renderer/components/nav/Nav.vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
-import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
+import { TreeNodeStruct } from '@renderer/components/tree/structures';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const helmetStore = useHelmetStore();
@@ -19,7 +19,7 @@ const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: tr
 
 onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 
-const rootNode = {
+const rootNode = ref({
     id: 'tree',
     label: 'Tree',
     iconClass: 'fa-solid fa-flask has-text-primary',
@@ -44,11 +44,7 @@ const rootNode = {
             label: 'Node3',
         },
     ],
-} as TreeNodeStruct;
-
-function onDrop(e: TreeNodeDropData) {
-    console.log(e);
-}
+} as TreeNodeStruct);
 </script>
 
 <style scoped lang="scss"></style>

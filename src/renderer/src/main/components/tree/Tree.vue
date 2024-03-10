@@ -39,8 +39,36 @@ const selected = ref<TreeNodeStruct>();
 
 watch(selected, (s) => console.log(s));
 
-function onDrop(drop: TreeNodeDropData) {
-    emit('drop', drop);
+function findNodeById(id: string, node: TreeNodeStruct): TreeNodeStruct | undefined {
+    if (node.id === id) return node;
+    for (const child of node.children ?? []) {
+        const result = findNodeById(id, child);
+        if (result) return result;
+    }
+    return undefined;
+}
+
+function onDrop(e: TreeNodeDropData) {
+    const nodeBeingMoved = findNodeById(e.sourceId, props.rootNode);
+    const newNodeParent = findNodeById(e.targetId, props.rootNode);
+    const currNodeParent = findNodeById(e.parentId, props.rootNode);
+
+    if (!(nodeBeingMoved && newNodeParent)) return;
+
+    const newLocation = e.afterId
+        ? newNodeParent.children!.findIndex((n) => n.id === e.afterId) + 1
+        : e.beforeId
+          ? newNodeParent.children!.findIndex((n) => n.id === e.beforeId)
+          : 0;
+
+    currNodeParent?.children?.splice(
+        currNodeParent.children.findIndex((n) => n.id === nodeBeingMoved.id),
+        1,
+    );
+
+    newNodeParent.children?.splice(newLocation, 0, nodeBeingMoved);
+
+    emit('drop', e);
 }
 </script>
 
