@@ -117,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import TimerVue from '@renderer/components/Timer.vue';
+import TimerVue from '@renderer/components/timer/Timer.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';

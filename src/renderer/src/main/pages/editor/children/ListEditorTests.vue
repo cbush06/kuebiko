@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import TableVue, { TableColumn } from '@renderer/components/Table.vue';
+import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { Test } from '@renderer/db/models/test';
 import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';

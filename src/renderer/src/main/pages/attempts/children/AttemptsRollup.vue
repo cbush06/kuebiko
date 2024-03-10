@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import TableVue, { TableColumn } from '@renderer/components/Table.vue';
+import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { AttemptTestRollup, AttemptsService } from '@renderer/services/attempts-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { useObservable } from '@vueuse/rxjs';

@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import NavVue from '@renderer/components/Nav.vue';
-import TableVue, { TableColumn } from '@renderer/components/Table.vue';
+import NavVue from '@renderer/components/nav/Nav.vue';
+import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';

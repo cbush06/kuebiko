@@ -57,7 +57,7 @@ import { DistributiveArray } from 'chart.js/dist/types/utils';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'vue-chartjs';
 
-import TableVue, { TableColumn } from '@renderer/components/Table.vue';
+import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { Attempt } from '@renderer/db/models/attempt';
 import { TestsService } from '@renderer/services/tests-service';
 import { differenceInSeconds, format, intervalToDuration } from 'date-fns';

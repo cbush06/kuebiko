@@ -1,15 +1,20 @@
-export interface TreeOptions {
-    rootLabel: string;
-    rootIcon?: string;
-    reorderable?: boolean;
-}
-
-export interface TreeNode {
+export interface TreeNodeStruct {
     id: string;
     label: string;
+    index?: number;
     iconClass?: string;
-    container?: boolean;
-    children?: TreeNode[];
-    expanded?: boolean;
-    disabled?: boolean;
+    children?: TreeNodeStruct[];
+    isExpanded?: boolean;
+    isDisabled?: boolean;
+    isContainer?: boolean;
+}
+
+export interface TreeNodeDragData {
+    sourceId: string;
+}
+
+export interface TreeNodeDropData extends TreeNodeDragData {
+    targetId: string;
+    afterId?: string;
+    beforeId?: string;
 }

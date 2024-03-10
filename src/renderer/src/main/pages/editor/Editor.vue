@@ -1,75 +1,54 @@
 <template>
     <NavVue />
     <div class="container is-max-widescreen mt-4">
-        <router-view />
+        <!-- <router-view /> -->
+        <TreeVue :root-node="rootNode" :collapsible="true" :reorderable="true" @drop="onDrop" />
     </div>
 </template>
 
 <script setup lang="ts">
-import NavVue from '@renderer/components/Nav.vue';
-import { TableColumn } from '@renderer/components/Table.vue';
-import { Test } from '@renderer/db/models/test';
-import { EditorTestsService } from '@renderer/services/editor-tests-service';
+import NavVue from '@renderer/components/nav/Nav.vue';
+import TreeVue from '@renderer/components/tree/Tree.vue';
+import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
-import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
-import { useMemoize } from '@vueuse/core';
-import { useObservable } from '@vueuse/rxjs';
-import { computed, inject, onBeforeMount } from 'vue';
+import { onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 
 const helmetStore = useHelmetStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 
 onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 
-const toast = inject<BulmaToastService>(BulmaToast)!;
-const router = useRouter();
+const rootNode = {
+    id: 'tree',
+    label: 'Tree',
+    iconClass: 'fa-solid fa-flask has-text-primary',
+    children: [
+        {
+            id: 'node1',
+            label: 'Node1',
+            isContainer: true,
+            children: [
+                {
+                    id: 'node2',
+                    label: 'Node2',
+                },
+                {
+                    id: 'node4',
+                    label: 'Node4',
+                },
+            ],
+        },
+        {
+            id: 'node3',
+            label: 'Node3',
+        },
+    ],
+} as TreeNodeStruct;
 
-const data = useObservable(EditorTestsService.fetchAllTests());
-
-const columns = computed(
-    () =>
-        [
-            {
-                title: 'Title',
-                key: 'title',
-                sortable: true,
-            },
-            {
-                title: 'Questions',
-                key: 'questions',
-                sortable: true,
-                computed: useMemoize((v: Test) =>
-                    v.sections.reduce((total, next) => total + next.questionRefs.length, 0),
-                ),
-            },
-            {
-                title: 'Version',
-                key: 'version',
-            },
-            {
-                title: 'Tags',
-                key: 'tags',
-            },
-        ] as TableColumn<Test>[],
-);
-
-const importTestPackage = async (e: InputEvent) => {
-    // const packageFile = (e.target as HTMLInputElement).files?.[0];
-    // if (packageFile) {
-    //     try {
-    //         await TestPackageMarshaller.unmarshal(packageFile, KuebikoDb.INSTANCE);
-    //     } catch (e) {
-    //         toast.danger({ message: `Uh oh! An error occurred during import: ${e}` });
-    //     }
-    // }
-    // (e.target as HTMLInputElement).value = '';
-};
-
-const handleTestSelection = async (test: Test) => {
-    router.push(`/editor/${test.uuid}`);
-};
+function onDrop(e: TreeNodeDropData) {
+    console.log(e);
+}
 </script>
 
 <style scoped lang="scss"></style>
