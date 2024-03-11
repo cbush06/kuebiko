@@ -40,4 +40,3 @@ watch(
     }
 }
 </i18n>
-@renderer/store/test-delivery-store/test-delivery-store@renderer/store/helmet-store/helmet-store

@@ -5,3 +5,10 @@
 @import '~/bulma/bulma.sass';
 @import '~/bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
 @import '~/bulma-multiselect/sass/multiselect';
+
+html,
+body,
+#app,
+#app > .container {
+    height: 100%;
+}

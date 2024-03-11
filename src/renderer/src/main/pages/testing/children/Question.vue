@@ -104,4 +104,3 @@ testDeliveryStore.deliveryItem?.visit();
 <style scoped></style>
 
 <i18n lang="json"></i18n>
-@renderer/db/kuebiko-db@renderer/db/models/answer@renderer/store/test-delivery-store/delivery-item/question-delivery-item@renderer/store/test-delivery-store/test-delivery-store

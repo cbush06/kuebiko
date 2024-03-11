@@ -5,6 +5,7 @@ import AttemptsRollupVue from './pages/attempts/children/AttemptsRollup.vue';
 import ResultsForAttemptVue from './pages/attempts/children/ResultsForAttempt.vue';
 import EditorVue from './pages/editor/Editor.vue';
 import ListEditorTestsVue from './pages/editor/children/ListEditorTests.vue';
+import TestEditorVue from './pages/editor/children/TestEditor.vue';
 import HomeVue from './pages/home/Home.vue';
 import TestVue from './pages/testing/Test.vue';
 import ConfigureVue from './pages/testing/children/Configure.vue';
@@ -69,6 +70,10 @@ export default [
             {
                 path: '',
                 component: ListEditorTestsVue,
+            },
+            {
+                path: 'edit/:testUuid?',
+                component: TestEditorVue,
             },
         ],
     },

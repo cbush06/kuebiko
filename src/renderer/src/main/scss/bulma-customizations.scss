@@ -17,9 +17,26 @@ $spacing-values: (
     '6': 3rem,
 ) !default;
 
-@each $name, $pair in $spacing-values {
+@each $name, $value in $spacing-values {
     .is-flex-gap-#{$name} {
-        gap: $pair !important;
+        gap: $value !important;
+    }
+}
+
+// Height/Width
+$size-values: (
+    '25': 25%,
+    '50': 50%,
+    '75': 75%,
+    '100': 100%,
+) !default;
+
+@each $name, $value in $size-values {
+    .w-#{$name} {
+        width: $value !important;
+    }
+    .h-#{$name} {
+        height: $value !important;
     }
 }
 

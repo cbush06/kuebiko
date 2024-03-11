@@ -17,12 +17,12 @@
                     </span>
                 </label>
             </div>
-            <button class="button is-primary">
+            <router-link to="/editor/edit" class="button is-primary">
                 <span class="icon">
                     <i class="fa-solid fa-plus"></i>
                 </span>
                 <span> Create New Project </span>
-            </button>
+            </router-link>
         </div>
         <div class="box">
             <!-- prettier-ignore -->

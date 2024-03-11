@@ -45,7 +45,7 @@
                 <div class="buttons">
                     <button
                         v-if="!testDeliveryStore.inProgress && !testDeliveryStore.completed"
-                        class="button is-link"
+                        class="button is-med is-link"
                         @click="goHome()"
                     >
                         <i class="fa-solid fa-house mr-2"></i> Home
@@ -230,6 +230,9 @@ const outOfTime = () => {
 </script>
 
 <style scoped lang="scss">
+@import '@renderer/scss/bulma-customizations.scss';
+@import '~/bulma/bulma.sass';
+
 .navbar-top-content {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -292,4 +295,3 @@ const outOfTime = () => {
     }
 }
 </style>
-@renderer/db/kuebiko-db@renderer/db/models/test@renderer/store/test-configuration-store/test-configuration-store@renderer/store/test-delivery-store/delivery-item/question-delivery-item@renderer/store/test-delivery-store/delivery-item/section-delivery-item@renderer/store/test-delivery-store/test-delivery-store@renderer/store/test-delivery-store/test-delivery-store-initializer@renderer/vue-config/bulma-toast/bulma-toast

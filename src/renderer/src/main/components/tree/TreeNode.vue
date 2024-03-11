@@ -315,7 +315,8 @@ function onDragEndLeave(e: DragEvent) {
             display: none;
         }
 
-        .children + .expander::before {
+        .children + .expander::before,
+        .drop-line + .expander::before {
             content: '\f0fe';
         }
     }

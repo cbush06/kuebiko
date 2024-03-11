@@ -46,4 +46,3 @@ testDeliveryStore.deliveryItem?.visit();
     }
 }
 </i18n>
-@renderer/store/test-delivery-store/test-delivery-store@renderer/db/kuebiko-db@renderer/store/test-delivery-store/delivery-item/section-delivery-item

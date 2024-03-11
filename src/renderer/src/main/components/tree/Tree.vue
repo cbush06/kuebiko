@@ -10,14 +10,14 @@
             :tree-options="props"
             :selected-node="selected"
             :is-container="true"
-            @select="(struct) => (selected = struct)"
+            @select="onSelect"
             @drop="onDrop"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import TreeNodeVue from './TreeNode.vue';
 import { TreeNodeDropData, TreeNodeStruct } from './structures';
 
@@ -34,10 +34,13 @@ interface TreeProps {
 }
 
 const props = defineProps<TreeOptions & TreeProps>();
-const emit = defineEmits(['drop']);
+const emit = defineEmits(['drop', 'select']);
 const selected = ref<TreeNodeStruct>();
 
-watch(selected, (s) => console.log(s));
+function onSelect(node: TreeNodeStruct) {
+    selected.value = node;
+    emit('select', node);
+}
 
 function findNodeById(id: string, node: TreeNodeStruct): TreeNodeStruct | undefined {
     if (node.id === id) return node;
