@@ -1,5 +1,5 @@
 <template>
-    <div class="section is-flex is-flex-direction-column is-flex-gap-2">
+    <div class="section is-flex is-flex-direction-column is-flex-gap-2 w-100">
         <h1 class="title mb-1">{{ t('projects') }}</h1>
         <div class="box is-flex is-flex-gap-2 is-justify-content-flex-end p-2">
             <div class="file is-info">

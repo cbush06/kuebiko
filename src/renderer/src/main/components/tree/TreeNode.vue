@@ -98,7 +98,7 @@ const iconClass = computed(() => {
     return props.iconClass;
 });
 
-const isSelected = computed(() => props.selectedNode === props);
+const isSelected = computed(() => props.selectedNode?.id === props.id);
 
 function select() {
     emit('select', props);

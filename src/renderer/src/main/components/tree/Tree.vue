@@ -31,11 +31,12 @@ export interface TreeOptions {
 
 interface TreeProps {
     rootNode: TreeNodeStruct;
+    selected?: TreeNodeStruct;
 }
 
 const props = defineProps<TreeOptions & TreeProps>();
 const emit = defineEmits(['drop', 'select']);
-const selected = ref<TreeNodeStruct>();
+const selected = ref<TreeNodeStruct | undefined>(props.selected);
 
 function onSelect(node: TreeNodeStruct) {
     selected.value = node;

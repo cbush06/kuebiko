@@ -7,6 +7,7 @@ export interface TreeNodeStruct {
     isExpanded?: boolean;
     isDisabled?: boolean;
     isContainer?: boolean;
+    data?: any;
 }
 
 export interface TreeNodeDragData {

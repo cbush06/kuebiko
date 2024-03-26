@@ -88,8 +88,48 @@ $table-row-hover-background-color: #ccc;
     }
 }
 
+// Rounded Borders
+.rounded-none {
+    border-radius: 0px;
+}
+.rounded-sm {
+    border-radius: 0.125rem; /* 2px */
+}
+.rounded {
+    border-radius: 0.25rem; /* 4px */
+}
+.rounded-md {
+    border-radius: 0.375rem; /* 6px */
+}
+.rounded-lg {
+    border-radius: 0.5rem; /* 8px */
+}
+.rounded-xl {
+    border-radius: 0.75rem; /* 12px */
+}
+.rounded-2xl {
+    border-radius: 1rem; /* 16px */
+}
+.rounded-3xl {
+    border-radius: 1.5rem; /* 24px */
+}
+
 // Fills Box Width
 .is-full-box-width {
     margin-left: -#{$box-padding};
     margin-right: -#{$box-padding};
+}
+
+// Colored Box-shadows
+@each $name, $pair in $colors {
+    .has-#{$name}-shadow {
+        box-shadow: 0 0 0 0.125em rgb(from nth($pair, 1) r g b / 0.25);
+    }
+}
+
+// Shaded Box-shadows
+@each $name, $color in $shades {
+    .has-#{$name}-shadow {
+        box-shadow: 0 0 0 0.125em rgb(from nth($color, 1) r g b / 0.25);
+    }
 }

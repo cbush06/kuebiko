@@ -46,7 +46,7 @@ export default defineConfig({
                             ),
                         ),
                         dest: normalizePath(
-                            resolve(__dirname, 'src/renderer/src/main/assets/public/webfonts'),
+                            resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
                         ),
                     },
                     {
@@ -56,6 +56,16 @@ export default defineConfig({
                                 'node_modules/@fortawesome/fontawesome-free/webfonts/*',
                             ),
                         ),
+                        dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
+                    },
+                    {
+                        src: normalizePath(resolve(__dirname, 'node_modules/@mdi/font/fonts/*')),
+                        dest: normalizePath(
+                            resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
+                        ),
+                    },
+                    {
+                        src: normalizePath(resolve(__dirname, 'node_modules/@mdi/font/fonts/*')),
                         dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
                     },
                 ],

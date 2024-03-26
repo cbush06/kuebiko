@@ -1,6 +1,6 @@
 <template>
     <NavVue />
-    <div class="editor container is-max-widescreen mt-4">
+    <div class="editor is-flex is-flex-direction-column h-100">
         <router-view />
     </div>
 </template>
@@ -23,7 +23,7 @@ onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 
 .editor {
     // Negate .has-navbar-fixed-bottom
-    height: calc(100% + $navbar-height - 1em) !important;
+    height: calc(100% + $navbar-height) !important;
 }
 </style>
 

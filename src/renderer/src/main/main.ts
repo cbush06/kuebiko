@@ -11,6 +11,9 @@ import { createPinia } from 'pinia';
 import { HelmetStoreState, useHelmetStore } from './store/helmet-store/helmet-store';
 import { VueI18n } from './vue-config/vuei18n/vuei18n';
 
+import '~/@milkdown/theme-nord/src/style.css';
+import '~/prosemirror-view/style/prosemirror.css';
+
 // Register service worker
 navigator.serviceWorker.register(ResourceRequestInterceptor, {
     type: 'module',
