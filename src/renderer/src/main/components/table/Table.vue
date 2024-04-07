@@ -23,9 +23,25 @@
                 :class="`${clickable ? 'is-clickable' : ''}`"
             >
                 <td v-for="column in columns">
-                    <slot :name="column.key" :row="row">
+                    <slot
+                        v-if="!(column.editable && props.mode === 'edit')"
+                        :name="propIdToString(column.key)"
+                        :row="row"
+                    >
                         {{ getColumnValue(column, row) }}
                     </slot>
+                    <slot v-else :name="propIdToString(column.key) + '-edit'" :row="row">
+                        <input
+                            type="text"
+                            class="input"
+                            :id="propIdToString(column.key) + '-edit'"
+                            :placeholder="column.title"
+                            v-model="row[column.key]"
+                        />
+                    </slot>
+                </td>
+                <td v-if="$slots.controls">
+                    <slot name="controls" :row="row"></slot>
                 </td>
             </tr>
         </tbody>
@@ -65,6 +81,7 @@ export interface TableColumn<T> {
     formatter: (v: any) => string;
     sortable?: boolean;
     comparator?: ColumnComparator<T>;
+    editable?: boolean;
 }
 
 export interface TableProps<T> {
@@ -77,6 +94,7 @@ export interface TableProps<T> {
     sort?: SortBy<T>;
     noDataMessage?: string;
     noFilterResultsMessage?: string;
+    mode?: 'view' | 'edit';
 }
 
 const props = defineProps<TableProps<any>>();
@@ -145,32 +163,46 @@ const getColumnValue = <T,>(column: TableColumn<T>, row: any) => {
     if (column.formatter) return column.formatter(rawValue);
     return rawValue;
 };
+
+const propIdToString = (propId: keyof any) => {
+    if (typeof propId === 'symbol') {
+        return propId.description;
+    }
+    return propId.toString();
+};
 </script>
 
 <style scoped lang="scss">
-th {
-    display: table-cell;
-    vertical-align: middle;
+table {
+    td {
+        display: table-cell;
+        vertical-align: middle;
+    }
 
-    &.sortable {
-        &::after {
-            display: inline-block;
+    th {
+        display: table-cell;
+        vertical-align: middle;
 
-            margin-top: auto;
-            margin-bottom: auto;
-            margin-left: 0.5rem;
+        &.sortable {
+            &::after {
+                display: inline-block;
 
-            text-rendering: auto;
-            font: var(--fa-font-solid);
-            content: '\f0dc';
-        }
+                margin-top: auto;
+                margin-bottom: auto;
+                margin-left: 0.5rem;
 
-        &.asc::after {
-            content: '\f0de';
-        }
+                text-rendering: auto;
+                font: var(--fa-font-solid);
+                content: '\f0dc';
+            }
 
-        &.desc::after {
-            content: '\f0dd';
+            &.asc::after {
+                content: '\f0de';
+            }
+
+            &.desc::after {
+                content: '\f0dd';
+            }
         }
     }
 }

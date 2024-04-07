@@ -2,22 +2,7 @@
     <div
         class="is-flex is-flex-direction-row stretch is-flex-grow-0 is-flex-shrink-0 is-grey-lighter-border has-bottom-border-1"
     >
-        <div class="field has-addons pt-1 pb-1 is-flex is-flex-direction-row w-100">
-            <div class="control is-flex-grow-1">
-                <input type="text" class="input is-medium is-radiusless" placeholder="Test Title" />
-            </div>
-            <div class="control is-flex-grow-0">
-                <button class="button is-success is-medium is-radiusless">
-                    <span class="icon"><i class="fa-solid fa-check"></i></span>
-                    <span>Save</span>
-                </button>
-            </div>
-            <div class="control is-flex-grow-0">
-                <button class="button is-danger is-outlined is-medium is-radiusless">
-                    <span class="icon"><i class="fa-solid fa-xmark"></i></span>
-                </button>
-            </div>
-        </div>
+        <span class="is-size-3 pl-2">Untitled</span>
     </div>
     <div class="columns is-flex-grow-1 m-0">
         <div
@@ -45,7 +30,7 @@
         </div>
         <div class="column">
             <MilkdownProvider>
-                <TestDetails />
+                <TestDetailsEditor />
             </MilkdownProvider>
         </div>
     </div>
@@ -56,7 +41,7 @@ import { MilkdownProvider } from '@milkdown/vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeStruct } from '@renderer/components/tree/structures';
 import { ref } from 'vue';
-import TestDetails from '../editors/TestDetails.vue';
+import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
 
 const rootNode = ref({
     id: 'tree',

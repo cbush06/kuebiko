@@ -7,13 +7,17 @@
     padding: 0.3rem;
     @extend .has-border-1, .is-grey-lighter-border;
 
+    &.editor {
+        min-height: 20rem;
+    }
+
     &:hover:not(.ProseMirror-focused) {
         @extend .is-grey-light-border;
     }
 
     &.ProseMirror-focused {
-        @extend .is-primary-border;
-        @extend .has-primary-shadow;
+        @extend .is-link-border;
+        @extend .has-link-shadow;
     }
 
     & .selectedCell:after {

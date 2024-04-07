@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import { menu } from '@milkdown-lab/plugin-menu';
 import { Editor, defaultValueCtx, rootCtx } from '@milkdown/core';
+import { listener } from '@milkdown/plugin-listener';
 import { commonmark } from '@milkdown/preset-commonmark';
 import { gfm } from '@milkdown/preset-gfm';
 import { Milkdown, useEditor } from '@milkdown/vue';
@@ -28,6 +29,7 @@ useEditor((root) =>
         .use(commonmark)
         .use(gfm)
         .use(menu)
+        .use(listener)
         .use(customMenuCommands(async () => await lastValueFrom(imageSelector.value!.show()))),
 );
 </script>

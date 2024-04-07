@@ -1,13 +1,13 @@
 import { MenuConfigItem, menuConfigCtx } from '@milkdown-lab/plugin-menu';
-import { editorStateCtx, schemaCtx } from '@milkdown/core';
+import { editorStateCtx, rootCtx, schemaCtx } from '@milkdown/core';
 import { Ctx } from '@milkdown/ctx';
+import { listenerCtx } from '@milkdown/plugin-listener';
 import { MarkType } from '@milkdown/prose/model';
 import { EditorState } from '@milkdown/prose/state';
 import { deleteColumnCommand } from './delete-column-cmd';
 import { deleteRowCommand } from './delete-row-cmd';
 import { deleteTableCommand } from './delete-table-cmd';
 import { ImageSelectorCallback, ImageSelectorCommand } from './image-selector-cmd';
-import { liftListItemCommand } from './lift-list-item-cmd';
 import './milkdown-menu.scss';
 
 const createIconContent = (clazz: string, label?: string) => {
@@ -30,7 +30,6 @@ const hasMark = (state: EditorState, type: MarkType | undefined): boolean => {
 
 export const customMenuCommands = (imageSelectorCallback: ImageSelectorCallback) => [
     deleteColumnCommand,
-    liftListItemCommand,
     deleteRowCommand,
     deleteTableCommand,
     ImageSelectorCommand(imageSelectorCallback),
@@ -43,9 +42,18 @@ const buildMenu = () => {
                 type: 'select',
                 text: 'Heading',
                 options: [
-                    { id: 1, content: 'Large Heading' },
-                    { id: 2, content: 'Medium Heading' },
-                    { id: 3, content: 'Small Heading' },
+                    {
+                        id: 1,
+                        content: createIconContent('mdi mdi-22px mdi-format-header-1', 'Heading 1'),
+                    },
+                    {
+                        id: 2,
+                        content: createIconContent('mdi mdi-22px mdi-format-header-2', 'Heading 2'),
+                    },
+                    {
+                        id: 3,
+                        content: createIconContent('mdi mdi-22px mdi-format-header-3', 'Heading 3'),
+                    },
                     { id: 0, content: 'Plain Text' },
                 ],
                 onSelect: (id) => (!!id ? ['WrapInHeading', id] : ['TurnIntoText', null]),
@@ -97,7 +105,7 @@ const buildMenu = () => {
             {
                 type: 'button',
                 content: createIconContent('mdi mdi-22px mdi-format-indent-decrease'),
-                key: 'KuebikoLiftListItem',
+                key: 'LiftListItem',
             },
             {
                 type: 'button',
@@ -106,7 +114,6 @@ const buildMenu = () => {
             },
         ],
         [
-            //Notice: this two command work properly, but maybe need improve UX
             {
                 type: 'button',
                 content: createIconContent('mdi mdi-22px mdi-link-variant'),
@@ -130,31 +137,49 @@ const buildMenu = () => {
                     },
                     {
                         id: 'DeleteTable',
-                        content: createIconContent('mdi mdi-22px mdi-table-remove'),
+                        content: createIconContent('mdi mdi-22px mdi-table-remove', 'Remove Table'),
                     },
                     {
                         id: 'AddColBefore',
-                        content: createIconContent('mdi mdi-22px mdi-table-column-plus-before'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-column-plus-before',
+                            'Add Column',
+                        ),
                     },
                     {
                         id: 'AddColAfter',
-                        content: createIconContent('mdi mdi-22px mdi-table-column-plus-after'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-column-plus-after',
+                            'Add Column',
+                        ),
                     },
                     {
                         id: 'AddRowBefore',
-                        content: createIconContent('mdi mdi-22px mdi-table-row-plus-before'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-row-plus-before',
+                            'Add Row',
+                        ),
                     },
                     {
                         id: 'AddRowAfter',
-                        content: createIconContent('mdi mdi-22px mdi-table-row-plus-after'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-row-plus-after',
+                            'Add Row',
+                        ),
                     },
                     {
                         id: 'DeleteColumn',
-                        content: createIconContent('mdi mdi-22px mdi-table-column-remove'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-column-remove',
+                            'Remove Column',
+                        ),
                     },
                     {
                         id: 'DeleteRow',
-                        content: createIconContent('mdi mdi-22px mdi-table-row-remove'),
+                        content: createIconContent(
+                            'mdi mdi-22px mdi-table-row-remove',
+                            'Remove Row',
+                        ),
                     },
                 ],
                 onSelect: (id: string) => id.split(','),
@@ -186,5 +211,16 @@ export const menuConfig = (ctx: Ctx) => {
     ctx.set(menuConfigCtx.key, {
         attributes: { class: 'milkdown-menu', 'data-menu': 'true' },
         items: buildMenu(),
+    });
+
+    // Give focus back to editor after a menu selection is made
+    const listener = ctx.get(listenerCtx);
+    listener.mounted((ctx) => {
+        // Register event listeners on all menu buttons
+        const root = ctx.get(rootCtx) as HTMLElement;
+        const editor = root.querySelector('.editor[contenteditable=true]') as HTMLElement;
+        root.querySelectorAll(
+            '.milkdown-menu button:not([aria-haspopup]), li[role="menuitem"]',
+        ).forEach((e) => (e as HTMLElement).addEventListener('click', () => editor.focus()));
     });
 };
