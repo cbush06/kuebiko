@@ -1,9 +1,6 @@
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
-import vue from '@vitejs/plugin-vue';
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
+import { externalizeDepsPlugin, defineConfig } from 'electron-vite';
 import { resolve } from 'path';
-import { normalizePath } from 'vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+import KuebikoViteConfig from './vite.config';
 
 export default defineConfig({
     main: {
@@ -26,63 +23,5 @@ export default defineConfig({
             },
         },
     },
-    renderer: {
-        resolve: {
-            alias: {
-                '@renderer': resolve(__dirname, 'src/renderer/src/main'),
-                '~': resolve(__dirname, 'node_modules'),
-                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
-            },
-        },
-        plugins: [
-            vue(),
-            viteStaticCopy({
-                targets: [
-                    {
-                        src: normalizePath(
-                            resolve(
-                                __dirname,
-                                'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                            ),
-                        ),
-                        dest: normalizePath(
-                            resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
-                        ),
-                    },
-                    {
-                        src: normalizePath(
-                            resolve(
-                                __dirname,
-                                'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                            ),
-                        ),
-                        dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
-                    },
-                    {
-                        src: normalizePath(resolve(__dirname, 'node_modules/@mdi/font/fonts/*')),
-                        dest: normalizePath(
-                            resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
-                        ),
-                    },
-                    {
-                        src: normalizePath(resolve(__dirname, 'node_modules/@mdi/font/fonts/*')),
-                        dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
-                    },
-                ],
-            }),
-            VueI18nPlugin({
-                include: 'json',
-                jitCompilation: true,
-                runtimeOnly: true,
-                compositionOnly: true,
-            }),
-        ],
-        build: {
-            rollupOptions: {
-                input: {
-                    index: resolve(__dirname, 'src/renderer/index.html'),
-                },
-            },
-        },
-    },
+    renderer: KuebikoViteConfig,
 });

@@ -116,7 +116,7 @@
                             v-model="filterBySection"
                             :options="sectionOptions"
                             track-by="uuid"
-                            :multiple="true"
+                            multiple
                             :close-on-select="false"
                             :clear-on-select="false"
                             label="title"
@@ -132,7 +132,7 @@
                             style="min-width: 30rem"
                             v-model="filterByCategory"
                             :options="categoryOptions"
-                            :multiple="true"
+                            multiple
                             :close-on-select="false"
                             :clear-on-select="false"
                         />
@@ -187,8 +187,11 @@ import { CategoryQuestionFilter } from '@renderer/store/test-delivery-store/ques
 import { CompoundQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/compound-question-filter';
 import { MatchAllQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/match-all-question-filter';
 import { SectionQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/section-question-filter';
-import { clockFormatToDuration, durationToClockFormat } from '@renderer/utils/datetime-utils';
-import { createMask } from 'imask';
+import {
+    clockFormatToDuration,
+    durationMask,
+    durationToClockFormat,
+} from '@renderer/utils/datetime-utils';
 import { nextTick, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IMaskComponent as VueMask } from 'vue-imask';
@@ -216,8 +219,6 @@ const test = ref<Test>();
 const testQuestions = ref<Question[]>([]);
 
 const duration = ref<string>('');
-
-const durationMask = ref(createMask({ mask: '00:`00:`00', lazy: false }));
 
 onBeforeMount(async () => {
     test.value = await TestsService.fetchTest(route.params['testUuid'] as string);

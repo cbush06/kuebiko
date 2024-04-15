@@ -2,11 +2,13 @@
     <div
         class="is-flex is-flex-direction-row stretch is-flex-grow-0 is-flex-shrink-0 is-grey-lighter-border has-bottom-border-1"
     >
-        <span class="is-size-3 pl-2">Untitled</span>
+        <span class="is-size-3 pl-2">{{
+            testEditorStore.test.title.trim().length ? testEditorStore.test.title : 'Untitled'
+        }}</span>
     </div>
-    <div class="columns is-flex-grow-1 m-0">
+    <div class="is-flex-grow-1 m-0 is-flex is-overflow-hidden">
         <div
-            class="column is-flex is-flex-direction-column is-align-items-center is-two-fifths-tablet is-one-quarter-desktop pt-5 is-grey-lighter-border has-right-border-1"
+            class="is-flex is-flex-grow-0 is-flex-shrink-0 w-auto is-flex-direction-column is-align-items-center p-4 is-grey-lighter-border has-right-border-1"
         >
             <div
                 class="is-flex is-flex-direction-row is-justify-content-space-between is-flex-gap-1 mb-4"
@@ -28,7 +30,7 @@
                 @select="(e) => (selected = e)"
             />
         </div>
-        <div class="column">
+        <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
             <MilkdownProvider>
                 <TestDetailsEditor />
             </MilkdownProvider>
@@ -40,6 +42,7 @@
 import { MilkdownProvider } from '@milkdown/vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeStruct } from '@renderer/components/tree/structures';
+import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import { ref } from 'vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
 
@@ -74,6 +77,8 @@ const rootNode = ref({
 } as TreeNodeStruct);
 
 const selected = ref<TreeNodeStruct>(rootNode.value);
+
+const testEditorStore = useTestEditorStore();
 </script>
 
 <style scoped lang="scss"></style>

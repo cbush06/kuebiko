@@ -1,11 +1,12 @@
 @import './scss/fontawesome.scss';
 @import './scss/mdi.scss';
 @import './scss/bulma-customizations.scss';
-@import '~/bulma-slider/src/sass/index';
+@import './scss/vue-tags-input.scss';
+@import '~bulma-slider/src/sass/index';
 @import './scss/bulma-ribbon.scss';
-@import '~/bulma/bulma.sass';
-@import '~/bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
-@import '~/bulma-multiselect/sass/multiselect';
+@import '~bulma/bulma.sass';
+@import '~bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
+@import '~bulma-multiselect/sass/multiselect';
 
 html,
 body,

@@ -5,6 +5,16 @@ import ResultsForAttemptVue from '@renderer/pages/attempts/children/ResultsForAt
 import { fireEvent, render } from '@testing-library/vue';
 import { of } from 'rxjs';
 
+// Mock the ResizeObserver
+const ResizeObserverMock = vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+}));
+
+// Stub the global ResizeObserver
+vi.stubGlobal('ResizeObserver', ResizeObserverMock);
+
 vi.mock('vue-router', () => ({
     useRoute: vi.fn().mockImplementation(() => ({
         params: {
@@ -49,7 +59,7 @@ vi.mock('@renderer/services/tests-service.ts', () => {
                         tags: [],
                         passingPercentage: 0.75,
                         allowedTime: 3600000, // 60 mins
-                    }) as Test,
+                    }) as unknown as Test,
             ),
         },
     };

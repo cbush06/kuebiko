@@ -169,7 +169,7 @@ import {
     PieController,
     Tooltip,
 } from 'chart.js';
-import { DistributiveArray } from 'chart.js/dist/types/utils';
+import { DistributiveArray } from '~/chart.js/dist/types/utils';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { format } from 'date-fns/format';

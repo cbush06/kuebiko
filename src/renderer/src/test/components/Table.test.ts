@@ -1,4 +1,4 @@
-import TableVue, { ColumnComparator } from '@renderer/components/Table.vue';
+import TableVue, { ColumnComparator } from '@renderer/components/table/Table.vue';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/vue';
 
@@ -27,7 +27,7 @@ describe('table component', () => {
 
         // prettier-ignore
         columns.map(c => c.title)
-            .forEach((title) => 
+            .forEach((title) =>
                 expect(getByText(title, { selector: 'th' })).toBeInTheDocument()
             );
 

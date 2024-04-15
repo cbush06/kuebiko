@@ -1,7 +1,7 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron';
+import { electronApp, is, optimizer } from '@electron-toolkit/utils';
+import { BinaryLike, randomUUID } from 'crypto';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils';
-import { BinaryLike } from 'crypto';
 import sha256 from './sha256';
 // import icon from '../../resources/icon.png?asset'
 
@@ -61,6 +61,11 @@ app.whenReady().then(() => {
     // Provide SHA-256 Hasher to Marshaller
     ipcMain.on('sha256', (e, data: BinaryLike) => {
         e.returnValue = sha256(data);
+    });
+
+    // Provide random UUID generation
+    ipcMain.on('randomUUID', (e) => {
+        e.returnValue = randomUUID();
     });
 
     createWindow();

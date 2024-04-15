@@ -13,6 +13,7 @@
             >
                 {{ column.title }}
             </th>
+            <th v-if="$slots.controls"></th>
         </thead>
         <tbody v-if="preparedData?.length">
             <tr
@@ -47,17 +48,20 @@
         </tbody>
         <tbody v-if="!preparedData?.length">
             <tr>
-                <td :colspan="columns.length">
-                    <div class="container">
-                        <div
-                            class="notification is-info is-light is-flex is-justify-content-center"
-                        >
-                            {{ emptyTableMessage }}
-                        </div>
+                <td :colspan="columns.length + ($slots.controls ? 1 : 0)">
+                    <div class="notification is-info is-light is-flex is-justify-content-center">
+                        {{ emptyTableMessage }}
                     </div>
                 </td>
             </tr>
         </tbody>
+        <tfoot v-if="$slots.footer">
+            <tr>
+                <td :colspan="columns.length + ($slots.controls ? 1 : 0)">
+                    <slot name="footer"></slot>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </template>
 

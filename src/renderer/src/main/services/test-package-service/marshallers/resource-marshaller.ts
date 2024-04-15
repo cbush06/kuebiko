@@ -1,5 +1,4 @@
 import { Resource, ResourceType } from '@renderer/db/models/resource';
-import { IpcRenderer } from 'electron';
 import { InvalidResourceHashError } from '../errors/invalid-resource-hash-error';
 import { MarshallingDbError } from '../errors/marshalling-db-error';
 import { MissingReferenceError } from '../errors/missing-reference-error';
@@ -28,10 +27,7 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
                 content = await zipObj.async('string');
         }
 
-        const hash = (globalThis.electron.ipcRenderer as unknown as IpcRenderer).sendSync(
-            'sha256',
-            content,
-        );
+        const hash = globalThis.kuebikoAPI.sha256(content);
 
         if (o.sha256 !== hash) {
             throw new InvalidResourceHashError(o.name, o.uuid);

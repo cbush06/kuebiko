@@ -1,0 +1,72 @@
+@import '~bulma/sass/utilities/initial-variables.sass';
+@import '~bulma/sass/utilities/derived-variables.sass';
+@import '~bulma/sass/form/shared.sass';
+@import '~bulma/sass/elements/tag.sass';
+@import './fontawesome.scss';
+
+$icon-font-size: 0.7em;
+
+#app {
+    .vue-tags-input {
+        background: transparent;
+        border: 0;
+        max-width: unset;
+
+        &.ti-focus {
+            .ti-input {
+                @extend :focus;
+            }
+        }
+
+        .ti-input {
+            @extend .input;
+
+            height: auto !important;
+            width: unset;
+
+            .ti-tags {
+                .ti-tag {
+                    background: $primary;
+                    color: $white;
+                    border-radius: $tag-radius;
+                    font-size: 1em;
+
+                    .ti-actions {
+                        i.ti-icon-close {
+                            position: relative;
+                            width: 0.8em;
+                            height: 100%;
+                            margin-left: 0.2em;
+                            font-family: 'Font Awesome 6 Free' !important;
+                            font-weight: 900 !important;
+                            color: bulmaRgba($black, 50%);
+                            font-size: $icon-font-size;
+                            line-height: $icon-font-size;
+                            @extend .fa-solid, .fa-xmark;
+
+                            &:hover,
+                            &.active {
+                                color: $white;
+                            }
+
+                            &:before {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(calc(-1 * ($icon-font-size/2)));
+                            }
+                        }
+                    }
+                }
+
+                .ti-new-tag-input-wrapper {
+                    font-size: 1em;
+                    padding: 0;
+
+                    .ti-new-tag-input {
+                        font-size: 1em;
+                    }
+                }
+            }
+        }
+    }
+}

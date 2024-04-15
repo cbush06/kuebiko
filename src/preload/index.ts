@@ -1,6 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 import { BinaryLike } from 'crypto';
+import { contextBridge, ipcRenderer } from 'electron';
 
 // Custom APIs for renderer
 const api = {};
@@ -13,7 +13,8 @@ if (process.contextIsolated) {
         contextBridge.exposeInMainWorld('electron', electronAPI);
         contextBridge.exposeInMainWorld('api', api);
         contextBridge.exposeInMainWorld('kuebikoAPI', {
-            sha256: (data: BinaryLike) => ipcRenderer.send('sha256', data),
+            sha256: (data: BinaryLike) => ipcRenderer.sendSync('sha256', data),
+            randomUUID: () => ipcRenderer.sendSync('randomUUID'),
         });
     } catch (error) {
         console.error(error);

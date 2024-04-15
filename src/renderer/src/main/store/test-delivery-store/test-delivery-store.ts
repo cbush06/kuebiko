@@ -55,7 +55,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
         isNextItemNewSection(state) {
             const isNextItemSection =
                 state.deliveryItems[state.deliveryItemIndex + 1] instanceof SectionDeliveryItem;
-            return this.canGoForward && isNextItemSection;
+            return state.canGoForward && isNextItemSection;
         },
         canGoForward: (state) =>
             !!state.test && state.deliveryItemIndex < state.deliveryItems.length - 1,
@@ -71,7 +71,7 @@ export const useTestDeliveryStore = defineStore('test-delivery', {
         currentQuestionNumber: (state) => state.deliveryItem 
             ? state.deliveryItems
                 .filter(di => di instanceof QuestionDeliveryItem)
-                .indexOf(state.deliveryItem!) + 1
+                .indexOf(state.deliveryItem as QuestionDeliveryItem) + 1
             : -1,
         // prettier-ignore
         totalQuestions: (state) => state.deliveryItems

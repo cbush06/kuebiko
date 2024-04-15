@@ -1,5 +1,5 @@
-@import '~/bulma/sass/utilities/derived-variables.sass';
-@import '~/bulma/sass/elements/box.sass';
+@import '~bulma/sass/utilities/derived-variables.sass';
+@import '~bulma/sass/elements/box.sass';
 
 // Navbar
 $navbar-height: 3.75rem;
@@ -29,6 +29,7 @@ $size-values: (
     '50': 50%,
     '75': 75%,
     '100': 100%,
+    'auto': 'auto',
 ) !default;
 
 @each $name, $value in $size-values {
@@ -131,5 +132,20 @@ $table-row-hover-background-color: #ccc;
 @each $name, $color in $shades {
     .has-#{$name}-shadow {
         box-shadow: 0 0 0 0.125em rgb(from nth($color, 1) r g b / 0.25);
+    }
+}
+
+// Overflow Options
+$overflow-values: (visible, hidden, clip, scroll, auto) !default;
+
+@each $value in $overflow-values {
+    .is-overflow-#{$value} {
+        overflow: $value;
+    }
+    .is-overflow-y-#{$value} {
+        overflow-y: $value;
+    }
+    .is-overflow-x-#{$value} {
+        overflow-x: $value;
     }
 }

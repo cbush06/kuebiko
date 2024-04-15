@@ -19,16 +19,6 @@ vi.mock('@renderer/db/kuebiko-db.ts', () => {
     };
 });
 
-// Mock Electron IPC Renderer
-vi.stubGlobal('electron', {
-    ipcRenderer: {
-        sendSync: (hash: string, data: BinaryLike) => {
-            const result = createHash(hash).update(data).digest('hex');
-            return result;
-        },
-    },
-});
-
 describe('resource marshaller', async () => {
     const kuebikoDb = new KuebikoDb();
     const bytes = new Uint8Array(fs.readFileSync('./src/renderer/src/test/resources/vite.png'));
@@ -44,7 +34,21 @@ describe('resource marshaller', async () => {
         },
     } as unknown as JSZip;
 
-    let resourceMarshaller = new ResourceMarshaller(jszip, {} as unknown as Manifest, kuebikoDb);
+    const resourceMarshaller = new ResourceMarshaller(jszip, {} as unknown as Manifest, kuebikoDb);
+
+    beforeAll(() => {
+        // Mock Electron IPC Renderer
+        globalThis.kuebikoAPI = Object.assign({}, globalThis.kuebikoAPI, {
+            sha256: vi.fn().mockImplementation((data: BinaryLike) => {
+                return createHash('sha256').update(data).digest('hex');
+            }),
+        });
+    });
+
+    afterAll(() => {
+        vi.restoreAllMocks();
+        delete globalThis.kuebikoAPI;
+    })
 
     test('unmarshalls MARKDOWN type', async () => {
         const toUnmarshall = {

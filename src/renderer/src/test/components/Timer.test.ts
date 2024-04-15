@@ -1,4 +1,4 @@
-import TimerVue from '@renderer/components/Timer.vue';
+import TimerVue from '@renderer/components/timer/Timer.vue';
 import { render } from '@testing-library/vue';
 
 describe('timer component', () => {

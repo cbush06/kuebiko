@@ -6,8 +6,8 @@
         </div>
         <div class="box">
             <!-- prettier-ignore -->
-            <TableVue 
-                :data="attempts" 
+            <TableVue
+                :data="attempts"
                 :columns="columns"
                 :hoverable="true"
                 :clickable="true"

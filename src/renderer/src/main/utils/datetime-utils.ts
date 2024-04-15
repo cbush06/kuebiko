@@ -1,4 +1,5 @@
 import { intervalToDuration } from 'date-fns';
+import { createMask } from 'imask/esm/index';
 
 const MILLIS_IN_HOUR = 3_600_000;
 const MILLIS_IN_MINUTE = 60_000;
@@ -40,3 +41,5 @@ export const clockFormatToDuration = (clockFormat: string) => {
 export const millisToHours = (millis: number) => {
     return millis / MILLIS_IN_HOUR;
 };
+
+export const durationMask = createMask({ mask: '00:`00:`00', lazy: false });
