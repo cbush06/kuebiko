@@ -204,8 +204,6 @@ watchDebounced(
     },
     { debounce: 500 },
 );
-
-watch(testEditorStore, (d) => console.log(d));
 </script>
 
 <style scoped lang="scss">
