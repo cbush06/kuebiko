@@ -63,7 +63,7 @@
             @drop="onDropAfter"
         ></div>
         <div
-            v-if="!props.isRoot && props.isContainer"
+            v-if="!props.isRoot && props.isContainer && props.children?.length"
             :class="`expander ${props.treeOptions.expanderClass ?? 'has-text-grey'}`"
             @click="isExpanded = !isExpanded"
         ></div>
@@ -84,7 +84,12 @@ export interface TreeNodeOptions {
 
 export type TreeNodeProps = TreeNodeStruct & TreeNodeOptions;
 
-const emit = defineEmits(['select', 'drop']);
+export interface TreeNodeEvents {
+    (e: 'select', payload: TreeNodeProps): void;
+    (e: 'drop', payload: TreeNodeDropData): void;
+}
+
+const emit = defineEmits<TreeNodeEvents>();
 const props = defineProps<TreeNodeProps>();
 
 const isExpanded = ref(props.isExpanded ?? true);
@@ -133,7 +138,7 @@ function onDrop(e: DragEvent, targetId?: string, afterId?: string, beforeId?: st
 
     // If it was dropped directly on the parent container, add it to the end of the child list
     if (!afterId && !beforeId) {
-        if (props.children) {
+        if (props.children?.length) {
             afterId = props.children[props.children.length - 1].id;
         }
     }
@@ -188,7 +193,6 @@ function onDragEndLeave(e: DragEvent) {
 
 .tree-node {
     position: relative;
-
     text-decoration: none;
 
     &:not(.root) {
@@ -198,12 +202,6 @@ function onDragEndLeave(e: DragEvent) {
                 &::before {
                     top: unset !important;
                     bottom: 0px;
-                }
-            }
-
-            & > .children {
-                &::after {
-                    height: 0em !important;
                 }
             }
         }

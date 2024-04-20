@@ -38,6 +38,8 @@
                 :reorderable="true"
                 :selected="selectedNavNode"
                 @select="(e) => (selectedNavNode = e)"
+                @drop="onDrop"
+                :prevent-dropping-leaves-on-root="true"
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
@@ -51,7 +53,7 @@
 <script setup lang="ts">
 import { MilkdownProvider } from '@milkdown/vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
-import { TreeNodeStruct } from '@renderer/components/tree/structures';
+import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
@@ -162,7 +164,7 @@ const convertTestToTree = async (test: Test) => {
             (q) =>
                 ({
                     id: q?.uuid,
-                    label: 'question',
+                    label: q?.uuid.substring(0, 4),
                 }) as TreeNodeStruct,
         );
 
@@ -170,6 +172,45 @@ const convertTestToTree = async (test: Test) => {
     }
 
     return tree;
+};
+// #endregion
+
+// #region Handling drag-n-drop of questions
+const onDrop = (e: TreeNodeDropData) => {
+    console.log('onDrop');
+    const question = e.sourceId;
+    const originalParent = testEditorStore.test.sections.find((s) => s.uuid === e.parentId);
+    const targetParent = testEditorStore.test.sections.find((s) => s.uuid === e.targetId);
+
+    if (question && originalParent && targetParent) {
+        // prettier-ignore
+        originalParent.questionRefs.splice(
+            originalParent.questionRefs.indexOf(question), 
+            1
+        );
+
+        if (e.beforeId) {
+            // prettier-ignore
+            targetParent.questionRefs.splice(
+                targetParent.questionRefs.indexOf(e.beforeId), 
+                0, 
+                question
+            );
+            return;
+        }
+
+        if (e.afterId) {
+            // prettier-ignore
+            targetParent.questionRefs.splice(
+                targetParent.questionRefs.indexOf(e.afterId) + 1,
+                0,
+                question
+            );
+            return;
+        }
+
+        targetParent.questionRefs.push(question);
+    }
 };
 // #endregion
 </script>

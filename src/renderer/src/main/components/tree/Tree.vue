@@ -27,6 +27,7 @@ export interface TreeOptions {
     expanderClass?: string;
     containerIcon?: string;
     containerExpandedIcon?: string;
+    preventDroppingLeavesOnRoot?: boolean;
 }
 
 interface TreeProps {
@@ -58,6 +59,13 @@ function onDrop(e: TreeNodeDropData) {
     const currNodeParent = findNodeById(e.parentId, props.rootNode);
 
     if (!(nodeBeingMoved && newNodeParent)) return;
+
+    if (
+        props.preventDroppingLeavesOnRoot &&
+        !nodeBeingMoved.isContainer &&
+        newNodeParent.id === 'root'
+    )
+        return;
 
     const newLocation = e.afterId
         ? newNodeParent.children!.findIndex((n) => n.id === e.afterId) + 1
