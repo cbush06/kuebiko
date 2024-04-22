@@ -169,7 +169,6 @@ import {
     PieController,
     Tooltip,
 } from 'chart.js';
-import { DistributiveArray } from '~/chart.js/dist/types/utils';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { format } from 'date-fns/format';
@@ -177,6 +176,7 @@ import { computed, ref, watch } from 'vue';
 import { Bar, Doughnut } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { DistributiveArray } from '~/chart.js/dist/types/utils';
 import ResponseVue from './Response.vue';
 
 const { t } = useI18n();
@@ -207,7 +207,7 @@ watch(
 
         const questionRefs = test.value?.sections.flatMap((s) => s.questionRefs) ?? [];
         questionMap.value = (await QuestionsService.fetchQuestions(questionRefs)).reduce(
-            (m, q) => m.set(q.uuid, q),
+            (m, q) => m.set(q!.uuid, q!),
             new Map<string, Question>(),
         );
 

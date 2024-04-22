@@ -71,8 +71,7 @@ watchEffect(async () => {
         const questionContentResource = (
             await ResourcesService.fetchResource(props.question?.contentRef ?? 'nonce')
         )?.data as string;
-        questionContent.value =
-            props.question?.contentText ?? questionContentResource ?? t('noQuestionContent');
+        questionContent.value = questionContentResource ?? t('noQuestionContent');
 
         const successFeedbackContentResource = (
             await ResourcesService.fetchResource(props.question?.successFeedbackRef ?? 'nonce')

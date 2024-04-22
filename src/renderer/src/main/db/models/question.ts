@@ -16,7 +16,6 @@ export interface Question {
     type: QuestionType;
     title: string;
     contentRef?: string;
-    contentText?: string;
     subjectImageRef?: string;
     dropZones?: Point[];
     answer?: AnswerType;

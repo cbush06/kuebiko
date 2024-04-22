@@ -61,7 +61,7 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                     [
                         {
                             uuid: 'b4983a44-4af3-43cb-9f38-f1a08c6e9c2d',
-                            contentText: 'What is 2+2?',
+                            contentRef: 'What is 2+2?',
                             type: 'MULTIPLE',
                             answer: '6a13d8b9-1e67-4d4d-ad0d-b4427fbced30',
                             options: [
@@ -82,7 +82,7 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                         },
                         {
                             uuid: '50c274a5-cc12-4fee-9b6d-5fa6ae05ef9f',
-                            contentText: 'What is the process by which plants make energy?',
+                            contentRef: 'What is the process by which plants make energy?',
                             type: 'MULTIPLE',
                             answer: '57681777-ab75-4404-963e-aa7811d68974',
                             options: [
@@ -105,7 +105,7 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                         },
                         {
                             uuid: 'c1cc99fd-2ae6-4c55-b97b-403496002f2a',
-                            contentText:
+                            contentRef:
                                 'What is the cycle of waters movement through the ecosystem called?',
                             type: 'MULTIPLE',
                             answer: '29926c5b-1534-4b0b-be1b-358f26043b97',
@@ -127,7 +127,7 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                         },
                         {
                             uuid: '9bd9f6da-ce88-4c58-9bff-600f72fc096e',
-                            contentText: 'Where do babies come from?',
+                            contentRef: 'Where do babies come from?',
                             type: 'MULTIPLE',
                             answer: 'c6722f02-091e-4c68-bc18-ab14d6403017',
                             options: [

@@ -50,7 +50,6 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             type: marshalledType,
             title: o.title,
             contentRef: o.contentRef,
-            contentText: o.contentText,
             answer: marshalledAnswer,
             options: marshalledOptions,
             successFeedbackRef: o.successFeedbackRef,

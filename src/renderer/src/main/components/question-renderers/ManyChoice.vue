@@ -136,8 +136,6 @@ export interface ManyChoiceProps extends RendererBaseProps {
     options: Array<Option>;
 }
 
-const somefunc = () => 'testme';
-
 export interface ManyChoiceOption {
     uuid: string;
     content: string;

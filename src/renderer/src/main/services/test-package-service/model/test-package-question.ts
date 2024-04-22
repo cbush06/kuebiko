@@ -16,7 +16,6 @@ export interface TestPackageQuestion {
     type: TestPackageQuestionType;
     title: string;
     contentRef?: string;
-    contentText?: string;
     subjectImageRef?: string;
     dropZones?: TestPackagePoint[];
     answer?: TestPackageAnswerType;
