@@ -1,9 +1,10 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Attempt } from '@renderer/db/models/attempt';
 import { Question } from '@renderer/db/models/question';
 import { QuestionResponse } from '@renderer/db/models/question-response';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
+import { QuestionsService } from '@renderer/services/questions-service';
+import { ResourcesService } from '@renderer/services/resources-service';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { ArrayUtils } from '@renderer/utils/array-utils';
 import { AbstractDeliveryItem } from './delivery-item/abstract-delivery-item';
@@ -60,9 +61,8 @@ export class TestDeliveryStoreInitializer {
         testStore.inProgress = false;
         testStore.completed = false;
         if (test?.descriptionRef) {
-            testStore.description = (
-                await KuebikoDb.INSTANCE.resources.where('uuid').equals(test.descriptionRef).first()
-            )?.data as string;
+            testStore.description = (await ResourcesService.fetchResource(test.descriptionRef))
+                ?.data as string;
         }
     }
 
@@ -86,7 +86,7 @@ export class TestDeliveryStoreInitializer {
 
         for (const section of test.sections) {
             const eligibleSectionQuestions = (
-                await KuebikoDb.INSTANCE.questions.bulkGet(section.questionRefs)
+                await QuestionsService.fetchQuestions(section.questionRefs)
             ).filter((q) => options.filter.match(q!));
 
             if (eligibleSectionQuestions.length) {

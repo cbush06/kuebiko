@@ -10,11 +10,7 @@ const fetchAllTests = () => from(
 );
 
 // prettier-ignore
-const fetchTest = async (testUuid: string) => 
-    await KuebikoDb.INSTANCE.editorTests
-        .where('uuid')
-        .equals(testUuid)
-        .first();
+const fetchTest = (testUuid: string) => KuebikoDb.INSTANCE.editorTests.get(testUuid);
 
 export const EditorTestsService = {
     fetchAllTests,

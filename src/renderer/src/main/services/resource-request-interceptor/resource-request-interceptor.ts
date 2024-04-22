@@ -2,10 +2,6 @@
 
 declare const self: ServiceWorkerGlobalScope;
 
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
-
-const db = new KuebikoDb();
-
 self.addEventListener('activate', () => {
     console.log('Resource Request Interceptor is active...');
 });

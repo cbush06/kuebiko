@@ -7,6 +7,6 @@ export interface HelmetStoreState {
 export const useHelmetStore = defineStore('helmet-store', {
     state: () =>
         ({
-            title: 'KuebikoDb',
+            title: 'Kuebiko',
         }) as HelmetStoreState,
 });

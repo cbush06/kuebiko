@@ -8,21 +8,12 @@ import { afterEach, describe, expect, test, vi } from 'vitest';
 import questionFactory from '../../factories/question-factory';
 import testFactory from '../../factories/test-factory';
 
-// Mock the DB
-vi.mock('@renderer/db/kuebiko-db.ts', () => {
-    const kuebikoDb = vi.fn();
-    kuebikoDb.prototype.questions = {
-        where: () => ({
-            anyOf: () => ({
-                toArray: vi.fn().mockImplementation(() => Promise.resolve([])),
-            }),
-        }),
-    };
-    kuebikoDb['INSTANCE'] = new kuebikoDb();
-    return {
-        kuebikoDb,
-    };
-});
+// Mock Question Service
+vi.mock('@renderer/services/questions-service.ts', () => ({
+    QuestionsService: {
+        fetchQuestions: () => Promise.resolve([]),
+    },
+}));
 
 describe('test delivery store initializer', () => {
     afterEach(() => {

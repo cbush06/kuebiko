@@ -29,8 +29,8 @@
 <script setup lang="ts">
 import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 import MultipleChoice from '@renderer/components/question-renderers/MultipleChoice.vue';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { AnswerType } from '@renderer/db/models/answer';
+import { ResourcesService } from '@renderer/services/resources-service';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { onBeforeMount, ref, watch } from 'vue';
@@ -47,27 +47,18 @@ const revealAnswer = ref(false);
 
 const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => {
     const questionContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(newDeliveryItem?.getContentRef() ?? 'nonce')
-            .first()
+        await ResourcesService.fetchResource(newDeliveryItem?.getContentRef() ?? 'nonce')
     )?.data as string;
     questionContent.value = questionContentResource ?? t('noQuestionContent');
 
     const successFeedbackContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce')
-            .first()
+        await ResourcesService.fetchResource(newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce')
     )?.data as string;
     successFeedbackContent.value =
         questionDeliveryItem.value?.getSuccessFeedbackText() ?? successFeedbackContentResource;
 
     const failureFeedbackContentResource = (
-        await KuebikoDb.INSTANCE.resources
-            .where('uuid')
-            .equals(newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce')
-            .first()
+        await ResourcesService.fetchResource(newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce')
     )?.data as string;
     failureFeedbackContent.value =
         questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;

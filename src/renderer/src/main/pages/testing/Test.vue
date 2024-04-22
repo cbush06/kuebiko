@@ -118,8 +118,9 @@
 
 <script setup lang="ts">
 import TimerVue from '@renderer/components/timer/Timer.vue';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
+import { AttemptsService } from '@renderer/services/attempts-service';
+import { TestsService } from '@renderer/services/tests-service';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
@@ -141,7 +142,7 @@ const test = ref<Test | undefined>();
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
-    test.value = await KuebikoDb.INSTANCE.tests.where('uuid').equals(uuid).first();
+    test.value = await TestsService.fetchTest(uuid);
 };
 
 onBeforeMount(async () => {
@@ -206,7 +207,7 @@ const saveAttempt = async () => {
         throw new Error('Uh oh! Something went wrong and your attempt results cannot be saved.');
     }
     testDeliveryStore.complete();
-    await KuebikoDb.INSTANCE.attempts.add(toRaw(testDeliveryStore.attempt));
+    await AttemptsService.addAttempt(toRaw(testDeliveryStore.attempt));
 };
 
 const finishTest = async () => {

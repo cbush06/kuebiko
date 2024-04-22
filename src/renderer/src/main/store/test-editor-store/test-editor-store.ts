@@ -1,10 +1,12 @@
 import { TreeNodeStruct } from '@renderer/components/tree/structures';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Author } from '@renderer/db/models/author';
 import { Question, QuestionType } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
+import { QuestionsService } from '@renderer/services/questions-service';
+import { ResourcesService } from '@renderer/services/resources-service';
+import { TestsService } from '@renderer/services/tests-service';
 import { defineStore } from 'pinia';
 
 export interface TestEditorStoreState {
@@ -62,23 +64,21 @@ export const useTestEditorStore = defineStore('test-editor', {
     getters: {},
     actions: {
         async initializeForTest(uuid: string) {
-            const test = await KuebikoDb.INSTANCE.tests.get(uuid);
+            const test = await TestsService.fetchTest(uuid);
             if (!test) throw new Error(`test with ID [${uuid}] does not exist`);
             this.test = test;
 
             this.resources.clear();
             this.resourceNamesToUuids.clear();
 
-            (await KuebikoDb.INSTANCE.resources.bulkGet(test.resourceRefs)).forEach((r) => {
+            (await ResourcesService.fetchResources(test.resourceRefs)).forEach((r) => {
                 if (!r) return;
                 this.resources.set(r.uuid, r);
                 this.resourceNamesToUuids.set(r.name, r.uuid);
             });
 
             (
-                await KuebikoDb.INSTANCE.questions.bulkGet(
-                    test.sections.flatMap((s) => s.questionRefs),
-                )
+                await QuestionsService.fetchQuestions(test.sections.flatMap((s) => s.questionRefs))
             ).forEach((q) => {
                 this.questions.set(q!.uuid, q!);
             });

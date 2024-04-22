@@ -1,4 +1,5 @@
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { Attempt } from '@renderer/db/models/attempt';
 import { from } from '@vueuse/rxjs';
 import Dexie, { liveQuery } from 'dexie';
 
@@ -62,15 +63,13 @@ const fetchAttemptHistoryForTest = (testUuid: string) => from(
             .sortBy('completed')).reverse()
     ));
 
-// prettier-ignore
-const fetchAttempt = async (attemptUuid: string) => 
-    await KuebikoDb.INSTANCE.attempts
-            .where('uuid')
-            .equals(attemptUuid)
-            .first();
+const fetchAttempt = (attemptUuid: string) => KuebikoDb.INSTANCE.attempts.get(attemptUuid);
+
+const addAttempt = (attempt: Attempt) => KuebikoDb.INSTANCE.attempts.add(attempt);
 
 export const AttemptsService = {
     fetchAttemptRollupByTest,
     fetchAttemptHistoryForTest,
     fetchAttempt,
+    addAttempt,
 };
