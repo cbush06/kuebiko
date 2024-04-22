@@ -52,10 +52,7 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
             .equals(newDeliveryItem?.getContentRef() ?? 'nonce')
             .first()
     )?.data as string;
-    questionContent.value =
-        questionDeliveryItem.value?.getContentText() ??
-        questionContentResource ??
-        t('noQuestionContent');
+    questionContent.value = questionContentResource ?? t('noQuestionContent');
 
     const successFeedbackContentResource = (
         await KuebikoDb.INSTANCE.resources

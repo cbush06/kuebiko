@@ -14,6 +14,7 @@ export type TestPackageAnswerType = string | string[] | TestPackagePoint[];
 export interface TestPackageQuestion {
     uuid: string;
     type: TestPackageQuestionType;
+    title: string;
     contentRef?: string;
     contentText?: string;
     subjectImageRef?: string;

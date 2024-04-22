@@ -40,6 +40,7 @@ describe('question marshaller', async () => {
         const toUnmarshal = {
             uuid: 'a3fad32ksdfa',
             type: 'TEXT',
+            title: 'Question #1',
             contentRef: 'd3afk32fdas',
             answer: 'blah blah blah',
             options: [],
@@ -53,6 +54,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'TEXT',
+            title: 'Question #1',
             contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: 'blah blah blah',
@@ -71,6 +73,7 @@ describe('question marshaller', async () => {
         const toUnmarshal = {
             uuid: 'a3fad32ksdfa',
             type: 'MULTIPLE',
+            title: 'Question #1',
             contentRef: 'd3afk32fdas',
             answer: 'a213fjkdad',
             options: [
@@ -97,6 +100,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'MULTIPLE',
+            title: 'Question #1',
             contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: 'a213fjkdad',
@@ -117,24 +121,22 @@ describe('question marshaller', async () => {
         const toUnmarshal = {
             uuid: 'a3fad32ksdfa',
             type: 'MANY',
+            title: 'Question #1',
             contentRef: 'd3afk32fdas',
             answer: ['a213fjkdad', 'sdcwfadjkdad'],
             options: [
                 {
                     uuid: 'a213fjkdad',
-                    contentText: 'A',
                     contentRef: 'some ref',
                     explanation: 'This is the right answer',
                 },
                 {
                     uuid: 'b23dffjkdad',
-                    contentText: 'B',
                     contentRef: 'some ref',
                     explanation: 'This is the wrong answer',
                 },
                 {
                     uuid: 'sdcwfadjkdad',
-                    contentText: 'E',
                     contentRef: 'some ref',
                     explanation: 'This is the wrong answer',
                 },
@@ -149,6 +151,7 @@ describe('question marshaller', async () => {
         expect(unmarshalled).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'MANY',
+            title: 'Question #1',
             contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: ['a213fjkdad', 'sdcwfadjkdad'],
@@ -169,6 +172,7 @@ describe('question marshaller', async () => {
         const toUnmarshal = {
             uuid: 'a3fad32ksdfa',
             type: 'POINT',
+            title: 'Question #1',
             contentRef: 'd3afk32fdas',
             answer: [{ x: 1, y: 2 }],
             options: [],
@@ -180,6 +184,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'POINT',
+            title: 'Question #1',
             contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: [{ x: 1, y: 2 }],
@@ -196,6 +201,7 @@ describe('question marshaller', async () => {
         const toUnmarshal = {
             uuid: 'a3fad32ksdfa',
             type: 'FILL',
+            title: 'Question #1',
             contentRef: 'd3afk32fdas',
             answer: [
                 { x: 1, y: 2 },
@@ -210,6 +216,7 @@ describe('question marshaller', async () => {
         expect(await questionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'a3fad32ksdfa',
             type: 'FILL',
+            title: 'Question #1',
             contentText: undefined,
             contentRef: 'd3afk32fdas',
             answer: [

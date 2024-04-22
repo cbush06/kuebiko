@@ -16,7 +16,7 @@ import ImageSelector from '../image-selector/ImageSelector.vue';
 import { customMenuCommands, menuConfig } from './milkdown-menu/milkdown-menu';
 import { kuebiko } from './theme-kuebiko';
 
-const model = defineModel<string>();
+const model = defineModel<string>({ default: '' });
 
 const imageSelector = ref<InstanceType<typeof ImageSelector> | null>(null);
 

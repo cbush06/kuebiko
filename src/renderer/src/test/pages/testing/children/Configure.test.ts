@@ -19,6 +19,7 @@ vi.mock('@renderer/services/tests-service.ts', () => {
                 () =>
                     ({
                         uuid: '824739e4-a3f9-42b8-af78-a84b70c3854b',
+                        version: 1,
                         title: 'Kuebiko 101',
                         authors: [],
                         created: new Date(2024, 1, 1), // Feb 1, 2024
@@ -66,12 +67,12 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                             options: [
                                 {
                                     uuid: 'fe756745-05c3-42ff-bfbe-bd77e77b697b',
-                                    contentText: '5',
+                                    contentRef: '5',
                                     explanation: '2+2 is not 5',
                                 },
                                 {
                                     uuid: '6a13d8b9-1e67-4d4d-ad0d-b4427fbced30',
-                                    contentText: '4',
+                                    contentRef: '4',
                                     explanation: '2+2 is always 4',
                                 },
                             ],
@@ -87,13 +88,13 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                             options: [
                                 {
                                     uuid: '57681777-ab75-4404-963e-aa7811d68974',
-                                    contentText: 'Photosynthesis',
+                                    contentRef: 'Photosynthesis',
                                     explanation:
                                         'Great! Plants convert carbon dixoide and water into energy via photosynthesis!',
                                 },
                                 {
                                     uuid: 'b4ef0dd6-9783-4c69-9467-0e154d58ad5a',
-                                    contentText: 'Hydrolysis',
+                                    contentRef: 'Hydrolysis',
                                     explanation:
                                         'No, if plants split water into its constituent molecules they would die.',
                                 },
@@ -111,12 +112,12 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                             options: [
                                 {
                                     uuid: 'fbb01a44-987b-4817-82ed-bcf20106e9e5',
-                                    contentText: 'The Circle of Life',
+                                    contentRef: 'The Circle of Life',
                                     explanation: 'Sorry, this is not The Lion King.',
                                 },
                                 {
                                     uuid: '29926c5b-1534-4b0b-be1b-358f26043b97',
-                                    contentText: 'The Water Cycle',
+                                    contentRef: 'The Water Cycle',
                                     explanation: 'Correct! It is the water cycle.',
                                 },
                             ],
@@ -132,12 +133,12 @@ vi.mock('@renderer/services/questions-service.ts', () => {
                             options: [
                                 {
                                     uuid: 'c6722f02-091e-4c68-bc18-ab14d6403017',
-                                    contentText: 'Storks',
+                                    contentRef: 'Storks',
                                     explanation: 'Correct! They are brought by massive birds.',
                                 },
                                 {
                                     uuid: '2210e912-db46-4d68-933a-627395ab88d1',
-                                    contentText: 'Pixie Dust',
+                                    contentRef: 'Pixie Dust',
                                     explanation:
                                         'Sorry, pixie dust makes you fly but does not create new humans.',
                                 },

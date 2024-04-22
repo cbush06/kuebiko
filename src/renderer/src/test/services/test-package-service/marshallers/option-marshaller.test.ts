@@ -14,7 +14,6 @@ describe('option marshaller', async () => {
     );
     const toUnmarshal = {
         uuid: 'ad3sdf3adcklja3!53',
-        contentText: 'Option A',
         contentRef: '3sdfdkl3fsdsf',
         explanation: 'You should have chosen this option because...',
     } as TestPackageOption;
@@ -22,7 +21,6 @@ describe('option marshaller', async () => {
     test('unmarshalls fields', async () => {
         expect(await optionMarshaller.unmarshall(toUnmarshal)).toStrictEqual({
             uuid: 'ad3sdf3adcklja3!53',
-            contentText: 'Option A',
             contentRef: '3sdfdkl3fsdsf',
             explanation: 'You should have chosen this option because...',
         } as Option);

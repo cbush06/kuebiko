@@ -10,7 +10,6 @@ export class OptionMarshaller extends AbstractMarshaller<Option, TestPackageOpti
     unmarshall(o: TestPackageOption): Promise<Option> {
         return Promise.resolve({
             uuid: o.uuid,
-            contentText: o.contentText,
             contentRef: o.contentRef,
             explanation: o.explanation,
         } as Option);

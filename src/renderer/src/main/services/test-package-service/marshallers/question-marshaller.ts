@@ -48,6 +48,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
         const q = {
             uuid: o.uuid,
             type: marshalledType,
+            title: o.title,
             contentRef: o.contentRef,
             contentText: o.contentText,
             answer: marshalledAnswer,

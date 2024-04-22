@@ -3,7 +3,7 @@ import AttemptsVue from './pages/attempts/Attempts.vue';
 import AttemptsForTestVue from './pages/attempts/children/AttemptsForTest.vue';
 import AttemptsRollupVue from './pages/attempts/children/AttemptsRollup.vue';
 import ResultsForAttemptVue from './pages/attempts/children/ResultsForAttempt.vue';
-import EditorVue from './pages/editor/Editor.vue';
+import EditorWrapper from './pages/editor/EditorWrapper.vue';
 import ListEditorTestsVue from './pages/editor/children/ListEditorTests.vue';
 import TestEditorVue from './pages/editor/children/TestEditor.vue';
 import HomeVue from './pages/home/Home.vue';
@@ -13,6 +13,7 @@ import IntroVue from './pages/testing/children/Intro.vue';
 import QuestionVue from './pages/testing/children/Question.vue';
 import ResultsVue from './pages/testing/children/Results.vue';
 import SectionVue from './pages/testing/children/Section.vue';
+import { useTestEditorStore } from './store/test-editor-store/test-editor-store';
 
 export default [
     {
@@ -65,7 +66,7 @@ export default [
     },
     {
         path: '/editor',
-        component: EditorVue,
+        component: EditorWrapper,
         children: [
             {
                 path: '',

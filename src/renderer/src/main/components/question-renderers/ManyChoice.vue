@@ -150,21 +150,15 @@ const model = defineModel({ default: new Array<string>() });
 const options = ref<Array<ManyChoiceOption>>([]);
 const updateOptions = async (newProps: ManyChoiceProps) => {
     options.value = await Promise.all(
-        newProps.options.map(async (o) => {
-            if (o.contentText)
-                return {
-                    uuid: o.uuid,
-                    content: o.contentText,
-                    explanation: o.explanation,
-                } as ManyChoiceOption;
-            else
-                return {
+        newProps.options.map(
+            async (o) =>
+                ({
                     uuid: o.uuid,
                     content: (await ResourcesService.fetchResource(o.contentRef ?? 'nonce'))
                         ?.data as string,
                     explanation: o.explanation,
-                } as ManyChoiceOption;
-        }),
+                }) as ManyChoiceOption,
+        ),
     );
 };
 watch(props, updateOptions);

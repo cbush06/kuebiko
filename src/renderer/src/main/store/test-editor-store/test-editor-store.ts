@@ -1,13 +1,20 @@
+import { TreeNodeStruct } from '@renderer/components/tree/structures';
+import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Author } from '@renderer/db/models/author';
+import { Question, QuestionType } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
+import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
 import { defineStore } from 'pinia';
 
 export interface TestEditorStoreState {
     // Props
     test: Test;
+    questions: Map<string, Question>;
     resources: Map<string, Resource>;
     resourceNamesToUuids: Map<string, string>;
+    testEditMode: 'test' | 'section' | 'question';
+    testEditPart: Test | Section | Question;
 
     // Actions
     addAuthor: (author: Author) => void;
@@ -23,29 +30,59 @@ export interface TestEditorStoreState {
     removeResource: (uuid: string) => void;
     updateResourceData: (uuid: string, data: Resource['data']) => void;
     updateResourceDataByName: (name: string, data: Resource['data']) => void;
+    addSection: () => void;
+    addQuestion: (section: Section) => void;
 }
 
 export const useTestEditorStore = defineStore('test-editor', {
-    state: () =>
-        ({
-            test: {
-                uuid: globalThis.kuebikoAPI.randomUUID(),
-                version: 0,
-                title: '',
-                descriptionRef: '',
-                authors: [],
-                created: new Date(),
-                resourceRefs: [],
-                sections: [],
-                tags: [],
-                passingPercentage: 75,
-                allowedTime: 3_600_000, // 1 hour
-            } as Test,
+    state: () => {
+        const test = {
+            uuid: globalThis.kuebikoAPI.randomUUID(),
+            version: 0,
+            title: '',
+            descriptionRef: '',
+            authors: [],
+            created: new Date(),
+            resourceRefs: [],
+            sections: [],
+            tags: [],
+            passingPercentage: 75,
+            allowedTime: 3_600_000, // 1 hour
+        } as Test;
+
+        return {
+            test,
             resources: new Map<string, Resource>(),
+            questions: new Map<string, Question>(),
             resourceNamesToUuids: new Map<string, string>(),
-        }) as unknown as TestEditorStoreState,
+            testEditMode: 'test',
+            testEditPart: test,
+        } as TestEditorStoreState;
+    },
     getters: {},
     actions: {
+        async initializeForTest(uuid: string) {
+            const test = await KuebikoDb.INSTANCE.tests.get(uuid);
+            if (!test) throw new Error(`test with ID [${uuid}] does not exist`);
+            this.test = test;
+
+            this.resources.clear();
+            this.resourceNamesToUuids.clear();
+
+            (await KuebikoDb.INSTANCE.resources.bulkGet(test.resourceRefs)).forEach((r) => {
+                if (!r) return;
+                this.resources.set(r.uuid, r);
+                this.resourceNamesToUuids.set(r.name, r.uuid);
+            });
+
+            (
+                await KuebikoDb.INSTANCE.questions.bulkGet(
+                    test.sections.flatMap((s) => s.questionRefs),
+                )
+            ).forEach((q) => {
+                this.questions.set(q!.uuid, q!);
+            });
+        },
         addAuthor(author: Author) {
             this.test.authors.push(author);
         },
@@ -98,6 +135,49 @@ export const useTestEditorStore = defineStore('test-editor', {
             if (this.resourceNamesToUuids.has(name)) {
                 this.updateResourceData(this.resourceNamesToUuids.get(name)!, data);
             }
+        },
+        setTestEditPartFromTreeNode(node: TreeNodeStruct) {
+            if (node.id === 'root') {
+                this.testEditMode = 'test';
+                this.testEditPart = this.test;
+                return;
+            }
+
+            if (node.isContainer) {
+                this.testEditMode = 'section';
+                this.testEditPart = this.test.sections.find((s) => s.uuid === node.id)!;
+                return;
+            }
+
+            this.testEditMode = 'question';
+            this.testEditPart = this.questions.get(node.id)!;
+        },
+        addSection() {
+            const newSectionUuid = globalThis.kuebikoAPI.randomUUID();
+            const descriptionRef = this.addResource(
+                `section-${newSectionUuid}-description.md`,
+                'MARKDOWN',
+                'text/markdown',
+                '',
+            );
+            this.test.sections.push({
+                uuid: newSectionUuid,
+                title: 'New Section',
+                default: false,
+                descriptionRef: descriptionRef,
+                questionRefs: [],
+            });
+        },
+        addQuestion(section: Section, type: QuestionType) {
+            const uuid = globalThis.kuebikoAPI.randomUUID();
+            this.questions.set(uuid, {
+                uuid,
+                title: 'New Question',
+                type,
+                options: [],
+                categories: [],
+            } as Question);
+            section.questionRefs.push(uuid);
         },
     },
 });

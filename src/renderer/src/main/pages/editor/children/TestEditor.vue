@@ -23,14 +23,69 @@
                     <span class="icon is-small"><i class="fa-solid fa-folder-plus"></i></span>
                     <span>Add Section</span>
                 </button>
-                <button
-                    class="button is-small"
-                    :disabled="!selectedNavNode.isContainer || selectedNavNode.id === 'root'"
-                    @click="addQuestion"
+
+                <div
+                    class="dropdown"
+                    :class="{ 'is-active': addQuestionMenuShown }"
+                    v-on-click-outside="() => (addQuestionMenuShown = false)"
                 >
-                    <span class="icon is-small"><i class="fa-solid fa-file-circle-plus"></i></span>
-                    <span>Add Question</span>
-                </button>
+                    <div class="dropdown-trigger">
+                        <button
+                            class="button is-small"
+                            :disabled="
+                                !selectedNavNode.isContainer || selectedNavNode.id === 'root'
+                            "
+                            @click="addQuestionMenuShown = true"
+                        >
+                            <span class="icon is-small"
+                                ><i class="fa-solid fa-file-circle-plus"></i
+                            ></span>
+                            <span>Add Question</span>
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a class="dropdown-item" @click="() => addQuestion('MULTIPLE')"
+                                ><i class="fa-solid fa-list-ul mr-2"></i> Select One</a
+                            >
+                            <a class="dropdown-item" @click="() => addQuestion('MANY')"
+                                ><i class="fa-solid fa-list-check mr-2"></i> Select Many</a
+                            >
+                            <!--
+                            <a
+                                class="dropdown-item"
+                                @click="
+                                    (e) => {
+                                        console.log(e);
+                                        addQuestionMenuShown = false;
+                                    }
+                                "
+                                ><i class="fa-solid fa-pen-to-square mr-2"></i> Fill-in-the-Blank</a
+                            >
+                            <a
+                                class="dropdown-item"
+                                @click="
+                                    (e) => {
+                                        console.log(e);
+                                        addQuestionMenuShown = false;
+                                    }
+                                "
+                                ><i class="fa-solid fa-object-group mr-2"></i> Drag-n-Drop</a
+                            >
+                            <a
+                                class="dropdown-item"
+                                @click="
+                                    (e) => {
+                                        console.log(e);
+                                        addQuestionMenuShown = false;
+                                    }
+                                "
+                                ><i class="fa-solid fa-circle-nodes mr-2"></i> Hot Area</a
+                            >
+                            -->
+                        </div>
+                    </div>
+                </div>
             </div>
             <TreeVue
                 :root-node="navigationTree"
@@ -39,12 +94,15 @@
                 :selected="selectedNavNode"
                 @select="(e) => (selectedNavNode = e)"
                 @drop="onDrop"
-                :prevent-dropping-leaves-on-root="true"
+                :preventLeavesInRoot="true"
+                :prevent-nested-containers="true"
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
             <MilkdownProvider>
-                <TestDetailsEditor />
+                <TestDetailsEditor v-if="testEditorStore.testEditMode === 'test'" />
+                <SectionDetailsEditor v-else-if="testEditorStore.testEditMode === 'section'" />
+                <QuestionEditor v-else />
             </MilkdownProvider>
         </div>
     </div>
@@ -54,14 +112,29 @@
 import { MilkdownProvider } from '@milkdown/vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
+import { Question, QuestionType } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
+import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
 import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import QuestionEditor from '../editors/QuestionEditor.vue';
+import SectionDetailsEditor from '../editors/SectionDetailsEditor.vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
 
+const addQuestionMenuShown = ref(false);
 const testEditorStore = useTestEditorStore();
+
+// Initialize the store for the current or new test
+const route = useRoute();
+if (route.params['testUuid']) {
+    testEditorStore.initializeForTest(route.params['testUuid'] as string);
+} else {
+    testEditorStore.$reset();
+}
+
+// Prepare the tree nav
 const navigationTree = ref({
     id: 'root',
     label: 'Untitled Test',
@@ -70,15 +143,13 @@ const navigationTree = ref({
 } as TreeNodeStruct);
 const selectedNavNode = ref<TreeNodeStruct>(navigationTree.value);
 
+// #region Handle navigation changes
+watch(selectedNavNode, (node) => testEditorStore.setTestEditPartFromTreeNode(node));
+// #endregion
+
 // #region Add/Remove sections
 const addSection = () => {
-    const test = testEditorStore.test;
-    test.sections.push({
-        uuid: globalThis.kuebikoAPI.randomUUID(),
-        title: 'New Section',
-        default: false,
-        questionRefs: [],
-    });
+    testEditorStore.addSection();
 };
 
 // If only 1 section exists, make it default; otherwise, none are default
@@ -94,28 +165,27 @@ watch(testEditorStore.test.sections, (s) => {
 // #endregion
 
 // #region Add/Remove questions
-const addQuestion = async () => {
+const addQuestion = async (type: QuestionType) => {
     if (selectedNavNode.value.isContainer && selectedNavNode.value.id !== 'root') {
         const selectedSection = testEditorStore.test.sections.find(
             (s) => s.uuid === selectedNavNode.value.id,
         );
-        const newQuestionUuid = await KuebikoDb.INSTANCE.questions.add({
-            uuid: globalThis.kuebikoAPI.randomUUID(),
-            type: 'MULTIPLE',
-            options: [],
-            categories: [],
-        });
-        selectedSection?.questionRefs.push(newQuestionUuid as string);
+        testEditorStore.addQuestion(selectedSection!, type);
+        console.log(type);
     }
+    addQuestionMenuShown.value = false;
 };
 // #endregion
 
 // #region Synchronize navigation tree with test structure
 const testIdPathSet = new Set<string>();
 watchThrottled(
-    testEditorStore.test,
-    async (test) => {
-        const currentIdPaths = buildTestElementIdPathList(test);
+    () => ({
+        test: testEditorStore.test,
+        questions: Array.from(testEditorStore.questions.values()),
+    }),
+    async ({ test, questions }) => {
+        const currentIdPaths = buildTestElementIdPathList(test, questions);
         const hasPathChanged = !(
             testIdPathSet.size === currentIdPaths.size &&
             Array.from(testIdPathSet.values()).every((v) => currentIdPaths.has(v))
@@ -127,18 +197,13 @@ watchThrottled(
     { deep: true, throttle: 1000 },
 );
 
-const buildTestElementIdPathList = (test: Test) => {
+const buildTestElementIdPathList = (test: Test, questions: Question[]) => {
     const idPathSet = new Set<string>();
 
     idPathSet.add(`${test.uuid}:${test.title}`);
 
-    for (const s of test.sections) {
-        idPathSet.add(`${test.uuid}:${s.uuid}:${s.title}`);
-
-        //prettier-ignore
-        s.questionRefs.map((q) => `${test.uuid}:${s.uuid}:${q}`)
-            .forEach((q) => idPathSet.add(q));
-    }
+    test.sections.forEach((s) => idPathSet.add(`${s.uuid}:${s.title}`));
+    questions.forEach((q) => idPathSet.add(`${q.uuid}:${q.title}`));
 
     return idPathSet;
 };
@@ -155,18 +220,20 @@ const convertTestToTree = async (test: Test) => {
     for (const s of test.sections) {
         const sectionStruct = {
             id: s.uuid,
-            label: s.title,
+            label: !!s.title ? s.title : 'Untitled Section',
             isContainer: true,
             children: [],
         } as TreeNodeStruct;
 
-        sectionStruct.children = (await KuebikoDb.INSTANCE.questions.bulkGet(s.questionRefs)).map(
-            (q) =>
-                ({
-                    id: q?.uuid,
-                    label: q?.uuid.substring(0, 4),
-                }) as TreeNodeStruct,
-        );
+        sectionStruct.children = s.questionRefs
+            .map((qRef) => testEditorStore.questions.get(qRef)!)
+            .map(
+                (q) =>
+                    ({
+                        id: q.uuid,
+                        label: q.title,
+                    }) as TreeNodeStruct,
+            );
 
         tree.children!.push(sectionStruct);
     }

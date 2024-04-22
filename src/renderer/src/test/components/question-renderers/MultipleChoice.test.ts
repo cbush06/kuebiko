@@ -4,17 +4,23 @@ import { Resource } from '@renderer/db/models/resource';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/vue';
 
+const mockOptionContents = new Map<string, string>([
+    ['6086fd81-2087-49de-a151-73cffecf63ee', '∛8 = 2'],
+    ['b7f5d6f7-ab01-478a-9147-31f5a591b5ad', '√4 = 3'],
+    ['e25acb29-0336-4c85-8f9d-c36b611db55e', '∛125 = 6'],
+]);
+
 vi.mock('@renderer/services/resources-service.ts', () => {
     return {
         ResourcesService: {
-            fetchResource: vi.fn().mockImplementation(() =>
+            fetchResource: vi.fn().mockImplementation((uuid: string) =>
                 Promise.resolve({
-                    uuid: '6086fd81-2087-49de-a151-73cffecf63ee',
+                    uuid,
                     name: '',
                     type: 'MARKDOWN',
                     mime: '',
                     sha256: '',
-                    data: '**∛8 = 2**',
+                    data: mockOptionContents.get(uuid),
                 } as Resource),
             ),
         },
@@ -25,7 +31,7 @@ describe('multiple choice component', () => {
     const options = [
         {
             uuid: '36973a42-dba8-40e8-aa6a-6d9f71dffacf',
-            contentText: '√4 = 3',
+            contentRef: 'b7f5d6f7-ab01-478a-9147-31f5a591b5ad',
             explanation: '2 x 2 = 4; therefore, the square root of 4 is 2, not 3.',
         },
         {
@@ -35,7 +41,7 @@ describe('multiple choice component', () => {
         },
         {
             uuid: 'fdd4a076-4d4c-4242-bcc1-e68ab243db11',
-            contentText: '∛125 = 6',
+            contentRef: 'e25acb29-0336-4c85-8f9d-c36b611db55e',
             explanation: '5 x 5 x 5 = 125; therefore, the cubed root of 125 is 5, not 6.',
         },
     ] as Option[];

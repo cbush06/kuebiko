@@ -148,21 +148,15 @@ const model = defineModel({ default: '' });
 const options = ref<Array<MultipleChoiceOption>>([]);
 const updateOptions = async (newProps: MultipleChoiceProps) => {
     options.value = await Promise.all(
-        newProps.options.map(async (o) => {
-            if (o.contentText)
-                return {
-                    uuid: o.uuid,
-                    content: o.contentText,
-                    explanation: o.explanation,
-                } as MultipleChoiceOption;
-            else
-                return {
+        newProps.options.map(
+            async (o) =>
+                ({
                     uuid: o.uuid,
                     content: (await ResourcesService.fetchResource(o.contentRef ?? 'nonce'))
                         ?.data as string,
                     explanation: o.explanation,
-                } as MultipleChoiceOption;
-        }),
+                }) as MultipleChoiceOption,
+        ),
     );
 };
 watch(props, updateOptions);

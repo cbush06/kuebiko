@@ -19,7 +19,7 @@
         <div class="field-body">
             <div class="field">
                 <div id="description-div" class="control">
-                    <MilkdownEditor v-model="description" />
+                    <ToggleTextEditor v-model="description" />
                 </div>
             </div>
         </div>
@@ -76,13 +76,15 @@
                         data-testid="max-questions"
                         type="range"
                         class="slider is-fullwidth is-primary"
-                        min="0"
+                        :min="0"
+                        :max="100"
                         :value="testEditorStore.test.passingPercentage"
                         @input="
-                            passingPercentage = parseInt(($event.target! as HTMLInputElement).value)
+                            testEditorStore.test.passingPercentage = parseInt(
+                                ($event.target! as HTMLInputElement).value,
+                            )
                         "
                         step="5"
-                        :max="100"
                     />
                 </div>
                 <div
@@ -124,8 +126,8 @@
 </template>
 
 <script setup lang="ts">
-import MilkdownEditor from '@renderer/components/milkdown-editor/MilkdownEditor.vue';
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
+import ToggleTextEditor from '@renderer/components/toggle-text-editor/ToggleTextEditor.vue';
 import { Author } from '@renderer/db/models/author';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import {
@@ -156,8 +158,6 @@ const authorColumns = computed(
         ] as TableColumn<Author>[],
 );
 
-const passingPercentage = ref(75);
-
 const allowedTime = ref<string>(
     durationToClockFormat(testEditorStore.test.allowedTime ?? 3_600_000),
 );
@@ -165,11 +165,8 @@ const clearTestEditorAllowedTime = () => (testEditorStore.test.allowedTime = und
 const updateTestEditorAllowedTime = (v: string) =>
     (testEditorStore.test.allowedTime = clockFormatToDuration(v));
 
-const description = ref<string>('');
-
 const tag = ref('');
 const tags = ref<{ text: string }[]>(testEditorStore.test.tags.map((t) => ({ text: t })));
-
 // prettier-ignore
 watch(tags, (t) => {
     testEditorStore.test.tags.splice(
@@ -179,35 +176,37 @@ watch(tags, (t) => {
     );
 });
 
+// #region Handle description updates
+if (!testEditorStore.test.descriptionRef) {
+    testEditorStore.test.descriptionRef = testEditorStore.addResource(
+        'description.md',
+        'MARKDOWN',
+        'text/markdown',
+        '',
+    );
+}
+const description = ref<string>(
+    (testEditorStore.resources.get(testEditorStore.test.descriptionRef ?? '')?.data as string) ??
+        '',
+);
 watchDebounced(
     description,
     (d) => {
-        if (d.length) {
-            if (!testEditorStore.test.descriptionRef) {
-                testEditorStore.test.descriptionRef = testEditorStore.addResource(
-                    'description.md',
-                    'MARKDOWN',
-                    'text/markdown',
-                    d,
-                );
-            } else {
-                testEditorStore.updateResourceData(testEditorStore.test.descriptionRef, d);
-            }
-            return;
-        }
-
-        // Description was cleared, so remove the resource
-        if (testEditorStore.test.descriptionRef) {
-            testEditorStore.removeResource(testEditorStore.test.descriptionRef);
-            testEditorStore.test.descriptionRef = undefined;
-        }
+        testEditorStore.updateResourceData(testEditorStore.test.descriptionRef!, d);
     },
     { debounce: 500 },
 );
+// #endregion
 </script>
 
 <style scoped lang="scss">
 input[type='range'].slider {
     margin: 0.5rem 0;
+}
+
+#description-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 16rem;
 }
 </style>

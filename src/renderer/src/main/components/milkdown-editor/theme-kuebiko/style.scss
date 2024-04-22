@@ -1,110 +1,132 @@
 @import '@renderer/scss/bulma-customizations.scss';
 @import '~/bulma/bulma.sass';
 
-.milkdown-theme-kuebiko {
-    outline: none;
+div[data-milkdown-root] {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex-grow: 1;
 
-    padding: 0.3rem;
-    @extend .has-border-1, .is-grey-lighter-border;
+    .milkdown {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex-grow: 1;
 
-    &.editor {
-        min-height: 20rem;
-    }
-
-    &:hover:not(.ProseMirror-focused) {
-        @extend .is-grey-light-border;
-    }
-
-    &.ProseMirror-focused {
-        @extend .is-link-border;
-        @extend .has-link-shadow;
-    }
-
-    & .selectedCell:after {
-        @extend .has-text-grey-light;
-    }
-
-    h1 {
-        @extend .has-text-grey-darker, .is-size-1;
-    }
-
-    h2 {
-        @extend .has-text-grey-darker, .is-size-2;
-    }
-
-    h3 {
-        @extend .has-text-grey-darker, .is-size-3;
-    }
-
-    h4 {
-        @extend .has-text-grey-darker, .is-size-4;
-    }
-
-    h5 {
-        @extend .has-text-grey-darker, .is-size-5;
-    }
-
-    blockquote {
-        @extend .has-left-border-2, .is-primary-border, .pl-4, .is-size-4, .has-text-grey-darker;
-    }
-
-    code {
-        @extend .is-family-code, .has-text-grey-darker;
-    }
-
-    pre code {
-        @extend .is-family-code, .is-block, .has-text-grey-darker;
-    }
-
-    img {
-        @extend .my-0, .is-inline-block;
-    }
-
-    ul,
-    ol {
-        &:is(ul) {
-            list-style: disc;
+        & > *:not(.editor) {
+            flex-grow: 0;
         }
 
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-        margin-inline-start: 1em;
-        padding-inline-start: 1em;
-    }
-
-    :where(blockquote):not(:where([class~='not-prose'] *)) {
-        //@apply font-normal;
-    }
-
-    :where(ol > li):not(:where([class~='not-prose'] *))::marker,
-    :where(ul > li):not(:where([class~='not-prose'] *))::marker {
-        @extend .has-text-grey-darker;
-    }
-
-    :where(blockquote p:first-of-type):not(:where([class~='not-prose'] *))::before,
-    :where(blockquote p:first-of-type):not(:where([class~='not-prose'] *))::after {
-        content: '';
-    }
-
-    :where(code):not(:where([class~='not-prose'] *))::before,
-    :where(code):not(:where([class~='not-prose'] *))::after {
-        content: '';
-    }
-
-    table {
-        @extend .table, .is-bordered, .is-striped;
-        tbody tr:last-child td {
-            border-bottom-width: 1px;
+        .editor {
+            flex-grow: 1;
         }
-    }
 
-    :where(td, th) p {
-        @extend .m-0;
-    }
+        .milkdown-theme-kuebiko {
+            outline: none;
 
-    /* A little workaround to turn the element into a space */
-    br[data-is-inline='true'],
-    br[data-is-inline='true']::after {
-        content: ' ';
+            padding: 0.3rem;
+            @extend .has-border-1, .is-grey-lighter-border;
+
+            &:hover:not(.ProseMirror-focused) {
+                @extend .is-grey-light-border;
+            }
+
+            &.ProseMirror-focused {
+                @extend .is-link-border;
+                @extend .has-link-shadow;
+            }
+
+            & .selectedCell:after {
+                @extend .has-text-grey-light;
+            }
+
+            h1 {
+                @extend .has-text-grey-darker, .is-size-1;
+            }
+
+            h2 {
+                @extend .has-text-grey-darker, .is-size-2;
+            }
+
+            h3 {
+                @extend .has-text-grey-darker, .is-size-3;
+            }
+
+            h4 {
+                @extend .has-text-grey-darker, .is-size-4;
+            }
+
+            h5 {
+                @extend .has-text-grey-darker, .is-size-5;
+            }
+
+            blockquote {
+                @extend .has-left-border-2,
+                    .is-primary-border,
+                    .pl-4,
+                    .is-size-4,
+                    .has-text-grey-darker;
+            }
+
+            code {
+                @extend .is-family-code, .has-text-grey-darker;
+            }
+
+            pre code {
+                @extend .is-family-code, .is-block, .has-text-grey-darker;
+            }
+
+            img {
+                @extend .my-0, .is-inline-block;
+            }
+
+            ul,
+            ol {
+                &:is(ul) {
+                    list-style: disc;
+                }
+
+                margin-block-start: 1em;
+                margin-block-end: 1em;
+                margin-inline-start: 1em;
+                padding-inline-start: 1em;
+            }
+
+            :where(blockquote):not(:where([class~='not-prose'] *)) {
+                //@apply font-normal;
+            }
+
+            :where(ol > li):not(:where([class~='not-prose'] *))::marker,
+            :where(ul > li):not(:where([class~='not-prose'] *))::marker {
+                @extend .has-text-grey-darker;
+            }
+
+            :where(blockquote p:first-of-type):not(:where([class~='not-prose'] *))::before,
+            :where(blockquote p:first-of-type):not(:where([class~='not-prose'] *))::after {
+                content: '';
+            }
+
+            :where(code):not(:where([class~='not-prose'] *))::before,
+            :where(code):not(:where([class~='not-prose'] *))::after {
+                content: '';
+            }
+
+            table {
+                @extend .table, .is-bordered, .is-striped;
+                tbody tr:last-child td {
+                    border-bottom-width: 1px;
+                }
+            }
+
+            :where(td, th) p {
+                @extend .m-0;
+            }
+
+            /* A little workaround to turn the element into a space */
+            br[data-is-inline='true'],
+            br[data-is-inline='true']::after {
+                content: ' ';
+            }
+        }
     }
 }

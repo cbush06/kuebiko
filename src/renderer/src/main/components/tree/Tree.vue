@@ -27,7 +27,8 @@ export interface TreeOptions {
     expanderClass?: string;
     containerIcon?: string;
     containerExpandedIcon?: string;
-    preventDroppingLeavesOnRoot?: boolean;
+    preventLeavesInRoot?: boolean;
+    preventNestedContainers?: boolean;
 }
 
 interface TreeProps {
@@ -60,10 +61,16 @@ function onDrop(e: TreeNodeDropData) {
 
     if (!(nodeBeingMoved && newNodeParent)) return;
 
+    // If leaves are not allowed on parent, bail...
+    if (props.preventLeavesInRoot && !nodeBeingMoved.isContainer && newNodeParent.id === 'root')
+        return;
+
+    // If containers cannot be nested, bail...
     if (
-        props.preventDroppingLeavesOnRoot &&
-        !nodeBeingMoved.isContainer &&
-        newNodeParent.id === 'root'
+        props.preventNestedContainers &&
+        nodeBeingMoved.isContainer &&
+        newNodeParent.isContainer &&
+        newNodeParent.id !== 'root'
     )
         return;
 

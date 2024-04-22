@@ -10,8 +10,6 @@ export abstract class AbstractDeliveryItem {
 
     abstract getModel(): Section | QuestionResponse;
 
-    abstract getContentText(): string | undefined;
-
     abstract getContentRef(): string | undefined;
 
     abstract getPath(): string;

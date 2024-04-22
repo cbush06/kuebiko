@@ -14,6 +14,7 @@ export type QuestionType =
 export interface Question {
     uuid: string;
     type: QuestionType;
+    title: string;
     contentRef?: string;
     contentText?: string;
     subjectImageRef?: string;

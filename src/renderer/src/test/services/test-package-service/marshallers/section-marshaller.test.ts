@@ -43,11 +43,11 @@ describe('section marshaller', async () => {
                 options: [
                     {
                         uuid: 'abe38dkd',
-                        contentText: 'choice 1',
+                        contentRef: 'choice 1',
                     },
                     {
                         uuid: '3kdaf83',
-                        contentText: 'choice 2',
+                        contentRef: 'choice 2',
                     },
                 ],
                 categories: ['example'],

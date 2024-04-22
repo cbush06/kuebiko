@@ -24,7 +24,6 @@ const updateSectionContent = async (newSection: SectionDeliveryItem) => {
             .first()
     )?.data as string;
     sectionContent.value =
-        newSection?.getContentText() ??
         sectionDescriptionResource ??
         t('defaultSectionIntro', {
             sectionTitle: testDeliveryStore.section?.title ?? 'Unknown Section',

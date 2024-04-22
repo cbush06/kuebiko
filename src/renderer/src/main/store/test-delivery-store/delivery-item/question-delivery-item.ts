@@ -25,7 +25,7 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
         this.response.response = v;
         if (v) {
             this.response.credit = getQuestionEvaluator(this.question.type).evaluate(
-                this.question,
+                this.question.answer!,
                 v,
             );
         }
@@ -33,10 +33,6 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
 
     getModel(): QuestionResponse {
         return this.response;
-    }
-
-    getContentText(): string | undefined {
-        return this.question.contentText;
     }
 
     getContentRef(): string | undefined {
