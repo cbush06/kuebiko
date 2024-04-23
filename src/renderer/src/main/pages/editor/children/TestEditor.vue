@@ -171,7 +171,6 @@ const addQuestion = async (type: QuestionType) => {
             (s) => s.uuid === selectedNavNode.value.id,
         );
         testEditorStore.addQuestion(selectedSection!, type);
-        console.log(type);
     }
     addQuestionMenuShown.value = false;
 };
@@ -194,7 +193,7 @@ watchThrottled(
             navigationTree.value = await convertTestToTree(test);
         }
     },
-    { deep: true, throttle: 1000 },
+    { deep: true, throttle: 500 },
 );
 
 const buildTestElementIdPathList = (test: Test, questions: Question[]) => {

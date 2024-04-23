@@ -170,13 +170,55 @@ export const useTestEditorStore = defineStore('test-editor', {
         },
         addQuestion(section: Section, type: QuestionType) {
             const uuid = globalThis.kuebikoAPI.randomUUID();
-            this.questions.set(uuid, {
-                uuid,
-                title: 'New Question',
-                type,
-                options: [],
-                categories: [],
-            } as Question);
+            switch (type) {
+                case 'MULTIPLE': {
+                    this.questions.set(uuid, {
+                        uuid,
+                        title: 'New Question',
+                        type,
+                        options: [
+                            {
+                                uuid: globalThis.kuebikoAPI.randomUUID(),
+                                contentRef: this.addResource(
+                                    'option1',
+                                    'MARKDOWN',
+                                    'text/markdown',
+                                    '',
+                                ),
+                            },
+                            {
+                                uuid: globalThis.kuebikoAPI.randomUUID(),
+                                contentRef: this.addResource(
+                                    'option2',
+                                    'MARKDOWN',
+                                    'text/markdown',
+                                    '',
+                                ),
+                            },
+                            {
+                                uuid: globalThis.kuebikoAPI.randomUUID(),
+                                contentRef: this.addResource(
+                                    'option3',
+                                    'MARKDOWN',
+                                    'text/markdown',
+                                    '',
+                                ),
+                            },
+                            {
+                                uuid: globalThis.kuebikoAPI.randomUUID(),
+                                contentRef: this.addResource(
+                                    'option4',
+                                    'MARKDOWN',
+                                    'text/markdown',
+                                    '',
+                                ),
+                            },
+                        ],
+                        categories: [],
+                    } as Question);
+                    break;
+                }
+            }
             section.questionRefs.push(uuid);
         },
     },

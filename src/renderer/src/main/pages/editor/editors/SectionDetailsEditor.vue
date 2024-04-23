@@ -11,7 +11,9 @@
         <div class="field-label is-normal">
             <label class="label">Description</label>
         </div>
-        <div class="field-body"><ToggleTextEditor v-model="description" /></div>
+        <div class="field-body">
+            <ToggleTextEditor v-model="description" starting-height="16rem" />
+        </div>
     </div>
 </template>
 

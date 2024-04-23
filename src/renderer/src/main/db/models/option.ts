@@ -2,7 +2,7 @@ import { Point } from './point';
 
 export interface Option {
     uuid: string;
-    subjectImageArea: Point[];
+    subjectImageArea?: Point[];
     contentRef?: string;
     explanation?: string;
 }

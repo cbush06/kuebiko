@@ -1,14 +1,22 @@
 <template>
-    <div class="panel is-shadowless w-100">
-        <div>
+    <div class="panel is-shadowless is-flex is-flex-grow-1 is-flex-direction-column">
+        <div class="is-flex is-flex-grow-1">
             <div v-if="textMode === 'plain'" class="editor plain">
-                <textarea class="textarea" v-model="model"></textarea>
+                <textarea
+                    class="textarea is-flex-grow-1"
+                    v-model="model"
+                    :style="{ 'min-height': props.startingHeight }"
+                ></textarea>
             </div>
-            <div v-else class="editor rich">
+            <div
+                v-else
+                class="editor rich is-flex is-flex-direction-column"
+                :style="{ 'min-height': props.startingHeight }"
+            >
                 <MilkdownEditor v-model="model" />
             </div>
         </div>
-        <div class="panel-tabs is-justify-content-end pr-4">
+        <div class="panel-tabs is-justify-content-end pr-4 is-flex-grow-0">
             <div class="buttons has-addons">
                 <button
                     class="button is-small text-mode-button"
@@ -33,6 +41,11 @@
 import { ref } from 'vue';
 import MilkdownEditor from '../milkdown-editor/MilkdownEditor.vue';
 
+interface ToggleTextEditorProps {
+    startingHeight: string;
+}
+
+const props = defineProps<ToggleTextEditorProps>();
 const model = defineModel({ default: '' });
 const textMode = ref<'plain' | 'rich'>('rich');
 </script>
@@ -51,15 +64,10 @@ const textMode = ref<'plain' | 'rich'>('rich');
 }
 
 .editor {
-    .plain {
-        textarea {
-            min-height: 16rem;
-        }
-    }
     .rich {
         display: flex;
         flex-direction: column;
-        min-height: 16rem;
+        flex-grow: 1;
     }
 }
 </style>
