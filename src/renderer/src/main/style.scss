@@ -8,9 +8,11 @@
 @import '~bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
 @import '~bulma-multiselect/sass/multiselect';
 
-html,
-body,
-#app,
-#app > .container {
-    height: 100%;
+html.is-full-height {
+    &,
+    body,
+    #app,
+    #app > .container {
+        height: 100%;
+    }
 }

@@ -1,20 +1,16 @@
 <template>
     <div class="panel is-shadowless is-flex is-flex-grow-1 is-flex-direction-column">
-        <div class="is-flex is-flex-grow-1">
-            <div v-if="textMode === 'plain'" class="editor plain">
-                <textarea
-                    class="textarea is-flex-grow-1"
-                    v-model="model"
-                    :style="{ 'min-height': props.startingHeight }"
-                ></textarea>
-            </div>
-            <div
-                v-else
-                class="editor rich is-flex is-flex-direction-column"
+        <div
+            class="is-flex is-flex-grow-1 is-align-items-stretch"
+            :style="{ 'min-height': props.startingHeight }"
+        >
+            <textarea
+                v-if="textMode === 'plain'"
+                class="textarea"
+                v-model="model"
                 :style="{ 'min-height': props.startingHeight }"
-            >
-                <MilkdownEditor v-model="model" />
-            </div>
+            ></textarea>
+            <MilkdownEditor v-else v-model="model" />
         </div>
         <div class="panel-tabs is-justify-content-end pr-4 is-flex-grow-0">
             <div class="buttons has-addons">
@@ -60,14 +56,6 @@ const textMode = ref<'plain' | 'rich'>('rich');
     border-color: $grey-light;
     &.is-active {
         background-color: $white-ter;
-    }
-}
-
-.editor {
-    .rich {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
     }
 }
 </style>

@@ -13,7 +13,6 @@ import IntroVue from './pages/testing/children/Intro.vue';
 import QuestionVue from './pages/testing/children/Question.vue';
 import ResultsVue from './pages/testing/children/Results.vue';
 import SectionVue from './pages/testing/children/Section.vue';
-import { useTestEditorStore } from './store/test-editor-store/test-editor-store';
 
 export default [
     {
@@ -67,6 +66,9 @@ export default [
     {
         path: '/editor',
         component: EditorWrapper,
+        meta: {
+            isFullHeight: true,
+        },
         children: [
             {
                 path: '',

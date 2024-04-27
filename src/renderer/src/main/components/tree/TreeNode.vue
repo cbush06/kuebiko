@@ -38,6 +38,7 @@
             ></div>
             <TreeNode
                 v-for="(node, index) in props.children"
+                :key="node.id"
                 :is-root="false"
                 :id="node.id"
                 :index="index"

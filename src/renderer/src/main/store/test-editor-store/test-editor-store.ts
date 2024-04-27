@@ -154,72 +154,46 @@ export const useTestEditorStore = defineStore('test-editor', {
         },
         addSection() {
             const newSectionUuid = globalThis.kuebikoAPI.randomUUID();
-            const descriptionRef = this.addResource(
-                `section-${newSectionUuid}-description.md`,
-                'MARKDOWN',
-                'text/markdown',
-                '',
-            );
-            this.test.sections.push({
+            const newSection = {
                 uuid: newSectionUuid,
                 title: 'New Section',
                 default: false,
-                descriptionRef: descriptionRef,
+                descriptionRef: this.addResource(
+                    `section-${newSectionUuid}-description.md`,
+                    'MARKDOWN',
+                    'text/markdown',
+                    '',
+                ),
                 questionRefs: [],
-            });
+            };
+            this.test.sections.push(newSection);
+            return newSection;
         },
         addQuestion(section: Section, type: QuestionType) {
             const uuid = globalThis.kuebikoAPI.randomUUID();
             switch (type) {
-                case 'MULTIPLE': {
-                    this.questions.set(uuid, {
+                case 'MULTIPLE':
+                case 'MANY': {
+                    const question = {
                         uuid,
                         title: 'New Question',
                         type,
-                        options: [
-                            {
-                                uuid: globalThis.kuebikoAPI.randomUUID(),
-                                contentRef: this.addResource(
-                                    'option1',
-                                    'MARKDOWN',
-                                    'text/markdown',
-                                    '',
-                                ),
-                            },
-                            {
-                                uuid: globalThis.kuebikoAPI.randomUUID(),
-                                contentRef: this.addResource(
-                                    'option2',
-                                    'MARKDOWN',
-                                    'text/markdown',
-                                    '',
-                                ),
-                            },
-                            {
-                                uuid: globalThis.kuebikoAPI.randomUUID(),
-                                contentRef: this.addResource(
-                                    'option3',
-                                    'MARKDOWN',
-                                    'text/markdown',
-                                    '',
-                                ),
-                            },
-                            {
-                                uuid: globalThis.kuebikoAPI.randomUUID(),
-                                contentRef: this.addResource(
-                                    'option4',
-                                    'MARKDOWN',
-                                    'text/markdown',
-                                    '',
-                                ),
-                            },
-                        ],
+                        options: [],
                         categories: [],
-                    } as Question);
+                    };
+                    this.questions.set(uuid, question);
+                    this.appendOption(question);
                     break;
                 }
             }
             section.questionRefs.push(uuid);
+        },
+        appendOption(question: Question) {
+            const uuid = globalThis.kuebikoAPI.randomUUID();
+            question.options.push({
+                uuid,
+                contentRef: this.addResource(`option-${uuid}`, 'MARKDOWN', 'text/markdown', ''),
+            });
         },
     },
 });

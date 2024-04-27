@@ -19,7 +19,7 @@
         <div class="field-body">
             <div class="field">
                 <div id="description-div" class="control">
-                    <ToggleTextEditor v-model="description" />
+                    <ToggleTextEditor v-model="description" starting-height="16rem" />
                 </div>
             </div>
         </div>

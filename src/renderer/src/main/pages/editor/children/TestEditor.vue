@@ -99,17 +99,14 @@
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
-            <MilkdownProvider>
-                <TestDetailsEditor v-if="testEditorStore.testEditMode === 'test'" />
-                <SectionDetailsEditor v-else-if="testEditorStore.testEditMode === 'section'" />
-                <QuestionEditor v-else />
-            </MilkdownProvider>
+            <TestDetailsEditor v-if="testEditorStore.testEditMode === 'test'" />
+            <SectionDetailsEditor v-else-if="testEditorStore.testEditMode === 'section'" />
+            <QuestionEditor v-else />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { MilkdownProvider } from '@milkdown/vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { Question, QuestionType } from '@renderer/db/models/question';
@@ -207,6 +204,11 @@ const buildTestElementIdPathList = (test: Test, questions: Question[]) => {
     return idPathSet;
 };
 
+const QUESTION_TYPE_TO_ICON_MAP = Object.seal({
+    MULTIPLE: 'fa-solid fa-list-ul',
+    MANY: 'fa-solid fa-list-check',
+} as Record<QuestionType, string>);
+
 const convertTestToTree = async (test: Test) => {
     const tree = {
         id: 'root',
@@ -231,6 +233,7 @@ const convertTestToTree = async (test: Test) => {
                     ({
                         id: q.uuid,
                         label: q.title,
+                        iconClass: QUESTION_TYPE_TO_ICON_MAP[q.type] + ' has-text-primary',
                     }) as TreeNodeStruct,
             );
 

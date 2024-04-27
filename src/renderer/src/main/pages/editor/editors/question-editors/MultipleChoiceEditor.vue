@@ -10,11 +10,13 @@
                         <div class="is-flex-grow-0 pl-2">
                             <input
                                 class="is-checkradio"
-                                id="exampleRadioInline1"
+                                name="correctAnswer"
+                                :id="o.uuid"
+                                :value="o.uuid"
+                                v-model="props.question.answer"
                                 type="radio"
-                                name="exampleRadioInline"
                             />
-                            <label for="exampleRadioInline1"></label>
+                            <label :for="o.uuid"></label>
                         </div>
                         <div class="is-flex-grow-1">
                             <ToggleTextEditor
@@ -22,13 +24,16 @@
                                 v-model="
                                     testEditorStore.resources.get(o.contentRef!)!.data as string
                                 "
-                                starting-height="10rem"
+                                starting-height="8rem"
                             />
                         </div>
                     </div>
                 </div>
                 <div class="panel-block">
-                    <button class="button is-primary is-outlined is-fullwidth">
+                    <button
+                        class="button is-primary is-outlined is-fullwidth"
+                        @click="testEditorStore.appendOption(props.question)"
+                    >
                         <i class="fa-solid fa-plus mr-1"></i> Add Option
                     </button>
                 </div>
