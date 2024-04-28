@@ -149,3 +149,19 @@ $overflow-values: (visible, hidden, clip, scroll, auto) !default;
         overflow-x: $value;
     }
 }
+
+// Circle button
+.button.is-circle {
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    padding: 0;
+}
+
+// Drag-n-drop
+.is-draggable {
+    cursor: grab;
+    &:active {
+        cursor: grabbing;
+    }
+}
