@@ -6,7 +6,9 @@
             {{ testEditorStore.test.title.trim().length ? testEditorStore.test.title : 'Untitled' }}
         </span>
         <div class="is-flex is-flex-direction-row is-align-items-center is-flex-gap-2 pr-2">
-            <button class="button"><i class="fa-solid fa-xmark pr-2"></i> Back</button>
+            <RouterLink class="button" to="/editor"
+                ><i class="fa-solid fa-xmark pr-2"></i> Back</RouterLink
+            >
             <button class="button is-primary">
                 <i class="fa-solid fa-floppy-disk pr-2"></i> Save
             </button>
@@ -32,9 +34,7 @@
                     <div class="dropdown-trigger">
                         <button
                             class="button is-small"
-                            :disabled="
-                                !selectedNavNode.isContainer || selectedNavNode.id === 'root'
-                            "
+                            :disabled="selectedNavNode.id === 'root'"
                             @click="addQuestionMenuShown = true"
                         >
                             <span class="icon is-small"
@@ -162,13 +162,30 @@ watch(testEditorStore.test.sections, (s) => {
 // #endregion
 
 // #region Add/Remove questions
-const addQuestion = async (type: QuestionType) => {
-    if (selectedNavNode.value.isContainer && selectedNavNode.value.id !== 'root') {
-        const selectedSection = testEditorStore.test.sections.find(
-            (s) => s.uuid === selectedNavNode.value.id,
-        );
-        testEditorStore.addQuestion(selectedSection!, type);
+const findTargetContainer: (node: TreeNodeStruct) => TreeNodeStruct | undefined = (
+    node: TreeNodeStruct,
+) => {
+    for (const child of node.children ?? []) {
+        if (child.id === selectedNavNode.value.id) return node;
+        if (!child.isContainer) continue;
+
+        const match = findTargetContainer(child);
+        if (match) return match;
     }
+    return undefined;
+};
+
+const addQuestion = async (type: QuestionType) => {
+    if (selectedNavNode.value.id === 'root') return;
+
+    const selectedSection = selectedNavNode.value.isContainer
+        ? testEditorStore.test.sections.find((s) => s.uuid === selectedNavNode.value.id)
+        : testEditorStore.test.sections.find(
+              (s) => s.uuid === findTargetContainer(navigationTree.value)?.id,
+          );
+
+    testEditorStore.addQuestion(selectedSection!, type);
+
     addQuestionMenuShown.value = false;
 };
 // #endregion

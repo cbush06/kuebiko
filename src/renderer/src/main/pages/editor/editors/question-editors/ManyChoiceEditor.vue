@@ -14,16 +14,18 @@
                 <template #item="{ element }">
                     <div
                         class="panel-block m-0 p-0"
-                        :class="{ 'is-active': element.uuid === props.question.answer }"
+                        :class="{ 'is-active': props.question.answer?.includes(element.uuid) }"
                     >
                         <div class="is-flex w-100">
                             <div
                                 class="is-flex-grow-0"
                                 :class="{
-                                    'has-background-grey-lighter':
-                                        element.uuid !== props.question.answer,
-                                    'has-background-primary':
-                                        element.uuid === props.question.answer,
+                                    'has-background-grey-lighter': !props.question.answer?.includes(
+                                        element.uuid,
+                                    ),
+                                    'has-background-primary': props.question.answer?.includes(
+                                        element.uuid,
+                                    ),
                                 }"
                                 style="width: 8px"
                             ></div>
@@ -38,11 +40,11 @@
                                 <div>
                                     <input
                                         class="is-checkradio"
-                                        :name="element.uuid"
+                                        :name="`${element.uuid}-correctAnswer`"
                                         :id="element.uuid"
                                         :value="element.uuid"
-                                        v-model="props.question.answer"
-                                        type="radio"
+                                        v-model="props.question.answer as string[]"
+                                        type="checkbox"
                                     />
                                     <label :for="element.uuid" class="pr-0 pl-4"></label>
                                 </div>
@@ -92,11 +94,11 @@ import { Question } from '@renderer/db/models/question';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import draggable from 'vuedraggable';
 
-interface MultipleChoiceEditorProps {
+interface ManyChoiceEditorProps {
     question: Question;
 }
 
-const props = defineProps<MultipleChoiceEditorProps>();
+const props = defineProps<ManyChoiceEditorProps>();
 const testEditorStore = useTestEditorStore();
 
 const deleteOption = (option: Option) => {
@@ -105,7 +107,11 @@ const deleteOption = (option: Option) => {
     if (idx < 0) return;
 
     props.question.options.splice(idx, 1);
-    if (props.question.answer === option.uuid) props.question.answer = undefined;
+
+    const answer = props.question.answer as string[] | undefined;
+    if (answer?.includes(option.uuid)) {
+        answer?.splice(answer.indexOf(option.uuid), 1);
+    }
 };
 </script>
 

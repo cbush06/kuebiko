@@ -171,17 +171,24 @@ export const useTestEditorStore = defineStore('test-editor', {
         },
         addQuestion(section: Section, type: QuestionType) {
             const uuid = globalThis.kuebikoAPI.randomUUID();
+
+            const question = {
+                uuid,
+                title: 'New Question',
+                type,
+                options: [],
+                categories: [],
+            } as Question;
+            this.questions.set(uuid, question);
+
             switch (type) {
-                case 'MULTIPLE':
+                case 'MULTIPLE': {
+                    question.answer = '';
+                    this.appendOption(question);
+                    break;
+                }
                 case 'MANY': {
-                    const question = {
-                        uuid,
-                        title: 'New Question',
-                        type,
-                        options: [],
-                        categories: [],
-                    };
-                    this.questions.set(uuid, question);
+                    question.answer = [] as string[];
                     this.appendOption(question);
                     break;
                 }

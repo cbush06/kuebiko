@@ -8,6 +8,7 @@
         </div>
     </div>
     <MultipleChoiceEditor v-if="question.type === 'MULTIPLE'" :question="question" />
+    <ManyChoiceEditor v-else-if="question.type === 'MANY'" :question="question" />
     <div v-else>Question type not recognized</div>
 </template>
 
@@ -15,6 +16,7 @@
 import { Question } from '@renderer/db/models/question';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import { computed } from 'vue';
+import ManyChoiceEditor from './question-editors/ManyChoiceEditor.vue';
 import MultipleChoiceEditor from './question-editors/MultipleChoiceEditor.vue';
 
 const testEditorStore = useTestEditorStore();
