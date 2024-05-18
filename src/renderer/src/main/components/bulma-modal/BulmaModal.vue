@@ -15,7 +15,7 @@
                             class="delete"
                             :aria-label="t('close')"
                             :title="t('close')"
-                            @click="close()"
+                            @click="close('closed')"
                         ></button>
                     </template>
                 </slot>

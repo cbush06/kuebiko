@@ -18,15 +18,19 @@
             @dragleave="onDragEndLeave"
             @dragend="onDragEndLeave"
             @drop="onDrop"
-            :draggable="!props.isRoot && props.treeOptions.reorderable"
+            :draggable="!props.isRoot && props.treeOptions?.reorderable"
+            :data-testid="`tree-node-label-${props.id}`"
         >
-            <i :class="iconClass"></i>
-            <span class="label-text">{{ props.label }}</span>
+            <i :class="iconClass" :data-testid="`tree-node-icon-${props.id}`"></i>
+            <span class="label-text" :data-testid="`tree-node-text-${props.id}`">{{
+                props.label
+            }}</span>
         </label>
         <div
             v-if="props.children?.length && (props.isRoot || props.isContainer)"
             class="children"
             :class="{ 'is-hidden': !(isExpanded || isRoot) }"
+            :data-testid="`tree-node-children-${props.id}`"
         >
             <div
                 class="drop-line"
@@ -35,6 +39,7 @@
                 @dragleave="onDragEndLeave"
                 @dragend="onDragEndLeave"
                 @drop="onDropBefore"
+                :data-testid="`tree-node-children-before-drop-line-${props.id}`"
             ></div>
             <TreeNode
                 v-for="(node, index) in props.children"
@@ -62,11 +67,13 @@
             @dragleave="onDragEndLeave"
             @dragend="onDragEndLeave"
             @drop="onDropAfter"
+            :data-testid="`tree-node-children-after-drop-line-${props.id}`"
         ></div>
         <div
             v-if="!props.isRoot && props.isContainer && props.children?.length"
-            :class="`expander ${props.treeOptions.expanderClass ?? 'has-text-grey'}`"
+            :class="`expander ${props.treeOptions?.expanderClass ?? 'has-text-grey'}`"
             @click="isExpanded = !isExpanded"
+            :data-testid="`tree-node-expander-${props.id}`"
         ></div>
     </div>
 </template>
@@ -78,7 +85,7 @@ import { TreeNodeDragData, TreeNodeDropData, TreeNodeStruct } from './structures
 
 export interface TreeNodeOptions {
     isRoot?: boolean;
-    treeOptions: TreeOptions;
+    treeOptions?: TreeOptions;
     selectedNode?: TreeNodeStruct;
     parent?: TreeNodeStruct;
 }
@@ -97,9 +104,9 @@ const isExpanded = ref(props.isExpanded ?? true);
 const iconClass = computed(() => {
     if (!!props.isContainer && !props.isRoot) {
         return isExpanded.value
-            ? props.treeOptions.containerExpandedIcon ??
+            ? props.treeOptions?.containerExpandedIcon ??
                   'fa-regular fa-folder-open has-text-primary'
-            : props.treeOptions.containerIcon ?? 'fa-solid fa-folder has-text-primary';
+            : props.treeOptions?.containerIcon ?? 'fa-solid fa-folder has-text-primary';
     }
     return props.iconClass;
 });
@@ -170,7 +177,7 @@ function onDragEnter(e: DragEvent) {
     e.preventDefault();
 
     if (
-        !props.treeOptions.reorderable ||
+        !props.treeOptions?.reorderable ||
         !(props.isContainer || (e.target as HTMLElement).classList.contains('drop-line'))
     )
         return;
@@ -181,7 +188,7 @@ function onDragEndLeave(e: DragEvent) {
     e.preventDefault();
 
     if (
-        !props.treeOptions.reorderable ||
+        !props.treeOptions?.reorderable ||
         !(props.isContainer || (e.target as HTMLElement).classList.contains('drop-line'))
     )
         return;

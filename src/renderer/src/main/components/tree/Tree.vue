@@ -31,7 +31,7 @@ export interface TreeOptions {
     preventNestedContainers?: boolean;
 }
 
-interface TreeProps {
+export interface TreeProps {
     rootNode: TreeNodeStruct;
     selected?: TreeNodeStruct;
 }
