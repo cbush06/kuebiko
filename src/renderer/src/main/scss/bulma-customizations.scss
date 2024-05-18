@@ -1,3 +1,4 @@
+@import '~bulma/sass/utilities/initial-variables.sass';
 @import '~bulma/sass/utilities/derived-variables.sass';
 @import '~bulma/sass/elements/box.sass';
 
@@ -150,17 +151,21 @@ $overflow-values: (visible, hidden, clip, scroll, auto) !default;
     }
 }
 
-// Circle button
-.button.is-circle {
-    border-radius: 50%;
-    width: 3em;
-    height: 3em;
-    padding: 0;
+// Light, white buttons
+button.button.is-white.has-text-grey-lighter {
+    &:hover,
+    &:active {
+        color: $grey-light !important;
+    }
 }
 
 // Drag-n-drop
 .is-draggable {
     cursor: grab;
+    &:hover,
+    &:active {
+        color: $grey-light !important;
+    }
     &:active {
         cursor: grabbing;
     }

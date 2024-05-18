@@ -4,16 +4,19 @@ import { Question, QuestionType } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
-import { QuestionsService } from '@renderer/services/questions-service';
-import { ResourcesService } from '@renderer/services/resources-service';
-import { TestsService } from '@renderer/services/tests-service';
+import { EditorQuestionsService } from '@renderer/services/editor-questions-service';
+import { EditorResourcesService } from '@renderer/services/editor-resources-service';
+import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { defineStore } from 'pinia';
 
 export interface TestEditorStoreState {
     // Props
     test: Test;
+    lastSavedTest: string;
     questions: Map<string, Question>;
+    lastSavedQuestions: Map<string, string>;
     resources: Map<string, Resource>;
+    lastSavedResources: Map<string, string>;
     resourceNamesToUuids: Map<string, string>;
     testEditMode: 'test' | 'section' | 'question';
     testEditPart: Test | Section | Question;
@@ -54,8 +57,11 @@ export const useTestEditorStore = defineStore('test-editor', {
 
         return {
             test,
+            lastSavedTest: globalThis.kuebikoAPI.sha256(JSON.stringify(test)),
             resources: new Map<string, Resource>(),
+            lastSavedResources: new Map<string, string>(),
             questions: new Map<string, Question>(),
+            lastSavedQuestions: new Map<string, string>(),
             resourceNamesToUuids: new Map<string, string>(),
             testEditMode: 'test',
             testEditPart: test,
@@ -64,24 +70,28 @@ export const useTestEditorStore = defineStore('test-editor', {
     getters: {},
     actions: {
         async initializeForTest(uuid: string) {
-            const test = await TestsService.fetchTest(uuid);
+            const test = await EditorTestsService.fetchTest(uuid);
             if (!test) throw new Error(`test with ID [${uuid}] does not exist`);
             this.test = test;
 
             this.resources.clear();
             this.resourceNamesToUuids.clear();
 
-            (await ResourcesService.fetchResources(test.resourceRefs)).forEach((r) => {
+            (await EditorResourcesService.fetchResources(test.resourceRefs)).forEach((r) => {
                 if (!r) return;
                 this.resources.set(r.uuid, r);
                 this.resourceNamesToUuids.set(r.name, r.uuid);
             });
 
             (
-                await QuestionsService.fetchQuestions(test.sections.flatMap((s) => s.questionRefs))
+                await EditorQuestionsService.fetchQuestions(
+                    test.sections.flatMap((s) => s.questionRefs),
+                )
             ).forEach((q) => {
                 this.questions.set(q!.uuid, q!);
             });
+
+            this.snapshotState();
         },
         addAuthor(author: Author) {
             this.test.authors.push(author);
@@ -201,6 +211,60 @@ export const useTestEditorStore = defineStore('test-editor', {
                 uuid,
                 contentRef: this.addResource(`option-${uuid}`, 'MARKDOWN', 'text/markdown', ''),
             });
+        },
+        snapshotState() {
+            // TODO: Make this WAYYY more efficient by using hashes of resources & questions
+            this.lastSavedTest = globalThis.kuebikoAPI.sha256(JSON.stringify(this.test));
+
+            this.lastSavedQuestions.clear();
+            this.questions.forEach((q) =>
+                this.lastSavedQuestions.set(
+                    q.uuid,
+                    globalThis.kuebikoAPI.sha256(JSON.stringify(q)),
+                ),
+            );
+
+            this.lastSavedResources.clear();
+            this.resources.forEach((r) =>
+                this.lastSavedResources.set(r.uuid, globalThis.kuebikoAPI.sha256(r.data)),
+            );
+        },
+        hasChangedWithoutSaving() {
+            const currentTestHash = globalThis.kuebikoAPI.sha256(JSON.stringify(this.test));
+            const currentQuestionsHashes = new Map<string, string>(
+                Array.from(this.questions.entries()).map(([k, v]) => [
+                    k,
+                    globalThis.kuebikoAPI.sha256(JSON.stringify(v)),
+                ]),
+            );
+            const currentResourcesHashes = new Map<string, string>(
+                Array.from(this.resources.entries()).map(([k, v]) => [
+                    k,
+                    globalThis.kuebikoAPI.sha256(v.data),
+                ]),
+            );
+
+            // prettier-ignore
+            return !(
+                // Test
+                this.lastSavedTest === currentTestHash &&
+
+                // Questions
+                this.lastSavedQuestions.size === currentQuestionsHashes.size &&
+                Array.from(this.lastSavedQuestions.keys()).every(
+                    (k) => this.lastSavedQuestions.get(k) === currentQuestionsHashes.get(k),
+                ) &&
+
+                // Resources
+                this.lastSavedResources.size === currentResourcesHashes.size &&
+                Array.from(this.lastSavedResources.keys()).every(
+                    (k) => this.lastSavedResources.get(k) === currentResourcesHashes.get(k),
+                )
+            );
+        },
+        save() {
+            console.log('Saving...');
+            this.snapshotState();
         },
     },
 });

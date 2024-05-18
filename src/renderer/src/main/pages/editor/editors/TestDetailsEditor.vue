@@ -184,6 +184,7 @@ if (!testEditorStore.test.descriptionRef) {
         'text/markdown',
         '',
     );
+    testEditorStore.snapshotState();
 }
 const description = ref<string>(
     (testEditorStore.resources.get(testEditorStore.test.descriptionRef ?? '')?.data as string) ??

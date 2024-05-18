@@ -43,19 +43,19 @@
                                         :name="`${element.uuid}-correctAnswer`"
                                         :id="element.uuid"
                                         :value="element.uuid"
-                                        v-model="props.question.answer as string[]"
+                                        v-model="props.question.answer"
                                         type="checkbox"
                                     />
                                     <label :for="element.uuid" class="pr-0 pl-4"></label>
                                 </div>
                                 <div>
                                     <button
-                                        class="button is-circle is-white"
+                                        class="button is-rounded is-white has-text-grey-lighter"
                                         @click="() => deleteOption(element)"
                                     >
-                                        <i
-                                            class="fa-solid fa-trash fa-lg has-text-grey-lighter"
-                                        ></i>
+                                        <span class="icon is-small">
+                                            <i class="fa-solid fa-trash fa-lg"></i>
+                                        </span>
                                     </button>
                                 </div>
                             </div>

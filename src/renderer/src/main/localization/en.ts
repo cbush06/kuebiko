@@ -1,5 +1,8 @@
 export default {
     attempt: 'Attempt',
+    cancel: 'Cancel',
+    close: 'Close',
+    confirm: 'Confirm',
     correct: 'Correct',
     default: 'Default',
     fail: 'fail',
@@ -11,6 +14,7 @@ export default {
     prepare: 'Prepare',
     questions: 'questions',
     results: 'Results',
+    save: 'Save',
     score: 'Score',
     seconds: 'seconds',
     simulate: 'Simulate',

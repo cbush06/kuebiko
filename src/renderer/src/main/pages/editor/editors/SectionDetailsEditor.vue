@@ -33,7 +33,6 @@ const description = ref(
 watchDebounced(
     description,
     () => {
-        console.log(description);
         testEditorStore.updateResourceData(section.value.descriptionRef!, description.value);
     },
     { debounce: 500 },

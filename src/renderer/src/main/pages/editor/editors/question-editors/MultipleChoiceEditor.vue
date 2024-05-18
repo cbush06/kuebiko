@@ -48,12 +48,12 @@
                                 </div>
                                 <div>
                                     <button
-                                        class="button is-circle is-white"
+                                        class="button is-rounded is-white has-text-grey-lighter"
                                         @click="() => deleteOption(element)"
                                     >
-                                        <i
-                                            class="fa-solid fa-trash fa-lg has-text-grey-lighter"
-                                        ></i>
+                                        <span class="icon is-small">
+                                            <i class="fa-solid fa-trash fa-lg"></i>
+                                        </span>
                                     </button>
                                 </div>
                             </div>

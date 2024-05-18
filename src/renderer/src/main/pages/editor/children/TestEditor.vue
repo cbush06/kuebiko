@@ -6,10 +6,10 @@
             {{ testEditorStore.test.title.trim().length ? testEditorStore.test.title : 'Untitled' }}
         </span>
         <div class="is-flex is-flex-direction-row is-align-items-center is-flex-gap-2 pr-2">
-            <RouterLink class="button" to="/editor"
-                ><i class="fa-solid fa-xmark pr-2"></i> Back</RouterLink
-            >
-            <button class="button is-primary">
+            <button class="button" @click="back">
+                <i class="fa-solid fa-xmark pr-2"></i> Back
+            </button>
+            <button class="button is-primary" @click="save">
                 <i class="fa-solid fa-floppy-disk pr-2"></i> Save
             </button>
         </div>
@@ -104,9 +104,14 @@
             <QuestionEditor v-else />
         </div>
     </div>
+
+    <BulmaModal ref="confirmLeaveWithoutSavingModal" :title="t('closeWithoutSaving')">
+        <template #body>{{ t('closeWithoutSavingMsg') }}</template>
+    </BulmaModal>
 </template>
 
 <script setup lang="ts">
+import BulmaModal from '@renderer/components/bulma-modal/BulmaModal.vue';
 import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { Question, QuestionType } from '@renderer/db/models/question';
@@ -115,13 +120,17 @@ import { useTestEditorStore } from '@renderer/store/test-editor-store/test-edito
 import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
 import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 import QuestionEditor from '../editors/QuestionEditor.vue';
 import SectionDetailsEditor from '../editors/SectionDetailsEditor.vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
 
 const addQuestionMenuShown = ref(false);
 const testEditorStore = useTestEditorStore();
+const confirmLeaveWithoutSavingModal = ref<InstanceType<typeof BulmaModal> | undefined>();
+const { t } = useI18n();
+const router = useRouter();
 
 // Initialize the store for the current or new test
 const route = useRoute();
@@ -129,6 +138,7 @@ if (route.params['testUuid']) {
     testEditorStore.initializeForTest(route.params['testUuid'] as string);
 } else {
     testEditorStore.$reset();
+    console.log(testEditorStore.hasChangedWithoutSaving());
 }
 
 // Prepare the tree nav
@@ -299,6 +309,31 @@ const onDrop = (e: TreeNodeDropData) => {
     }
 };
 // #endregion
+
+// #region saving and navigating
+const save = () => {
+    testEditorStore.save();
+};
+
+const back = () => {
+    if (testEditorStore.hasChangedWithoutSaving()) {
+        confirmLeaveWithoutSavingModal.value?.show().subscribe((result) => {
+            if (result === 'confirmed') router.push('/editor');
+        });
+    } else {
+        router.push('/editor');
+    }
+};
+// #endregion
 </script>
 
 <style scoped lang="scss"></style>
+
+<i18n lang="json">
+{
+    "en": {
+        "closeWithoutSaving": "Close Without Saving?",
+        "closeWithoutSavingMsg": "You have unsaved changes. If you want to keep them, click \"Cancel\" and save you changes; otherwise, click \"Confirm.\""
+    }
+}
+</i18n>
