@@ -8,6 +8,7 @@ import { EditorQuestionsService } from '@renderer/services/editor-questions-serv
 import { EditorResourcesService } from '@renderer/services/editor-resources-service';
 import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { defineStore } from 'pinia';
+import { toRaw } from 'vue';
 
 export interface TestEditorStoreState {
     // Props
@@ -262,9 +263,19 @@ export const useTestEditorStore = defineStore('test-editor', {
                 )
             );
         },
-        save() {
-            console.log('Saving...');
+        async save() {
             this.snapshotState();
+
+            try {
+                await EditorTestsService.saveTestAndRelations(
+                    toRaw(this.test),
+                    Array.from(this.resources.values()).map((r) => toRaw(r)),
+                    Array.from(this.questions.values()).map((q) => toRaw(q)),
+                );
+            } catch (e) {
+                console.error('Error encountered while saving test', e);
+                throw e;
+            }
         },
     },
 });

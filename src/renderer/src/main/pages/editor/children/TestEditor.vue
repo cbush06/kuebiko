@@ -117,14 +117,16 @@ import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/stru
 import { Question, QuestionType } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
+import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import QuestionEditor from '../editors/QuestionEditor.vue';
 import SectionDetailsEditor from '../editors/SectionDetailsEditor.vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
+const toast = inject<BulmaToastService>(BulmaToast)!;
 
 const addQuestionMenuShown = ref(false);
 const testEditorStore = useTestEditorStore();
@@ -311,8 +313,13 @@ const onDrop = (e: TreeNodeDropData) => {
 // #endregion
 
 // #region saving and navigating
-const save = () => {
-    testEditorStore.save();
+const save = async () => {
+    try {
+        await testEditorStore.save();
+        toast.success({ message: 'Changes saved!' });
+    } catch (e) {
+        toast.danger({ message: 'Uh oh! An error prevented saving your changes.' });
+    }
 };
 
 const back = () => {
