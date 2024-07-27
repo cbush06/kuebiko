@@ -96,6 +96,7 @@
                 @drop="onDrop"
                 :preventLeavesInRoot="true"
                 :prevent-nested-containers="true"
+                max-width="15rem"
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">

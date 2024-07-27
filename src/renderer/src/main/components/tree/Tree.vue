@@ -1,5 +1,11 @@
 <template>
-    <div class="tree" :class="{ collapsible: props.collapsible, reorderable: props.reorderable }">
+    <div
+        class="tree"
+        :class="{ collapsible: props.collapsible, reorderable: props.reorderable }"
+        :style="{
+            width: props.maxWidth || '100%',
+        }"
+    >
         <TreeNodeVue
             :id="props.rootNode.id"
             :label="props.rootNode.label"
@@ -29,6 +35,7 @@ export interface TreeOptions {
     containerExpandedIcon?: string;
     preventLeavesInRoot?: boolean;
     preventNestedContainers?: boolean;
+    maxWidth?: string;
 }
 
 export interface TreeProps {
@@ -91,8 +98,4 @@ function onDrop(e: TreeNodeDropData) {
 }
 </script>
 
-<style scoped>
-.tree {
-    width: fit-content;
-}
-</style>
+<style scoped></style>

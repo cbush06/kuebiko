@@ -6,6 +6,9 @@
             disabled: props.isDisabled,
             collapsed: !(isExpanded || props.isRoot),
         }"
+        :style="{
+            width: props.isRoot ? props.treeOptions?.maxWidth : undefined,
+        }"
         :data-testid="`tree-node-${props.id}`"
     >
         <div class="branch"></div>
@@ -22,9 +25,9 @@
             :data-testid="`tree-node-label-${props.id}`"
         >
             <i :class="iconClass" :data-testid="`tree-node-icon-${props.id}`"></i>
-            <span class="label-text" :data-testid="`tree-node-text-${props.id}`">{{
-                props.label
-            }}</span>
+            <span class="label-text" :data-testid="`tree-node-text-${props.id}`">
+                {{ props.label }}
+            </span>
         </label>
         <div
             v-if="props.children?.length && (props.isRoot || props.isContainer)"
@@ -200,6 +203,7 @@ function onDragEndLeave(e: DragEvent) {
 @import '~/bulma/bulma.sass';
 
 .tree-node {
+    display: block;
     position: relative;
     text-decoration: none;
 
@@ -239,7 +243,10 @@ function onDragEndLeave(e: DragEvent) {
 
     label {
         display: block;
-        width: fit-content;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         .label-text {
             margin-left: 0.2em;
