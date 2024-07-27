@@ -75,7 +75,7 @@ export default [
                 component: ListEditorTestsVue,
             },
             {
-                path: 'edit/:testUuid?',
+                path: ':testUuid',
                 component: TestEditorVue,
             },
         ],

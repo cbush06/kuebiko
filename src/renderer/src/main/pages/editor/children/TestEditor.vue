@@ -116,6 +116,7 @@ import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { Question, QuestionType } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
+import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { vOnClickOutside } from '@vueuse/components';
@@ -136,12 +137,14 @@ const router = useRouter();
 
 // Initialize the store for the current or new test
 const route = useRoute();
-if (route.params['testUuid']) {
-    testEditorStore.initializeForTest(route.params['testUuid'] as string);
-} else {
-    testEditorStore.$reset();
-    console.log(testEditorStore.hasChangedWithoutSaving());
-}
+
+EditorTestsService.fetchTest(route.params['testUuid'] as string).then((t) => {
+    if (t) {
+        testEditorStore.initializeForTest(route.params['testUuid'] as string);
+    } else {
+        testEditorStore.$reset();
+    }
+});
 
 // Prepare the tree nav
 const navigationTree = ref({
