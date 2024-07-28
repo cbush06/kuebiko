@@ -1,4 +1,3 @@
-import { TreeNodeStruct } from '@renderer/components/tree/structures';
 import { Author } from '@renderer/db/models/author';
 import { Question, QuestionType } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
@@ -23,6 +22,7 @@ export interface TestEditorStoreState {
     testEditPart: Test | Section | Question;
 
     // Actions
+    initializeForTest: (uuid: string) => Promise<void>;
     addAuthor: (author: Author) => void;
     removeAuthor: (author: Author) => void;
     addTag: (tag: string) => void;
@@ -36,8 +36,16 @@ export interface TestEditorStoreState {
     removeResource: (uuid: string) => void;
     updateResourceData: (uuid: string, data: Resource['data']) => void;
     updateResourceDataByName: (name: string, data: Resource['data']) => void;
-    addSection: () => void;
-    addQuestion: (section: Section) => void;
+    setTestEditPartFromTreeNode: (uuid: string) => void;
+    addSection: () => Section;
+    removeSection: (uuid: string) => void;
+    isSectionUuid: (uuid: string) => boolean;
+    addQuestion: (section: Section) => Question;
+    removeQuestion: (uuid: string) => void;
+    appendOption: (question: Question) => void;
+    snapshotState: () => void;
+    hasChangedWithoutSaving: () => boolean;
+    save: () => Promise<void>;
 }
 
 export const useTestEditorStore = defineStore('test-editor', {
@@ -147,21 +155,23 @@ export const useTestEditorStore = defineStore('test-editor', {
                 this.updateResourceData(this.resourceNamesToUuids.get(name)!, data);
             }
         },
-        setTestEditPartFromTreeNode(node: TreeNodeStruct) {
-            if (node.id === 'root') {
+        setTestEditPartFromTreeNode(uuid: string) {
+            if (uuid === 'root') {
                 this.testEditMode = 'test';
                 this.testEditPart = this.test;
                 return;
             }
 
-            if (node.isContainer) {
+            const isSection = this.isSectionUuid(uuid);
+
+            if (isSection) {
                 this.testEditMode = 'section';
-                this.testEditPart = this.test.sections.find((s) => s.uuid === node.id)!;
+                this.testEditPart = this.test.sections.find((s) => s.uuid === uuid)!;
                 return;
             }
 
             this.testEditMode = 'question';
-            this.testEditPart = this.questions.get(node.id)!;
+            this.testEditPart = this.questions.get(uuid)!;
         },
         addSection() {
             const newSectionUuid = globalThis.kuebikoAPI.randomUUID();
@@ -176,35 +186,69 @@ export const useTestEditorStore = defineStore('test-editor', {
                     '',
                 ),
                 questionRefs: [],
-            };
+            } as Section;
             this.test.sections.push(newSection);
             return newSection;
+        },
+        removeSection(uuid: string) {
+            const sectionIdx = this.test.sections.findIndex((s) => s.uuid === uuid);
+            if (sectionIdx > -1) {
+                const section = this.test.sections[sectionIdx];
+
+                // Remove all questions for this section
+                section.questionRefs.forEach((q) => this.removeQuestion(q));
+
+                // Delete section description
+                if (section.descriptionRef) this.removeResource(section.descriptionRef);
+
+                // Delete section
+                this.test.sections.splice(sectionIdx, 1);
+            }
+        },
+        isSectionUuid(uuid: string) {
+            return this.test.sections.map((s) => s.uuid).includes(uuid);
         },
         addQuestion(section: Section, type: QuestionType) {
             const uuid = globalThis.kuebikoAPI.randomUUID();
 
-            const question = {
+            const newQuestion = {
                 uuid,
                 title: 'New Question',
                 type,
                 options: [],
                 categories: [],
             } as Question;
-            this.questions.set(uuid, question);
+            this.questions.set(uuid, newQuestion);
 
             switch (type) {
                 case 'MULTIPLE': {
-                    question.answer = '';
-                    this.appendOption(question);
+                    newQuestion.answer = '';
+                    this.appendOption(newQuestion);
                     break;
                 }
                 case 'MANY': {
-                    question.answer = [] as string[];
-                    this.appendOption(question);
+                    newQuestion.answer = [] as string[];
+                    this.appendOption(newQuestion);
                     break;
                 }
             }
             section.questionRefs.push(uuid);
+
+            return newQuestion;
+        },
+        removeQuestion(uuid: string) {
+            if (this.questions.has(uuid)) {
+                const question = this.questions.get(uuid);
+                if (question?.contentRef) this.removeResource(question.contentRef);
+                if (question?.subjectImageRef) this.removeResource(question.subjectImageRef);
+                if (question?.successFeedbackRef) this.removeResource(question.successFeedbackRef);
+                if (question?.failureFeedbackRef) this.removeResource(question.failureFeedbackRef);
+                this.questions.delete(uuid);
+                this.test.sections.forEach((s) => {
+                    const qIdx = s.questionRefs.indexOf(uuid);
+                    if (qIdx > -1) s.questionRefs.splice(qIdx, 1);
+                });
+            }
         },
         appendOption(question: Question) {
             const uuid = globalThis.kuebikoAPI.randomUUID();

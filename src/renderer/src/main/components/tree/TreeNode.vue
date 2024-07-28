@@ -7,7 +7,7 @@
             collapsed: !(isExpanded || props.isRoot),
         }"
         :style="{
-            width: props.isRoot ? props.treeOptions?.maxWidth : undefined,
+            width: props.isRoot ? props.treeOptions?.width : undefined,
         }"
         :data-testid="`tree-node-${props.id}`"
     >
@@ -58,7 +58,7 @@
                 :isExpanded="node.isExpanded"
                 :isDisabled="node.isDisabled"
                 :tree-options="props.treeOptions"
-                :selected-node="props.selectedNode"
+                :selectedId="props.selectedId"
                 @select="(struct) => emit('select', struct)"
                 @drop="onDropChild"
             />
@@ -89,14 +89,14 @@ import { TreeNodeDragData, TreeNodeDropData, TreeNodeStruct } from './structures
 export interface TreeNodeOptions {
     isRoot?: boolean;
     treeOptions?: TreeOptions;
-    selectedNode?: TreeNodeStruct;
+    selectedId?: string;
     parent?: TreeNodeStruct;
 }
 
 export type TreeNodeProps = TreeNodeStruct & TreeNodeOptions;
 
 export interface TreeNodeEvents {
-    (e: 'select', payload: TreeNodeProps): void;
+    (e: 'select', payload: string): void;
     (e: 'drop', payload: TreeNodeDropData): void;
 }
 
@@ -114,10 +114,10 @@ const iconClass = computed(() => {
     return props.iconClass;
 });
 
-const isSelected = computed(() => props.selectedNode?.id === props.id);
+const isSelected = computed(() => props.selectedId === props.id);
 
 function select() {
-    emit('select', props);
+    emit('select', props.id);
 }
 
 function onDragStart(e: DragEvent) {

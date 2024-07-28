@@ -3,7 +3,7 @@
         class="tree"
         :class="{ collapsible: props.collapsible, reorderable: props.reorderable }"
         :style="{
-            width: props.maxWidth || '100%',
+            width: props.width || '100%',
         }"
     >
         <TreeNodeVue
@@ -14,7 +14,7 @@
             :is-root="true"
             :isDisabled="false"
             :tree-options="props"
-            :selected-node="selected"
+            :selectedId="selected"
             :is-container="true"
             @select="onSelect"
             @drop="onDrop"
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import TreeNodeVue from './TreeNode.vue';
 import { TreeNodeDropData, TreeNodeStruct } from './structures';
 
@@ -35,21 +35,33 @@ export interface TreeOptions {
     containerExpandedIcon?: string;
     preventLeavesInRoot?: boolean;
     preventNestedContainers?: boolean;
-    maxWidth?: string;
+    width?: string;
 }
 
 export interface TreeProps {
     rootNode: TreeNodeStruct;
-    selected?: TreeNodeStruct;
+    selectedId?: string;
+}
+
+export interface TreeEvents {
+    (e: 'select', payload: string): void;
+    (e: 'drop', payload: TreeNodeDropData): void;
 }
 
 const props = defineProps<TreeOptions & TreeProps>();
-const emit = defineEmits(['drop', 'select']);
-const selected = ref<TreeNodeStruct | undefined>(props.selected);
+const emit = defineEmits<TreeEvents>();
+const selected = ref<string | undefined>(props.selectedId);
 
-function onSelect(node: TreeNodeStruct) {
-    selected.value = node;
-    emit('select', node);
+watch(
+    () => props.selectedId,
+    (newSelected) => {
+        if (newSelected) onSelect(newSelected);
+    },
+);
+
+function onSelect(id: string) {
+    selected.value = id;
+    emit('select', id);
 }
 
 function findNodeById(id: string, node: TreeNodeStruct): TreeNodeStruct | undefined {
