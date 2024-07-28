@@ -34,13 +34,16 @@
                     <div class="dropdown-trigger">
                         <button
                             class="button is-small"
-                            :disabled="selectedNavNode.id === 'root'"
+                            :disabled="selectedNavNodeId === 'root'"
                             @click="addQuestionMenuShown = true"
                         >
                             <span class="icon is-small"
                                 ><i class="fa-solid fa-file-circle-plus"></i
                             ></span>
                             <span>Add Question</span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
                         </button>
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -86,17 +89,25 @@
                         </div>
                     </div>
                 </div>
+
+                <button
+                    class="button is-small"
+                    :disabled="!isDeleteButtonActive"
+                    @click="deleteItem()"
+                >
+                    <span class="icon is-small"><i class="fa-solid fa-trash-can"></i></span>
+                </button>
             </div>
             <TreeVue
                 :root-node="navigationTree"
                 :collapsible="true"
                 :reorderable="true"
-                :selected="selectedNavNode"
-                @select="(e) => (selectedNavNode = e)"
+                :selectedId="selectedNavNodeId"
+                @select="(e) => (selectedNavNodeId = e)"
                 @drop="onDrop"
                 :preventLeavesInRoot="true"
                 :prevent-nested-containers="true"
-                max-width="15rem"
+                width="18rem"
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
@@ -122,7 +133,7 @@ import { useTestEditorStore } from '@renderer/store/test-editor-store/test-edito
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
-import { inject, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import QuestionEditor from '../editors/QuestionEditor.vue';
@@ -136,7 +147,7 @@ const confirmLeaveWithoutSavingModal = ref<InstanceType<typeof BulmaModal> | und
 const { t } = useI18n();
 const router = useRouter();
 
-// Initialize the store for the current or new test
+// #region Fetch/init test data and navigation tree
 const route = useRoute();
 
 EditorTestsService.fetchTest(route.params['testUuid'] as string).then((t) => {
@@ -154,15 +165,49 @@ const navigationTree = ref({
     icon: 'fa-solid fa-flask has-text-primary',
     children: [],
 } as TreeNodeStruct);
-const selectedNavNode = ref<TreeNodeStruct>(navigationTree.value);
-
-// #region Handle navigation changes
-watch(selectedNavNode, (node) => testEditorStore.setTestEditPartFromTreeNode(node));
+const selectedNavNodeId = ref<string>(navigationTree.value.id);
+watch(selectedNavNodeId, (id) => testEditorStore.setTestEditPartFromTreeNode(id));
 // #endregion
 
-// #region Add/Remove sections
+// #region Delete button
+const isDeleteButtonActive = computed(
+    () => !!selectedNavNodeId.value && selectedNavNodeId.value !== 'root',
+);
+
+const deleteItem = () => {
+    // If it's a section...
+    if (testEditorStore.isSectionUuid(selectedNavNodeId.value)) {
+        // Delete the section
+        testEditorStore.removeSection(selectedNavNodeId.value);
+
+        // Select the first previous section
+        if (navigationTree.value.children!.length > 1) {
+            const newNodeIndex = navigationTree.value
+                .children!.filter((c) => c.id !== selectedNavNodeId.value)
+                .reduce((prev, _, idx) => Math.min(prev, idx), Number.MAX_VALUE);
+            selectedNavNodeId.value = navigationTree.value.children![newNodeIndex].id;
+        } else {
+            selectedNavNodeId.value = navigationTree.value.id;
+        }
+    }
+
+    // If it's a question...
+    else {
+        // Find the question's section
+        const section = findTargetContainer(navigationTree.value);
+
+        // Delete the question
+        testEditorStore.removeQuestion(selectedNavNodeId.value);
+
+        // Select the section
+        selectedNavNodeId.value = section!.id;
+    }
+};
+// #endregion
+
+// #region Add section
 const addSection = () => {
-    testEditorStore.addSection();
+    selectedNavNodeId.value = testEditorStore.addSection().uuid;
 };
 
 // If only 1 section exists, make it default; otherwise, none are default
@@ -177,12 +222,12 @@ watch(testEditorStore.test.sections, (s) => {
 });
 // #endregion
 
-// #region Add/Remove questions
+// #region Add questions
 const findTargetContainer: (node: TreeNodeStruct) => TreeNodeStruct | undefined = (
     node: TreeNodeStruct,
 ) => {
     for (const child of node.children ?? []) {
-        if (child.id === selectedNavNode.value.id) return node;
+        if (child.id === selectedNavNodeId.value) return node;
         if (!child.isContainer) continue;
 
         const match = findTargetContainer(child);
@@ -192,16 +237,15 @@ const findTargetContainer: (node: TreeNodeStruct) => TreeNodeStruct | undefined 
 };
 
 const addQuestion = async (type: QuestionType) => {
-    if (selectedNavNode.value.id === 'root') return;
+    if (selectedNavNodeId.value === 'root') return;
 
-    const selectedSection = selectedNavNode.value.isContainer
-        ? testEditorStore.test.sections.find((s) => s.uuid === selectedNavNode.value.id)
+    const selectedSection = testEditorStore.isSectionUuid(selectedNavNodeId.value)
+        ? testEditorStore.test.sections.find((s) => s.uuid === selectedNavNodeId.value)
         : testEditorStore.test.sections.find(
               (s) => s.uuid === findTargetContainer(navigationTree.value)?.id,
           );
 
-    testEditorStore.addQuestion(selectedSection!, type);
-
+    selectedNavNodeId.value = testEditorStore.addQuestion(selectedSection!, type).uuid;
     addQuestionMenuShown.value = false;
 };
 // #endregion
