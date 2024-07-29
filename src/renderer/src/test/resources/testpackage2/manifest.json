@@ -60,6 +60,125 @@
             "type": "MARKDOWN",
             "mime": "text/markdown",
             "sha256": "88d1a5f282680d6bdd2d0c6edf4d9d2097d3a8f212aafe1a2c5d69644bd52cd0"
+        },
+        {
+            "uuid": "b5cf9341-0186-4ff6-a275-18a6709629fa",
+            "name": "q1options/opt1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "7b3e2ebee0bfa7ee59cbe5dcad713c85362174092396321ac6384c7d8b16cdaf"
+        },
+        {
+            "uuid": "0aaf3ed7-5e5f-4cec-b573-4999929d162f",
+            "name": "q1options/opt2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "f709faced4876eab085a67d1b854d25cfdba514c932e774e1ebb96b7b96558e8"
+        },
+        {
+            "uuid": "ac9a9feb-659d-459a-acdd-a6b980df30e9",
+            "name": "q1options/opt3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "23d46a515815086812e26a3f7d1b62faa880ed99d383d755abea48bf25101fec"
+        },
+        {
+            "uuid": "103b5129-d6fd-440b-a5e6-a871ac284ec1",
+            "name": "q1options/opt4.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "841c5f25a09c45bb86d8fae017010f1430e88f759fcb7770dceae01d80ca5c7b"
+        },
+        {
+            "uuid": "2c9f90ac-e4a6-44e8-aab4-cdedf7c78f62",
+            "name": "q2options/opt1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "96ba8a2e2c25cfb0852128addb10f2f6db80790c2fc9c46783cfe253ab3149cf"
+        },
+        {
+            "uuid": "f0f3482c-5d6e-4837-b28b-09dd124b6569",
+            "name": "q2options/opt2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "ede5c77424fd029a7d20b0a389ca6e36094fd2a310946f18a9fe40298d670076"
+        },
+        {
+            "uuid": "90b7f7c3-1c00-4a21-8ef9-b0a8adc86f1a",
+            "name": "q2options/opt3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "de8bf979d7369aab7d70be40269b7b38f4d83a64f2d58b61db5607c2fd1c2765"
+        },
+        {
+            "uuid": "36aefe48-721a-431b-b1d3-33a0c7aa65cc",
+            "name": "q2options/opt4.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "7b56339c7fa1f5e56bec72f58c9221a921535ff096bf38a316cfb2decce2671a"
+        },
+        {
+            "uuid": "e2aa40db-ebee-42b5-9f81-3f56e5ed6194",
+            "name": "q2options/opt5.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "7bc1df0e0d2212c01ab356856c05e773944f4d5efef945b78cb162e84a043fcc"
+        },
+        {
+            "uuid": "ee1a9df4-fee8-47e4-838f-ed1bbc20163c",
+            "name": "q3options/opt1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "7b2380f7ec14d570ae4f6558afb38140fcb39050e757760fcf24c248f75036c1"
+        },
+        {
+            "uuid": "49f05abf-e2cc-4d2c-937f-314c7525b07c",
+            "name": "q3options/opt2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "fe56475bbce9e3f073c663be8a4efd7bcdad319de835bcf92a9e26e3519c5c04"
+        },
+        {
+            "uuid": "56fdd2fb-b5a0-41c4-9412-cf941dcc8ced",
+            "name": "q3options/opt3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "360e1540e8bf24287868208d2861e504835771909c55996f2077fee047bdebd4"
+        },
+        {
+            "uuid": "d7d4befe-320f-4797-acc6-bcbb0cbc2519",
+            "name": "q3options/opt4.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "4c8fafa10f287298baabfe39be1b499eb5dc28eff3fc420d3271b10381ba6d61"
+        },
+        {
+            "uuid": "5bb1cdc2-c585-49b0-8579-d9dc3f6c849a",
+            "name": "q4options/opt1.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "ede5c77424fd029a7d20b0a389ca6e36094fd2a310946f18a9fe40298d670076"
+        },
+        {
+            "uuid": "e1729bf1-44b4-4258-9e95-6fab95a48b65",
+            "name": "q4options/opt2.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "3d7ea293f5f43a7ad9a214c8ab4550627d6a18c13d5bb0e671652c7fe66fe4d1"
+        },
+        {
+            "uuid": "ba537ffd-89ab-44a3-888d-43b7f0745e6e",
+            "name": "q4options/opt3.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "681dff1696d359994d5319a610f6e988a40fea9eed38cdfdef9411d3a2e3d27b"
+        },
+        {
+            "uuid": "7d4ca55d-47b4-41ed-964e-c67beb659640",
+            "name": "q4options/opt4.md",
+            "type": "MARKDOWN",
+            "mime": "text/markdown",
+            "sha256": "0e513181c4cb256eb4e5287ae3fe4bc59900c0f3123b1fd798730e22a220951a"
         }
     ],
     "sections": [
@@ -77,19 +196,19 @@
                     "options": [
                         {
                             "uuid": "48671bf2-cd69-4b69-a5fa-a38967c431d3",
-                            "contentText": "Put the access key in an S3 bucket, and retrieve the access key on boot from the instance."
+                            "contentRef": "b5cf9341-0186-4ff6-a275-18a6709629fa"
                         },
                         {
                             "uuid": "9cfabe14-4a42-40e2-8ac7-6373a283f240",
-                            "contentText": "Pass the access key to the instances through instance user data."
+                            "contentRef": "0aaf3ed7-5e5f-4cec-b573-4999929d162f"
                         },
                         {
                             "uuid": "f2db95ca-e2fa-43fb-8e9c-e856c890f3c9",
-                            "contentText": "Obtain the access key from a key server launched in a private subnet."
+                            "contentRef": "ac9a9feb-659d-459a-acdd-a6b980df30e9"
                         },
                         {
                             "uuid": "cb9ac5fa-04b0-4a31-b920-13b787469bc5",
-                            "contentText": "Create an IAM role with permissions to access the table, and launch all instances with the new role."
+                            "contentRef": "103b5129-d6fd-440b-a5e6-a871ac284ec1"
                         }
                     ],
                     "categories": ["Security", "Availability", "S3", "IAM"]
@@ -105,23 +224,23 @@
                     "options": [
                         {
                             "uuid": "303fbe82-88f9-4ada-8134-c238e310c693",
-                            "contentText": "CloudWatch"
+                            "contentRef": "2c9f90ac-e4a6-44e8-aab4-cdedf7c78f62"
                         },
                         {
                             "uuid": "43a0a68a-d659-44f2-ba84-f405fe67bd08",
-                            "contentText": "DynamoDB"
+                            "contentRef": "f0f3482c-5d6e-4837-b28b-09dd124b6569"
                         },
                         {
                             "uuid": "cee10dea-969a-4fa9-a62e-df10b8714565",
-                            "contentText": "Elastic Load Balancing"
+                            "contentRef": "90b7f7c3-1c00-4a21-8ef9-b0a8adc86f1a"
                         },
                         {
                             "uuid": "7094ea4d-8e68-4c6f-b735-a3d9cb825218",
-                            "contentText": "ElastiCache"
+                            "contentRef": "36aefe48-721a-431b-b1d3-33a0c7aa65cc"
                         },
                         {
                             "uuid": "268d10f4-99ec-4ca0-991f-3fd86892c84c",
-                            "contentText": "Storage Gateway"
+                            "contentRef": "e2aa40db-ebee-42b5-9f81-3f56e5ed6194"
                         }
                     ],
                     "categories": ["Caching", "Availability", "Sessions", "IAM"]
@@ -142,19 +261,19 @@
                     "options": [
                         {
                             "uuid": "ed165ab0-3c6e-43e8-bb58-5245299d4839",
-                            "contentText": "Store data in an EBS volume and create snapshots once a week."
+                            "contentRef": "ee1a9df4-fee8-47e4-838f-ed1bbc20163c"
                         },
                         {
                             "uuid": "b869ab2a-88fc-40f0-b4b6-58806c86b246",
-                            "contentText": "Store data in an S3 bucket and enable versioning."
+                            "contentRef": "49f05abf-e2cc-4d2c-937f-314c7525b07c"
                         },
                         {
                             "uuid": "9ddddbb2-d8f1-4b67-9199-c33d255b8fc8",
-                            "contentText": "Store data in two S3 buckets in different AWS regions."
+                            "contentRef": "56fdd2fb-b5a0-41c4-9412-cf941dcc8ced"
                         },
                         {
                             "uuid": "130a8cfc-1ce4-4a3a-b31c-3edfdb57ce08",
-                            "contentText": "Store data on EC2 instance storage."
+                            "contentRef": "d7d4befe-320f-4797-acc6-bcbb0cbc2519"
                         }
                     ],
                     "categories": ["Storage", "Availability", "S3", "EBS"]
@@ -167,19 +286,19 @@
                     "options": [
                         {
                             "uuid": "9bfb9c81-51de-4f04-a6a8-a7d6a208e183",
-                            "contentText": "DynamoDB"
+                            "contentRef": "5bb1cdc2-c585-49b0-8579-d9dc3f6c849a"
                         },
                         {
                             "uuid": "d2927b3c-2c94-4fa9-a370-62e470add8f5",
-                            "contentText": "Amazon S3"
+                            "contentRef": "e1729bf1-44b4-4258-9e95-6fab95a48b65"
                         },
                         {
                             "uuid": "6cca0d0a-e96c-4681-9490-50e19a313fad",
-                            "contentText": "Amazon Aurora"
+                            "contentRef": "ba537ffd-89ab-44a3-888d-43b7f0745e6e"
                         },
                         {
                             "uuid": "b68fe1ca-1523-44b5-bbd4-9702b9de97eb",
-                            "contentText": "Amazon Redshift"
+                            "contentRef": "7d4ca55d-47b4-41ed-964e-c67beb659640"
                         }
                     ],
                     "categories": ["Storage", "DynamoDB", "S3", "Aurora", "Redshift"]
