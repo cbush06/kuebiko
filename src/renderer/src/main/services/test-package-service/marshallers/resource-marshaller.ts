@@ -7,7 +7,15 @@ import { AbstractMarshaller } from './abstract-marshaller';
 
 export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackageResource> {
     marshal(o: Resource): Promise<TestPackageResource> {
-        throw new Error('Method not implemented.');
+        this.jszip.file(o.name, o.data);
+
+        return Promise.resolve({
+            mime: o.mime,
+            name: o.name,
+            type: o.type,
+            uuid: o.uuid,
+            sha256: globalThis.kuebikoAPI.sha256(o.data),
+        } as TestPackageResource);
     }
 
     async unmarshall(o: TestPackageResource): Promise<Resource> {

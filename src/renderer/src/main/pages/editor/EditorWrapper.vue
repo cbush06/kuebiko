@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import NavVue from '@renderer/components/nav/Nav.vue';
+import NavVue from '@renderer/components/nav/StandardNav.vue';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -18,8 +18,7 @@ onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 </script>
 
 <style scoped lang="scss">
-@import '@renderer/scss/bulma-customizations.scss';
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
 
 .editor {
     // Negate .has-navbar-fixed-bottom

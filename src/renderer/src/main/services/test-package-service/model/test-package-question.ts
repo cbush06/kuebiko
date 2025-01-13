@@ -1,3 +1,4 @@
+import { TestPackageAnswerType } from './test-package-answer';
 import { TestPackageOption } from './test-package-option';
 import { TestPackagePoint } from './test-package-point';
 
@@ -9,7 +10,6 @@ export type TestPackageQuestionType =
     | 'TEXT'
     | 'DRAGNDROP'
     | 'HOTAREA';
-export type TestPackageAnswerType = string | string[] | TestPackagePoint[];
 
 export interface TestPackageQuestion {
     uuid: string;

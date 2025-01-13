@@ -1,28 +1,10 @@
 <template>
-    <nav class="navbar is-info is-fixed-top navbar-top-content">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <img src="../../assets/kuebiko_white.png" />
-                <span class="is-size-4 has-text-weight-semibold ml-3">Kuebiko</span>
-            </div>
-        </div>
-        <div class="test-title">
-            <span class="title has-text-white">{{ test?.title }}</span>
-        </div>
-        <div class="navbar-item test-timer">
-            <!-- <div v-if="test?.allowedTime" class="level has-text-white"> -->
-            <div class="level has-text-white">
-                <i class="fa-solid fa-clock"></i>
-                <span class="timer is-size-5 ml-2 has-text-weight-semibold">
-                    <TimerVue
-                        :duration="timerValue"
-                        :ticking="testDeliveryStore.inProgress"
-                        @expired="outOfTime()"
-                    />
-                </span>
-            </div>
-        </div>
-    </nav>
+    <TestNav
+        :title="test?.title ?? ''"
+        :timer-value="timerValue"
+        :ticking="testDeliveryStore.inProgress"
+        @outOfTime="outOfTime()"
+    />
 
     <nav
         class="navbar navbar-section-header is-primary"
@@ -133,6 +115,7 @@ import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/
 import { computed, inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
+import TestNav from '@renderer/components/nav/TestNav.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -231,8 +214,7 @@ const outOfTime = () => {
 </script>
 
 <style scoped lang="scss">
-@import '@renderer/scss/bulma-customizations.scss';
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
 
 .navbar-top-content {
     display: grid;

@@ -16,8 +16,21 @@ export class SectionMarshaller extends AbstractMarshaller<Section, TestPackageSe
         super(jszip, manifest, db);
     }
 
-    marshal(o: Section): Promise<TestPackageSection> {
-        throw new Error('Method not implemented.');
+    async marshal(o: Section): Promise<TestPackageSection> {
+        const questionEntities = await this.db.questions.bulkGet(o.questionRefs);
+        const questions = await Promise.all(
+            questionEntities
+                .filter((q) => !!q)
+                .map(async (q) => await this.questionMarshaller.marshal(q)),
+        );
+
+        return {
+            uuid: o.uuid,
+            default: o.default,
+            title: o.title,
+            questions,
+            descriptionRef: o.descriptionRef,
+        } as TestPackageSection;
     }
 
     async unmarshall(o: TestPackageSection): Promise<Section> {

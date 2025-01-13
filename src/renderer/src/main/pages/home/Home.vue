@@ -1,5 +1,5 @@
 <template>
-    <NavVue />
+    <StandardNav />
     <div class="container is-max-widescreen mt-4">
         <div class="section is-flex is-flex-direction-column is-flex-gap-2">
             <h1 class="title mb-1">{{ t('tests') }}</h1>
@@ -46,7 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import NavVue from '@renderer/components/nav/Nav.vue';
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
@@ -59,6 +58,7 @@ import { useObservable } from '@vueuse/rxjs';
 import { computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import StandardNav from '@renderer/components/nav/StandardNav.vue';
 
 const helmetStore = useHelmetStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });

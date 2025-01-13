@@ -1,0 +1,8 @@
+@use 'sass:color';
+
+@function get-text-color($bg-color) {
+    @if (color.lightness($bg-color) > 40%) {
+        @return #000;
+    }
+    @return #fff;
+}

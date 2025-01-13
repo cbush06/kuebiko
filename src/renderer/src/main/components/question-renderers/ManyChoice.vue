@@ -165,8 +165,7 @@ onBeforeMount(async () => await updateOptions(props));
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
-@import '@renderer/scss/bulma-customizations.scss';
+@use '@renderer/style' as *;
 
 .exam-field {
     @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;

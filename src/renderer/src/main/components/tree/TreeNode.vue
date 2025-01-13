@@ -200,7 +200,7 @@ function onDragEndLeave(e: DragEvent) {
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
+@use '~bulma/sass/utilities' as *;
 
 .tree-node {
     display: block;
@@ -260,7 +260,7 @@ function onDragEndLeave(e: DragEvent) {
 
         &.selected {
             .label-text {
-                @extend .has-background-grey-lighter;
+                @extend .has-background-grey-lighter !optional;
             }
         }
     }

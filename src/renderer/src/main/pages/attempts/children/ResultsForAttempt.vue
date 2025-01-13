@@ -462,7 +462,7 @@ const sectionScoringBreakdownChartData = useMemoize(
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
 
 .section-breakdown-box {
     .chart-container {

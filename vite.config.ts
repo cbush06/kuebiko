@@ -31,10 +31,7 @@ export default defineConfig({
             targets: [
                 {
                     src: normalizePath(
-                        resolve(
-                            __dirname,
-                            'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                        ),
+                        resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*'),
                     ),
                     dest: normalizePath(
                         resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
@@ -42,10 +39,7 @@ export default defineConfig({
                 },
                 {
                     src: normalizePath(
-                        resolve(
-                            __dirname,
-                            'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                        ),
+                        resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*'),
                     ),
                     dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
                 },
@@ -72,6 +66,16 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: resolve(__dirname, 'src/renderer/index.html'),
+            },
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            sass: {
+                quietDeps: true,
+            },
+            scss: {
+                quietDeps: true,
             },
         },
     },
