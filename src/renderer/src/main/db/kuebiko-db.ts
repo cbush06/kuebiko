@@ -1,4 +1,4 @@
-import Dexie, { Table } from 'dexie';
+import { Dexie, Table } from 'dexie';
 import { Attempt } from './models/attempt';
 import { Question } from './models/question';
 import { Resource } from './models/resource';
@@ -11,8 +11,8 @@ export class KuebikoDb extends Dexie {
     attempts!: Table<Attempt>;
 
     editorTests!: Table<Test>;
-    editorQuestions!: Table<Question>;
     editorResources!: Table<Resource>;
+    editorQuestions!: Table<Question>;
 
     constructor() {
         super('kuebiko');

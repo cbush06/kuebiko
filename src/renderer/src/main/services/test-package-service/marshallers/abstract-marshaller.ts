@@ -1,6 +1,6 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import JSZip from 'jszip';
 import { Manifest } from '../model/manifest';
+import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
 
 /**
  * Abstract class for marshallers used to convert data between the form stored in the database
@@ -12,11 +12,11 @@ import { Manifest } from '../model/manifest';
 export abstract class AbstractMarshaller<M, P> {
     constructor(
         protected jszip: JSZip,
-        protected manifest: Manifest,
-        protected db: KuebikoDb,
+        protected db: KuebikoDbFacade,
+        protected manifest?: Manifest,
     ) {}
 
-    abstract marshal(o: M): Promise<P>;
+    abstract marshall(o: M): Promise<P>;
 
     abstract unmarshall(o: P): Promise<M>;
 }

@@ -24,6 +24,10 @@ export default defineConfig({
                 find: 'vue-i18n',
                 replacement: 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
             },
+            {
+                find: 'dexie',
+                replacement: 'dexie/dist/dexie.mjs',
+            },
         ],
     },
     plugins: [

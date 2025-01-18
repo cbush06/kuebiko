@@ -39,7 +39,7 @@
         "chartjs-adapter-date-fns": "^3.0.0",
         "chartjs-plugin-datalabels": "^2.2.0",
         "date-fns": "^4.1.0",
-        "dexie": "^4.0.10",
+        "dexie": "^4.0.11",
         "imask": "^7.6.1",
         "install": "^0.13.0",
         "jszip": "^3.10.1",

@@ -30,7 +30,7 @@
             <div class="box">
                 <!-- prettier-ignore -->
                 <TableVue 
-                    :data="data" 
+                    :data="data as any[]"
                     :columns="columns" 
                     :hoverable="true" 
                     :clickable="true"
@@ -38,11 +38,11 @@
                     @row-click="handleTestSelection($event)"
                 >
                     <template #title="{ row }">
-                        <router-link :to="`/test/${(row as Test).uuid}`" class="is-underlined">{{ (row as Test).title }}</router-link>
+                        <router-link :to="`/editor/${(row as Test).uuid}`" class="is-underlined">{{ (row as Test).title }}</router-link>
                     </template>
                     <template #tags="{ row }">
                         <template v-if="(row as Test).tags.length">
-                            <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags.slice(0, 5)">{{ tag }}</span>
+                            <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags.slice(0, 5)" :key="tag">{{ tag }}</span>
                         </template>
                         <template v-else>&nbsp;</template>
                     </template>
@@ -55,13 +55,13 @@
 <script setup lang="ts">
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { Test } from '@renderer/db/models/test';
-import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { useMemoize } from '@vueuse/core';
 import { useObservable } from '@vueuse/rxjs';
 import { computed, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
 
 const helmetStore = useHelmetStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
@@ -70,7 +70,7 @@ onBeforeMount(() => (helmetStore.title = t('title')));
 
 const router = useRouter();
 
-const data = useObservable(EditorTestsService.fetchAllTests());
+const data = useObservable(EditorTestObjectProvider.fetchAllTests());
 
 const columns = computed(
     () =>

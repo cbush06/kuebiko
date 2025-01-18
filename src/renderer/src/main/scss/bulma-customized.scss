@@ -199,3 +199,11 @@ button.button.is-white.has-text-grey-lighter {
         //--bulma-navbar-item-color-l: var(--bulma-navbar-item-selected-color-l);
     }
 }
+
+// Toast / Notification
+.notification {
+    .delete {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+}

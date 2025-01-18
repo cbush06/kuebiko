@@ -42,13 +42,13 @@ import { useRoute } from 'vue-router';
 
 // see https://chartjs-plugin-datalabels.netlify.app/
 import {
-    ChartData,
     Chart as ChartJS,
+    ChartData,
     ChartOptions,
     Legend,
+    LinearScale,
     LineController,
     LineElement,
-    LinearScale,
     PointElement,
     TimeScale,
     Tooltip,
@@ -59,8 +59,8 @@ import { Line } from 'vue-chartjs';
 
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { Attempt } from '@renderer/db/models/attempt';
-import { TestsService } from '@renderer/services/tests-service';
 import { differenceInSeconds, format, intervalToDuration } from 'date-fns';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -72,7 +72,7 @@ const attempts = useObservable(
 );
 
 onBeforeMount(async () => {
-    test.value = await TestsService.fetchTest(route.params['testUuid'] as string);
+    test.value = await DeliveryTestObjectProvider.fetchTest(route.params['testUuid'] as string);
     helmetStore.title = `Kuebiko :: ${t('attemptsForTest', [test.value?.title])}`;
 });
 

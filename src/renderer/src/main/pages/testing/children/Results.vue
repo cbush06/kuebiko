@@ -57,8 +57,8 @@ import { useI18n } from 'vue-i18n';
 // see https://www.chartjs.org/docs/latest/getting-started/integration.html
 import {
     ArcElement,
-    ChartData,
     Chart as ChartJS,
+    ChartData,
     ChartOptions,
     DoughnutDataPoint,
     Legend,

@@ -1,4 +1,3 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import JSZip from 'jszip';
 import { MarshallingDbError } from '../errors/marshalling-db-error';
@@ -7,21 +6,43 @@ import { AbstractMarshaller } from './abstract-marshaller';
 import { AuthorMarshaller } from './author-marshaller';
 import { ResourceMarshaller } from './resource-marshaller';
 import { SectionMarshaller } from './section-marshaller';
+import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
 
 export class TestMarshaller extends AbstractMarshaller<Test, Manifest> {
     constructor(
         protected jszip: JSZip,
-        protected manifest: Manifest,
-        protected db: KuebikoDb,
+        protected db: KuebikoDbFacade,
         protected authorMarshaller: AuthorMarshaller,
         protected resourceMarshaller: ResourceMarshaller,
         protected sectionMarshaller: SectionMarshaller,
+        protected manifest?: Manifest,
     ) {
-        super(jszip, manifest, db);
+        super(jszip, db, manifest);
     }
 
-    marshal(o: Test): Promise<Manifest> {
-        throw new Error('Method not implemented.');
+    async marshall(o: Test): Promise<Manifest> {
+        const authors = await Promise.all(o.authors.map((a) => this.authorMarshaller.marshall(a)));
+        const resources = await Promise.all(
+            (await this.db.resources.bulkGet(o.resourceRefs))
+                .filter((r) => !!r)
+                .map((r) => this.resourceMarshaller.marshall(r)),
+        );
+        const sections = await Promise.all(
+            o.sections.map((s) => this.sectionMarshaller.marshall(s)),
+        );
+
+        return {
+            uuid: o.uuid,
+            title: o.title,
+            version: o.version,
+            descriptionRef: o.descriptionRef,
+            authors,
+            created: o.created.toISOString(),
+            resources,
+            sections,
+            tags: o.tags,
+            allowedTime: o.allowedTime,
+        };
     }
 
     async unmarshall(o: Manifest): Promise<Test> {

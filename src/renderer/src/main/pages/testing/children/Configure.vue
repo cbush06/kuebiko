@@ -149,8 +149,6 @@
 <script setup lang="ts">
 import { Question } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
-import { QuestionsService } from '@renderer/services/questions-service';
-import { TestsService } from '@renderer/services/tests-service';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { AbstractQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/abstract-question-filter';
 import { CategoryQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/category-question-filter';
@@ -169,6 +167,7 @@ import { Multiselect } from 'vue-multiselect';
 import { useRoute } from 'vue-router';
 import BulmaOptionGroup from '@renderer/components/bulma-option/BulmaOptionGroup.vue';
 import BulmaOption from '@renderer/components/bulma-option/BulmaOption.vue';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 interface SectionOption {
     title: string;
@@ -193,10 +192,10 @@ const testQuestions = ref<Question[]>([]);
 const duration = ref<string>('');
 
 onBeforeMount(async () => {
-    test.value = await TestsService.fetchTest(route.params['testUuid'] as string);
+    test.value = await DeliveryTestObjectProvider.fetchTest(route.params['testUuid'] as string);
     duration.value = durationToClockFormat(test.value?.allowedTime ?? 0);
     testQuestions.value.push(
-        ...((await QuestionsService.fetchQuestions(
+        ...((await DeliveryTestObjectProvider.fetchQuestions(
             test.value?.sections.flatMap((s) => s.questionRefs) ?? [],
         )) as Question[]),
     );

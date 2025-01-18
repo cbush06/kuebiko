@@ -13,7 +13,7 @@
     -moz-osx-font-smoothing: grayscale !important;
     -webkit-font-smoothing: subpixel-antialiased !important;
 
-    html.is-full-height {
+    &.is-full-height {
         &,
         body,
         #app,

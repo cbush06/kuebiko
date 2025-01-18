@@ -3,14 +3,11 @@ import { Question, QuestionType } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
 import { Section } from '@renderer/db/models/section';
 import { Test } from '@renderer/db/models/test';
-import { EditorQuestionsService } from '@renderer/services/editor-questions-service';
-import { EditorResourcesService } from '@renderer/services/editor-resources-service';
-import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { defineStore } from 'pinia';
 import { toRaw } from 'vue';
+import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
 
-export interface TestEditorStoreState {
-    // Props
+interface TestEditorStoreState {
     test: Test;
     lastSavedTest: string;
     questions: Map<string, Question>;
@@ -20,8 +17,9 @@ export interface TestEditorStoreState {
     resourceNamesToUuids: Map<string, string>;
     testEditMode: 'test' | 'section' | 'question';
     testEditPart: Test | Section | Question;
+}
 
-    // Actions
+interface TestEditorStoreActions {
     initializeForTest: (uuid: string) => Promise<void>;
     addAuthor: (author: Author) => void;
     removeAuthor: (author: Author) => void;
@@ -40,7 +38,7 @@ export interface TestEditorStoreState {
     addSection: () => Section;
     removeSection: (uuid: string) => void;
     isSectionUuid: (uuid: string) => boolean;
-    addQuestion: (section: Section) => Question;
+    addQuestion: (section: Section, type: QuestionType) => Question;
     removeQuestion: (uuid: string) => void;
     appendOption: (question: Question) => void;
     snapshotState: () => void;
@@ -48,7 +46,12 @@ export interface TestEditorStoreState {
     save: () => Promise<void>;
 }
 
-export const useTestEditorStore = defineStore('test-editor', {
+export const useTestEditorStore = defineStore<
+    string,
+    TestEditorStoreState,
+    {},
+    TestEditorStoreActions
+>('test-editor', {
     state: () => {
         const test = {
             uuid: globalThis.kuebikoAPI.randomUUID(),
@@ -74,26 +77,26 @@ export const useTestEditorStore = defineStore('test-editor', {
             resourceNamesToUuids: new Map<string, string>(),
             testEditMode: 'test',
             testEditPart: test,
-        } as TestEditorStoreState;
+        };
     },
     getters: {},
     actions: {
         async initializeForTest(uuid: string) {
-            const test = await EditorTestsService.fetchTest(uuid);
+            const test = await EditorTestObjectProvider.fetchTest(uuid);
             if (!test) throw new Error(`test with ID [${uuid}] does not exist`);
             this.test = test;
 
             this.resources.clear();
             this.resourceNamesToUuids.clear();
 
-            (await EditorResourcesService.fetchResources(test.resourceRefs)).forEach((r) => {
+            (await EditorTestObjectProvider.fetchResources(test.resourceRefs)).forEach((r) => {
                 if (!r) return;
                 this.resources.set(r.uuid, r);
                 this.resourceNamesToUuids.set(r.name, r.uuid);
             });
 
             (
-                await EditorQuestionsService.fetchQuestions(
+                await EditorTestObjectProvider.fetchQuestions(
                     test.sections.flatMap((s) => s.questionRefs),
                 )
             ).forEach((q) => {
@@ -162,9 +165,7 @@ export const useTestEditorStore = defineStore('test-editor', {
                 return;
             }
 
-            const isSection = this.isSectionUuid(uuid);
-
-            if (isSection) {
+            if (this.isSectionUuid(uuid)) {
                 this.testEditMode = 'section';
                 this.testEditPart = this.test.sections.find((s) => s.uuid === uuid)!;
                 return;
@@ -243,6 +244,8 @@ export const useTestEditorStore = defineStore('test-editor', {
                 if (question?.subjectImageRef) this.removeResource(question.subjectImageRef);
                 if (question?.successFeedbackRef) this.removeResource(question.successFeedbackRef);
                 if (question?.failureFeedbackRef) this.removeResource(question.failureFeedbackRef);
+                if (question?.options)
+                    question.options.forEach((o) => this.removeResource(o.contentRef!));
                 this.questions.delete(uuid);
                 this.test.sections.forEach((s) => {
                     const qIdx = s.questionRefs.indexOf(uuid);
@@ -254,7 +257,7 @@ export const useTestEditorStore = defineStore('test-editor', {
             const uuid = globalThis.kuebikoAPI.randomUUID();
             question.options.push({
                 uuid,
-                contentRef: this.addResource(`option-${uuid}`, 'MARKDOWN', 'text/markdown', ''),
+                contentRef: this.addResource(`option-${uuid}.md`, 'MARKDOWN', 'text/markdown', ''),
             });
         },
         snapshotState() {
@@ -297,13 +300,13 @@ export const useTestEditorStore = defineStore('test-editor', {
                 // Questions
                 this.lastSavedQuestions.size === currentQuestionsHashes.size &&
                 Array.from(this.lastSavedQuestions.keys()).every(
-                    (k) => this.lastSavedQuestions.get(k) === currentQuestionsHashes.get(k),
+                    (k) => this.lastSavedQuestions.get(k) === currentQuestionsHashes.get(k)
                 ) &&
 
                 // Resources
                 this.lastSavedResources.size === currentResourcesHashes.size &&
                 Array.from(this.lastSavedResources.keys()).every(
-                    (k) => this.lastSavedResources.get(k) === currentResourcesHashes.get(k),
+                    (k) => this.lastSavedResources.get(k) === currentResourcesHashes.get(k)
                 )
             );
         },
@@ -311,7 +314,7 @@ export const useTestEditorStore = defineStore('test-editor', {
             this.snapshotState();
 
             try {
-                await EditorTestsService.saveTestAndRelations(
+                await EditorTestObjectProvider.saveTestAndRelations(
                     toRaw(this.test),
                     Array.from(this.resources.values()).map((r) => toRaw(r)),
                     Array.from(this.questions.values()).map((q) => toRaw(q)),

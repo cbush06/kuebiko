@@ -175,7 +175,7 @@ watch(tags, (t) => {
     );
 });
 
-// #region Handle description updates
+//region Handle description updates
 if (!testEditorStore.test.descriptionRef) {
     testEditorStore.test.descriptionRef = testEditorStore.addResource(
         'description.md',
@@ -196,7 +196,7 @@ watchDebounced(
     },
     { debounce: 500 },
 );
-// #endregion
+//endregion
 </script>
 
 <style scoped lang="scss">

@@ -99,10 +99,8 @@
 </template>
 
 <script setup lang="ts">
-import TimerVue from '@renderer/components/timer/Timer.vue';
 import { Test } from '@renderer/db/models/test';
 import { AttemptsService } from '@renderer/services/attempts-service';
-import { TestsService } from '@renderer/services/tests-service';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
@@ -116,6 +114,7 @@ import { computed, inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
 import TestNav from '@renderer/components/nav/TestNav.vue';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 const router = useRouter();
 const route = useRoute();
@@ -125,7 +124,7 @@ const test = ref<Test | undefined>();
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
-    test.value = await TestsService.fetchTest(uuid);
+    test.value = await DeliveryTestObjectProvider.fetchTest(uuid);
 };
 
 onBeforeMount(async () => {

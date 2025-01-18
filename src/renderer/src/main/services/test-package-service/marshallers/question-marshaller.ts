@@ -1,4 +1,3 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { AnswerType } from '@renderer/db/models/answer';
 import { Point } from '@renderer/db/models/point';
 import { Question, QuestionType } from '@renderer/db/models/question';
@@ -10,18 +9,19 @@ import { TestPackagePoint } from '../model/test-package-point';
 import { TestPackageQuestion, TestPackageQuestionType } from '../model/test-package-question';
 import { AbstractMarshaller } from './abstract-marshaller';
 import { OptionMarshaller } from './option-marshaller';
+import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
 
 export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackageQuestion> {
     constructor(
         protected jszip: JSZip,
-        protected manifest: Manifest,
-        protected db: KuebikoDb,
+        protected db: KuebikoDbFacade,
         protected optionMarshaller: OptionMarshaller,
+        protected manifest?: Manifest,
     ) {
-        super(jszip, manifest, db);
+        super(jszip, db, manifest);
     }
 
-    async marshal(o: Question): Promise<TestPackageQuestion> {
+    async marshall(o: Question): Promise<TestPackageQuestion> {
         const marshalledType = o.type as TestPackageQuestionType;
         let marshalledAnswer: TestPackageAnswerType;
         let marshalledDropZones: TestPackagePoint[] | undefined;
@@ -50,7 +50,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
         }
 
         const marshalledOptions = await Promise.all(
-            o.options.map((o) => this.optionMarshaller.marshal(o)),
+            o.options.map((o) => this.optionMarshaller.marshall(o)),
         );
 
         const q = {
