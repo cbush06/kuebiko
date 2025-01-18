@@ -5,7 +5,7 @@
         >
             <h1 class="title mb-1">{{ t('projects') }}</h1>
             <div class="box is-flex is-flex-gap-2 is-justify-content-flex-end p-2">
-                <div class="file is-info">
+                <div class="file mb-0 is-info">
                     <label class="file-label">
                         <input
                             class="file-input"

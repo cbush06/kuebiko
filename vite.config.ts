@@ -7,6 +7,7 @@ import { resolve } from 'path';
 import vue from '@vitejs/plugin-vue';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import { NodePackageImporter } from 'sass-embedded';
 
 export default defineConfig({
     resolve: {
@@ -73,9 +74,15 @@ export default defineConfig({
         preprocessorOptions: {
             sass: {
                 quietDeps: true,
+                silenceDeprecations: ['legacy-js-api', 'color-functions'],
+                api: 'modern-compiler',
+                importers: [new NodePackageImporter()],
             },
             scss: {
                 quietDeps: true,
+                silenceDeprecations: ['legacy-js-api', 'color-functions'],
+                api: 'modern-compiler',
+                importers: [new NodePackageImporter()],
             },
         },
     },

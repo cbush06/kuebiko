@@ -1,7 +1,7 @@
 @use 'sass:list';
-@forward '~bulma/sass' with (
+@forward 'bulma/sass' with (
     // Fonts
-    $family-sans-serif: "Roboto, 'Times New Roman'",
+    $family-sans-serif: 'Roboto, sans-serif',
     $family-monospace: "'Roboto Mono', monospace",
     $body-family: "Roboto, 'Times New Roman'",
 
@@ -13,9 +13,9 @@
     // Darken table rows on hover
     $table-row-hover-background-color: #ccc
 );
-@use '~bulma/sass/utilities/initial-variables' as initial-variables;
-@use '~bulma/sass/utilities/derived-variables' as derived-variables;
-@use '~bulma/sass/elements/box' as box;
+@use 'bulma/sass/utilities/initial-variables' as initial-variables;
+@use 'bulma/sass/utilities/derived-variables' as derived-variables;
+@use 'bulma/sass/elements/box' as box;
 
 // Flex Gap
 $spacing-values: (
@@ -175,5 +175,27 @@ button.button.is-white.has-text-grey-lighter {
     }
     &:active {
         cursor: grabbing;
+    }
+}
+
+// Navbar
+.navbar.is-primary,
+.navbar-is-info {
+    .navbar-item.is-selected,
+    .navbar-item.is-active {
+        // Make text brighter
+        color: var(--bulma-scheme-main);
+
+        // Darken selected item on navbar
+        background-color: hsla(
+            var(--bulma-navbar-h),
+            var(--bulma-navbar-s),
+            calc(
+                var(--bulma-navbar-item-background-l) +
+                    var(--bulma-navbar-item-hover-background-l-delta)
+            ),
+            var(--bulma-navbar-item-background-a)
+        );
+        //--bulma-navbar-item-color-l: var(--bulma-navbar-item-selected-color-l);
     }
 }

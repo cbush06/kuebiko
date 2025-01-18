@@ -1,8 +1,8 @@
 @use 'sass:list';
 @use 'sass:color';
 @use 'helper-functions' as fn;
-@use '~bulma/sass/utilities/derived-variables' as derived-variables;
-@use '~bulma/sass/utilities/initial-variables' as initial-variables;
+@use 'bulma/sass/utilities/derived-variables' as derived-variables;
+@use 'bulma/sass/utilities/initial-variables' as initial-variables;
 
 $ribbon-color: initial-variables.$grey-darker !default;
 $ribbon-background-color: initial-variables.$white !default;

@@ -1,0 +1,35 @@
+@forward 'vue-multiselect/dist/vue-multiselect.css';
+@use './bulma-customized' as bulma;
+
+.multiselect__placeholder {
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-left: 10px;
+}
+
+.multiselect__input {
+    padding-left: 10px;
+}
+
+.multiselect__option--highlight {
+    background-color: bulma.$primary;
+
+    &::after {
+        background-color: bulma.$primary;
+    }
+}
+
+.multiselect__option--selected {
+    &.multiselect__option--highlight {
+        background: bulma.$danger;
+
+        &::after {
+            background-color: bulma.$danger;
+        }
+    }
+}
+
+.multiselect__tag {
+    background-color: bulma.$primary;
+    margin-bottom: 0;
+}

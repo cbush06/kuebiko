@@ -1,0 +1,4 @@
+@use './bulma-customized' as bulma;
+@forward 'vue-slider-component/lib/theme/default' with (
+    $themeColor: bulma.$primary
+);

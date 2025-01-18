@@ -67,6 +67,7 @@ const isSelected = computed(() => {
     label {
         @extend .is-flex, .is-flex-direction-row, .is-align-items-center, .is-vcentered;
 
+        width: fit-content;
         gap: 0.5em;
 
         input {

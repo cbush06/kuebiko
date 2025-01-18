@@ -18,7 +18,7 @@ onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 </script>
 
 <style scoped lang="scss">
-@use '@renderer/style' as *;
+@use '@renderer/scss/bulma-customized' as *;
 
 .editor {
     // Negate .has-navbar-fixed-bottom

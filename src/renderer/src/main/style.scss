@@ -1,12 +1,11 @@
-@forward 'scss/bulma-customized';
-@forward 'scss/vue-tags-input';
-@forward 'scss/bulma-ribbon';
-
+@use 'scss/bulma-customized' as *;
 @use 'scss/fontawesome' as *;
 @use 'scss/mdi' as *;
 @use 'scss/roboto' as *;
 @use 'scss/roboto-mono' as *;
-@use '~vue-multiselect/dist/vue-multiselect.css' as *;
+@use 'scss/multi-select' as *;
+@use 'scss/vue-slider' as *;
+@use 'scss/bulma-ribbon' as *;
 
 :root {
     font-size: 16px;

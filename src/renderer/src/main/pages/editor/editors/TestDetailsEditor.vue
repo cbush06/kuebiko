@@ -135,7 +135,6 @@ import {
     durationMask,
     durationToClockFormat,
 } from '@renderer/utils/datetime-utils';
-import VueTagsInput from '@sipec/vue3-tags-input/dist/vue-tags-input';
 import { watchDebounced } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 import { IMaskComponent as VueMask } from 'vue-imask';
