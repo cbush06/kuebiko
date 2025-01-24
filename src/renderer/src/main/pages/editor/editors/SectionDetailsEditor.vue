@@ -4,7 +4,7 @@
             <label class="label">Title</label>
         </div>
         <div class="field-body">
-            <input type="text" class="input" placeholder="Untitled" v-model="section.title" />
+            <input v-model="section.title" type="text" class="input" placeholder="Untitled" />
         </div>
     </div>
     <div class="field is-horizontal">
@@ -30,6 +30,7 @@ const section = computed(() => testEditorStore.testEditPart as Section);
 const description = ref(
     (testEditorStore.resources.get(section.value.descriptionRef!)?.data as string) ?? '',
 );
+
 watchDebounced(
     description,
     () => {

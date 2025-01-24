@@ -1,4 +1,3 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { AuthorMarshaller } from '@renderer/services/test-package-service/marshallers/author-marshaller';
 import { ResourceMarshaller } from '@renderer/services/test-package-service/marshallers/resource-marshaller';
@@ -7,27 +6,24 @@ import { TestMarshaller } from '@renderer/services/test-package-service/marshall
 import { Manifest } from '@renderer/services/test-package-service/model/manifest';
 import JSZip from 'jszip';
 import { describe, expect, test, vi } from 'vitest';
+import { DeliveryDbFacade } from '@renderer/services/delivery-db-facade';
 
 // Mock the DB
-vi.mock('@renderer/db/kuebiko-db.ts', () => {
-    const KuebikoDb = vi.fn();
-    KuebikoDb.prototype.questions = {
-        add: vi.fn().mockImplementation(() => Promise.resolve()),
-    };
-    KuebikoDb.prototype.resources = {
-        add: vi.fn().mockImplementation(() => Promise.resolve()),
-    };
-    KuebikoDb.prototype.tests = {
-        add: vi.fn().mockImplementation(() => Promise.resolve()),
-    };
-    return {
-        KuebikoDb,
-    };
-});
+vi.mock('@renderer/services/delivery-db-facade', () => ({
+    DeliveryDbFacade: {
+        questions: {
+            add: vi.fn().mockImplementation(() => Promise.resolve()),
+        },
+        resources: {
+            add: vi.fn().mockImplementation(() => Promise.resolve()),
+        },
+        tests: {
+            add: vi.fn().mockImplementation(() => Promise.resolve()),
+        },
+    },
+}));
 
 describe('test marshaller', async () => {
-    const kuebikoDb = new KuebikoDb();
-
     const resourceMarshaller = {
         unmarshall: vi.fn(() => ({ uuid: 'a23gk3l' })),
     } as unknown as ResourceMarshaller;
@@ -45,11 +41,11 @@ describe('test marshaller', async () => {
 
     const testMarshaller = new TestMarshaller(
         {} as JSZip,
-        {} as Manifest,
-        kuebikoDb,
+        DeliveryDbFacade,
         authorMarshaller,
         resourceMarshaller,
         sectionMarshaller,
+        {} as Manifest,
     );
 
     const toUnmarshal = {
@@ -111,6 +107,6 @@ describe('test marshaller', async () => {
         expect(authorMarshaller.unmarshall).toHaveBeenCalledWith(toUnmarshal.authors[0]);
         expect(resourceMarshaller.unmarshall).toHaveBeenCalledWith(toUnmarshal.resources[0]);
         expect(sectionMarshaller.unmarshall).toHaveBeenCalledWith(toUnmarshal.sections[0]);
-        expect(kuebikoDb.tests.add).toHaveBeenCalledWith(unmarshalled);
+        expect(DeliveryDbFacade.tests.add).toHaveBeenCalledWith(unmarshalled);
     });
 });

@@ -1,5 +1,5 @@
 <template>
-    <NavVue />
+    <StandardNav />
     <div class="container is-max-widescreen mt-4">
         <div class="section is-flex is-flex-direction-column is-flex-gap-2">
             <h1 class="title mb-1">{{ t('tests') }}</h1>
@@ -23,7 +23,7 @@
             <div class="box">
                 <!-- prettier-ignore -->
                 <TableVue 
-                    :data="data" 
+                    :data="data as any[]"
                     :columns="columns" 
                     :hoverable="true" 
                     :clickable="true"
@@ -35,7 +35,7 @@
                     </template>
                     <template #tags="{ row }">
                         <template v-if="(row as Test).tags.length">
-                            <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags.slice(0, 5)">{{ tag }}</span>
+                            <span class="tag is-primary is-light mr-2" v-for="tag in (row as Test).tags.slice(0, 5)" :key="tag">{{ tag }}</span>
                         </template>
                         <template v-else>&nbsp;</template>
                     </template>
@@ -46,12 +46,10 @@
 </template>
 
 <script setup lang="ts">
-import NavVue from '@renderer/components/nav/Nav.vue';
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';
-import { TestsService } from '@renderer/services/tests-service';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { useMemoize } from '@vueuse/core';
@@ -59,6 +57,9 @@ import { useObservable } from '@vueuse/rxjs';
 import { computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import StandardNav from '@renderer/components/nav/StandardNav.vue';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+import { DeliveryDbFacade } from '@renderer/services/delivery-db-facade';
 
 const helmetStore = useHelmetStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
@@ -68,7 +69,7 @@ onBeforeMount(() => (helmetStore.title = t('homeTitle')));
 const toast = inject<BulmaToastService>(BulmaToast)!;
 const router = useRouter();
 
-const data = useObservable(TestsService.fetchAllTests());
+const data = useObservable(DeliveryTestObjectProvider.fetchAllTests());
 
 const columns = computed(
     () =>
@@ -102,7 +103,10 @@ const importTestPackage = async (e: InputEvent) => {
 
     if (packageFile) {
         try {
-            await TestPackageMarshaller.unmarshal(packageFile, KuebikoDb.INSTANCE);
+            await new TestPackageMarshaller(DeliveryDbFacade).unmarshall(
+                packageFile,
+                KuebikoDb.INSTANCE,
+            );
         } catch (e) {
             toast.danger({ message: `Uh oh! An error occurred during import: ${e}` });
         }

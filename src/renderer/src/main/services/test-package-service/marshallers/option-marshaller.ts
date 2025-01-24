@@ -3,15 +3,21 @@ import { TestPackageOption } from '../model/test-package-option';
 import { AbstractMarshaller } from './abstract-marshaller';
 
 export class OptionMarshaller extends AbstractMarshaller<Option, TestPackageOption> {
-    marshal(o: Option): Promise<TestPackageOption> {
-        throw new Error('Method not implemented.');
+    async marshall(o: Option): Promise<TestPackageOption> {
+        return Promise.resolve({
+            contentRef: o.contentRef,
+            explanation: o.explanation,
+            subjectImageArea: o.subjectImageArea,
+            uuid: o.uuid,
+        });
     }
 
-    unmarshall(o: TestPackageOption): Promise<Option> {
+    async unmarshall(o: TestPackageOption): Promise<Option> {
         return Promise.resolve({
             uuid: o.uuid,
             contentRef: o.contentRef,
             explanation: o.explanation,
+            subjectImageArea: o.subjectImageArea,
         } as Option);
     }
 }

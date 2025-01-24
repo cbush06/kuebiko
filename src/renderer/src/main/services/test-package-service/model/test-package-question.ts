@@ -1,15 +1,15 @@
+import { TestPackageAnswerType } from './test-package-answer';
 import { TestPackageOption } from './test-package-option';
-import { TestPackagePoint } from './test-package-point';
+import { TestPackageRectangle } from '@renderer/services/test-package-service/model/test-package-rectangle';
 
 export type TestPackageQuestionType =
     | 'MULTIPLE'
     | 'MANY'
-    | 'POINT'
     | 'FILL'
     | 'TEXT'
     | 'DRAGNDROP'
+    | 'HOTSPOT'
     | 'HOTAREA';
-export type TestPackageAnswerType = string | string[] | TestPackagePoint[];
 
 export interface TestPackageQuestion {
     uuid: string;
@@ -17,7 +17,7 @@ export interface TestPackageQuestion {
     title: string;
     contentRef?: string;
     subjectImageRef?: string;
-    dropZones?: TestPackagePoint[];
+    dropZones?: TestPackageRectangle[];
     answer?: TestPackageAnswerType;
     options: TestPackageOption[];
     successFeedbackText?: string;

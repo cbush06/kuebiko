@@ -1,7 +1,7 @@
 import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Attempt } from '@renderer/db/models/attempt';
 import { from } from '@vueuse/rxjs';
-import Dexie, { liveQuery } from 'dexie';
+import { Dexie, liveQuery } from 'dexie';
 
 export interface AttemptTestRollup {
     testUuid: string;

@@ -12,10 +12,11 @@ export function getQuestionEvaluator(
             return MULTIPLE_CHOICE_EVALUATOR;
         case 'MANY':
             return MANY_CHOICE_EVALUATOR;
+        case 'TEXT':
         case 'FILL':
-        case 'LONG':
-        case 'POINT':
-        case 'SHORT':
+        case 'DRAGNDROP':
+        case 'HOTSPOT':
+        case 'HOTAREA':
             throw new Error(`Evaluator not implemented for ${questionType} type`);
     }
 }

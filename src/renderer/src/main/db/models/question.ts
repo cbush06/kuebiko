@@ -1,14 +1,14 @@
 import { AnswerType } from './answer';
 import { Option } from './option';
-import { Point } from './point';
+import { Rectangle } from '@renderer/db/models/rectangle';
 
 export type QuestionType =
     | 'MULTIPLE'
     | 'MANY'
-    | 'POINT'
     | 'FILL'
     | 'TEXT'
     | 'DRAGNDROP'
+    | 'HOTSPOT'
     | 'HOTAREA';
 
 export interface Question {
@@ -17,7 +17,7 @@ export interface Question {
     title: string;
     contentRef?: string;
     subjectImageRef?: string;
-    dropZones?: Point[];
+    dropZones?: Rectangle[];
     answer?: AnswerType;
     options: Option[];
     successFeedbackText?: string;

@@ -21,7 +21,7 @@
                     :success-feedback="successFeedback"
                     :failure-feedback="failureFeedback"
                     :reveal-answer="true"
-                    v-model="answer"
+                    v-model="answer as string"
                     :options="props.question?.options ?? []"
                 />
                 <ManyChoice
@@ -32,7 +32,7 @@
                     :success-feedback="successFeedback"
                     :failure-feedback="failureFeedback"
                     :reveal-answer="true"
-                    v-model="answer"
+                    v-model="answer as string[]"
                     :options="question.options ?? []"
                 />
             </div>
@@ -46,9 +46,9 @@ import MultipleChoice from '@renderer/components/question-renderers/MultipleChoi
 import { AnswerType } from '@renderer/db/models/answer';
 import { Question } from '@renderer/db/models/question';
 import { QuestionResponse } from '@renderer/db/models/question-response';
-import { ResourcesService } from '@renderer/services/resources-service';
 import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 interface ResponseProps {
     questionNumber: number;
@@ -69,18 +69,22 @@ const answer = ref<AnswerType | undefined>(props.response?.response);
 watchEffect(async () => {
     try {
         const questionContentResource = (
-            await ResourcesService.fetchResource(props.question?.contentRef ?? 'nonce')
+            await DeliveryTestObjectProvider.fetchResource(props.question?.contentRef ?? 'nonce')
         )?.data as string;
         questionContent.value = questionContentResource ?? t('noQuestionContent');
 
         const successFeedbackContentResource = (
-            await ResourcesService.fetchResource(props.question?.successFeedbackRef ?? 'nonce')
+            await DeliveryTestObjectProvider.fetchResource(
+                props.question?.successFeedbackRef ?? 'nonce',
+            )
         )?.data as string;
         successFeedback.value =
             props.question?.successFeedbackText ?? successFeedbackContentResource;
 
         const failureFeedbackContentResource = (
-            await ResourcesService.fetchResource(props.question?.failureFeedbackRef ?? 'nonce')
+            await DeliveryTestObjectProvider.fetchResource(
+                props.question?.failureFeedbackRef ?? 'nonce',
+            )
         )?.data as string;
         failureFeedback.value =
             props.question?.failureFeedbackText ?? failureFeedbackContentResource;

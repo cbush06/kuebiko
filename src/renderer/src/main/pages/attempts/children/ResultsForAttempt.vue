@@ -35,7 +35,7 @@
                                 )
                             "
                         >
-                            <option v-for="a in attempts" :value="a.uuid">
+                            <option v-for="a in attempts" :value="a.uuid" :key="a.uuid">
                                 {{ format(a.completed!, 'MMM dd, yyyy h:mm aa') }}
                             </option>
                         </select>
@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="box section-breakdown-box">
-            <div class="block chart-container" v-for="s in sectionScoringBreakdown">
+            <div class="block chart-container" v-for="s in sectionScoringBreakdown" :key="s.uuid">
                 <h2 class="is-size-5 has-text-weight-semibold">
                     {{ s.section ? s.section : t('default') }}
                 </h2>
@@ -96,7 +96,11 @@
                             :disabled="!sectionsInAttempt?.length"
                         >
                             <option selected :value="undefined">All Sections</option>
-                            <option v-for="section in sectionsInAttempt" :value="section.uuid">
+                            <option
+                                v-for="section in sectionsInAttempt"
+                                :value="section.uuid"
+                                :key="section.uuid"
+                            >
                                 {{ section.title }}
                             </option>
                         </select>
@@ -108,7 +112,11 @@
                             :disabled="!categoriesInAttempt?.length"
                         >
                             <option selected :value="undefined">All Categories</option>
-                            <option v-for="category in categoriesInAttempt" :value="category">
+                            <option
+                                v-for="category in categoriesInAttempt"
+                                :value="category"
+                                :key="category"
+                            >
                                 {{ category }}
                             </option>
                         </select>
@@ -131,9 +139,9 @@
                 v-for="(r, i) in filteredResponses"
                 class="is-full-box-width mb-4"
                 :class="{ 'has-background-white-ter': i % 2 > 0 }"
+                :key="`${attempt?.uuid}-${r.questionRef}`"
             >
                 <ResponseVue
-                    :key="`${attempt?.uuid}-${r.questionRef}`"
                     :question="questionMap?.get(r.questionRef)"
                     :questionNumber="i + 1"
                     :response="r"
@@ -148,9 +156,7 @@ import { Attempt } from '@renderer/db/models/attempt';
 import { Question } from '@renderer/db/models/question';
 import { QuestionResponse } from '@renderer/db/models/question-response';
 import { Test } from '@renderer/db/models/test';
-import { AttemptsService } from '@renderer/services/attempts-service';
-import { QuestionsService } from '@renderer/services/questions-service';
-import { TestsService } from '@renderer/services/tests-service';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { millisToHours } from '@renderer/utils/datetime-utils';
 import { useMemoize } from '@vueuse/core';
@@ -160,8 +166,8 @@ import {
     BarController,
     BarElement,
     CategoryScale,
-    ChartData,
     Chart as ChartJS,
+    ChartData,
     ChartOptions,
     DoughnutDataPoint,
     Legend,
@@ -178,6 +184,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { DistributiveArray } from '~/chart.js/dist/types/utils';
 import ResponseVue from './Response.vue';
+import { AttemptsService } from '@renderer/services/attempts-service';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -201,17 +208,17 @@ watch(
     async () => {
         resetFilters();
 
-        test.value = await TestsService.fetchTest(route.params['testUuid'] as string);
+        test.value = await DeliveryTestObjectProvider.fetchTest(route.params['testUuid'] as string);
 
         attempt.value = await AttemptsService.fetchAttempt(route.params['attemptUuid'] as string);
 
         const questionRefs = test.value?.sections.flatMap((s) => s.questionRefs) ?? [];
-        questionMap.value = (await QuestionsService.fetchQuestions(questionRefs)).reduce(
+        questionMap.value = (await DeliveryTestObjectProvider.fetchQuestions(questionRefs)).reduce(
             (m, q) => m.set(q!.uuid, q!),
             new Map<string, Question>(),
         );
 
-        helmetStore.title = `Kuebiko :: ${t('resultsForTest', [test.value?.title, format(attempt.value?.completed!, 'MMM dd, yyyy h:mm aa')])}`;
+        helmetStore.title = `Kuebiko :: ${t('resultsForTest', [test.value?.title, format(attempt.value!.completed!, 'MMM dd, yyyy h:mm aa')])}`;
     },
     { immediate: true },
 );
@@ -272,11 +279,11 @@ const handleAttemptSelectionChange = (uuid: string) => {
 
 const duration = computed(() => {
     if (!attempt.value?.completed) return 0;
-    const hours = differenceInHours(attempt.value?.completed!, attempt.value?.started!);
+    const hours = differenceInHours(attempt.value.completed, attempt.value.started!);
     const minutes =
-        differenceInMinutes(attempt.value?.completed!, attempt.value?.started!) - hours * 60;
+        differenceInMinutes(attempt.value.completed!, attempt.value.started!) - hours * 60;
     const seconds =
-        differenceInSeconds(attempt.value?.completed!, attempt.value?.started!) -
+        differenceInSeconds(attempt.value.completed!, attempt.value.started!) -
         hours * 3600 -
         minutes * 60;
     if (hours) {
@@ -462,7 +469,7 @@ const sectionScoringBreakdownChartData = useMemoize(
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
 
 .section-breakdown-box {
     .chart-container {

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import Nav from '@renderer/components/nav/Nav.vue';
+import Nav from '@renderer/components/nav/StandardNav.vue';
 </script>
 
 <style scoped></style>

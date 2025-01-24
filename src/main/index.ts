@@ -29,7 +29,7 @@ function createWindow(): void {
     });
 
     if (is.dev) {
-        mainWindow.webContents.openDevTools({ mode: 'right' });
+        // mainWindow.webContents.openDevTools({ mode: 'right' });
     }
 
     // HMR for renderer base on electron-vite cli.

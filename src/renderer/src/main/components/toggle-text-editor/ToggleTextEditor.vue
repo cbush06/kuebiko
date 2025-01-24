@@ -47,7 +47,7 @@ const textMode = ref<'plain' | 'rich'>('rich');
 </script>
 
 <style scoped lang="scss">
-@import '~bulma/sass/utilities/initial-variables.sass';
+@use '~bulma/sass/utilities/initial-variables.scss' as *;
 
 .text-mode-button {
     border-top-width: 0;

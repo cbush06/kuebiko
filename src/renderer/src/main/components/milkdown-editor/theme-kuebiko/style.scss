@@ -1,5 +1,4 @@
-@import '@renderer/scss/bulma-customizations.scss';
-@import '~/bulma/bulma.sass';
+@use '@renderer/scss/bulma-customized';
 
 div[data-milkdown-root] {
     display: flex;

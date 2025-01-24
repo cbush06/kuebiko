@@ -9,9 +9,9 @@ export default new Factory<Question>()
         faker.helpers.arrayElement<QuestionType>([
             'MULTIPLE',
             'MANY',
-            'POINT',
             'FILL',
             'DRAGNDROP',
+            'HOTSPOT',
             'HOTAREA',
             'TEXT',
         ]),

@@ -1,23 +1,36 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Section } from '@renderer/db/models/section';
 import JSZip from 'jszip';
 import { Manifest } from '../model/manifest';
 import { TestPackageSection } from '../model/test-package-section';
 import { AbstractMarshaller } from './abstract-marshaller';
 import { QuestionMarshaller } from './question-marshaller';
+import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
 
 export class SectionMarshaller extends AbstractMarshaller<Section, TestPackageSection> {
     constructor(
         protected jszip: JSZip,
-        protected manifest: Manifest,
-        protected db: KuebikoDb,
+        protected db: KuebikoDbFacade,
         protected questionMarshaller: QuestionMarshaller,
+        protected manifest?: Manifest,
     ) {
-        super(jszip, manifest, db);
+        super(jszip, db, manifest);
     }
 
-    marshal(o: Section): Promise<TestPackageSection> {
-        throw new Error('Method not implemented.');
+    async marshall(o: Section): Promise<TestPackageSection> {
+        const questionEntities = await this.db.questions.bulkGet(o.questionRefs);
+        const questions = await Promise.all(
+            questionEntities
+                .filter((q) => !!q)
+                .map(async (q) => await this.questionMarshaller.marshall(q)),
+        );
+
+        return {
+            uuid: o.uuid,
+            default: o.default,
+            title: o.title,
+            questions,
+            descriptionRef: o.descriptionRef,
+        } as TestPackageSection;
     }
 
     async unmarshall(o: TestPackageSection): Promise<Section> {

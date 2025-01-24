@@ -104,8 +104,14 @@ const deleteOption = (option: Option) => {
 
     if (idx < 0) return;
 
+    // eslint-disable-next-line vue/no-mutating-props
     props.question.options.splice(idx, 1);
+
+    // eslint-disable-next-line vue/no-mutating-props
     if (props.question.answer === option.uuid) props.question.answer = undefined;
+
+    // Remove content from db
+    testEditorStore.removeResource(option.contentRef!);
 };
 </script>
 

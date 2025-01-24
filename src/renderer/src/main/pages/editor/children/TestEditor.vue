@@ -6,6 +6,13 @@
             {{ testEditorStore.test.title.trim().length ? testEditorStore.test.title : 'Untitled' }}
         </span>
         <div class="is-flex is-flex-direction-row is-align-items-center is-flex-gap-2 pr-2">
+            <button class="button is-link" @click="exportTest">
+                <i class="fa-solid fa-download pr-2"></i> Export
+            </button>
+            <div
+                class="is-grey-lighter-border has-left-border-1"
+                style="height: 3rem; width: 1px"
+            ></div>
             <button class="button" @click="back">
                 <i class="fa-solid fa-xmark pr-2"></i> Back
             </button>
@@ -111,9 +118,18 @@
             />
         </div>
         <div class="is-flex-grow-1 is-flex-shrink-1 p-4 is-overflow-y-auto">
-            <TestDetailsEditor v-if="testEditorStore.testEditMode === 'test'" />
-            <SectionDetailsEditor v-else-if="testEditorStore.testEditMode === 'section'" />
-            <QuestionEditor v-else />
+            <TestDetailsEditor
+                v-if="testEditorStore.testEditMode === 'test'"
+                :key="testEditorStore.testEditPart.uuid"
+            />
+            <SectionDetailsEditor
+                v-if="testEditorStore.testEditMode === 'section'"
+                :key="testEditorStore.testEditPart.uuid"
+            />
+            <QuestionEditor
+                v-if="testEditorStore.testEditMode === 'question'"
+                :key="testEditorStore.testEditPart.uuid"
+            />
         </div>
     </div>
 
@@ -128,17 +144,20 @@ import TreeVue from '@renderer/components/tree/Tree.vue';
 import { TreeNodeDropData, TreeNodeStruct } from '@renderer/components/tree/structures';
 import { Question, QuestionType } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
-import { EditorTestsService } from '@renderer/services/editor-tests-service';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
-import { computed, inject, ref, watch } from 'vue';
+import { computed, inject, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import QuestionEditor from '../editors/QuestionEditor.vue';
 import SectionDetailsEditor from '../editors/SectionDetailsEditor.vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
+import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';
+import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
+import { EditorDbFacade } from '@renderer/services/editor-db-facade';
+
 const toast = inject<BulmaToastService>(BulmaToast)!;
 
 const addQuestionMenuShown = ref(false);
@@ -147,10 +166,16 @@ const confirmLeaveWithoutSavingModal = ref<InstanceType<typeof BulmaModal> | und
 const { t } = useI18n();
 const router = useRouter();
 
-// #region Fetch/init test data and navigation tree
+//region Initialize
+onBeforeMount(() => {
+    testEditorStore.testEditMode = 'test';
+});
+//endregion
+
+//region Fetch/init test data and navigation tree
 const route = useRoute();
 
-EditorTestsService.fetchTest(route.params['testUuid'] as string).then((t) => {
+EditorTestObjectProvider.fetchTest(route.params['testUuid'] as string).then((t) => {
     if (t) {
         testEditorStore.initializeForTest(route.params['testUuid'] as string);
     } else {
@@ -167,9 +192,9 @@ const navigationTree = ref({
 } as TreeNodeStruct);
 const selectedNavNodeId = ref<string>(navigationTree.value.id);
 watch(selectedNavNodeId, (id) => testEditorStore.setTestEditPartFromTreeNode(id));
-// #endregion
+//endregion
 
-// #region Delete button
+//region Delete button
 const isDeleteButtonActive = computed(
     () => !!selectedNavNodeId.value && selectedNavNodeId.value !== 'root',
 );
@@ -203,9 +228,9 @@ const deleteItem = () => {
         selectedNavNodeId.value = section!.id;
     }
 };
-// #endregion
+//endregion
 
-// #region Add section
+//region Add section
 const addSection = () => {
     selectedNavNodeId.value = testEditorStore.addSection().uuid;
 };
@@ -220,9 +245,9 @@ watch(testEditorStore.test.sections, (s) => {
         s[0].default = true;
     }
 });
-// #endregion
+//endregion
 
-// #region Add questions
+//region Add questions
 const findTargetContainer: (node: TreeNodeStruct) => TreeNodeStruct | undefined = (
     node: TreeNodeStruct,
 ) => {
@@ -248,9 +273,9 @@ const addQuestion = async (type: QuestionType) => {
     selectedNavNodeId.value = testEditorStore.addQuestion(selectedSection!, type).uuid;
     addQuestionMenuShown.value = false;
 };
-// #endregion
+//endregion
 
-// #region Synchronize navigation tree with test structure
+//region Synchronize navigation tree with test structure
 const testIdPathSet = new Set<string>();
 watchThrottled(
     () => ({
@@ -289,7 +314,7 @@ const QUESTION_TYPE_TO_ICON_MAP = Object.seal({
 const convertTestToTree = async (test: Test) => {
     const tree = {
         id: 'root',
-        label: !!test.title ? test.title : 'Untitled Test',
+        label: test.title ? test.title : 'Untitled Test',
         icon: 'fa-solid fa-flask has-text-primary',
         isContainer: true,
         children: [],
@@ -298,7 +323,7 @@ const convertTestToTree = async (test: Test) => {
     for (const s of test.sections) {
         const sectionStruct = {
             id: s.uuid,
-            label: !!s.title ? s.title : 'Untitled Section',
+            label: s.title ? s.title : 'Untitled Section',
             isContainer: true,
             children: [],
         } as TreeNodeStruct;
@@ -319,9 +344,9 @@ const convertTestToTree = async (test: Test) => {
 
     return tree;
 };
-// #endregion
+//endregion
 
-// #region Handling drag-n-drop of questions
+//region Handling drag-n-drop of questions
 const onDrop = (e: TreeNodeDropData) => {
     console.log('onDrop');
     const question = e.sourceId;
@@ -331,16 +356,16 @@ const onDrop = (e: TreeNodeDropData) => {
     if (question && originalParent && targetParent) {
         // prettier-ignore
         originalParent.questionRefs.splice(
-            originalParent.questionRefs.indexOf(question), 
-            1
+                originalParent.questionRefs.indexOf(question),
+                1
         );
 
         if (e.beforeId) {
             // prettier-ignore
             targetParent.questionRefs.splice(
-                targetParent.questionRefs.indexOf(e.beforeId), 
-                0, 
-                question
+                    targetParent.questionRefs.indexOf(e.beforeId),
+                    0,
+                    question
             );
             return;
         }
@@ -348,9 +373,9 @@ const onDrop = (e: TreeNodeDropData) => {
         if (e.afterId) {
             // prettier-ignore
             targetParent.questionRefs.splice(
-                targetParent.questionRefs.indexOf(e.afterId) + 1,
-                0,
-                question
+                    targetParent.questionRefs.indexOf(e.afterId) + 1,
+                    0,
+                    question
             );
             return;
         }
@@ -358,14 +383,15 @@ const onDrop = (e: TreeNodeDropData) => {
         targetParent.questionRefs.push(question);
     }
 };
-// #endregion
+//endregion
 
-// #region saving and navigating
+//region Saving and navigating
 const save = async () => {
     try {
         await testEditorStore.save();
         toast.success({ message: 'Changes saved!' });
     } catch (e) {
+        console.error(e);
         toast.danger({ message: 'Uh oh! An error prevented saving your changes.' });
     }
 };
@@ -379,7 +405,33 @@ const back = () => {
         router.push('/editor');
     }
 };
-// #endregion
+
+const exportTest = async () => {
+    try {
+        await testEditorStore.save();
+        const jszip = await new TestPackageMarshaller(EditorDbFacade).marshall(
+            testEditorStore.test,
+        );
+
+        // @ts-expect-error - TS doesn't know about showSaveFilePicker
+        const fileHandle: FileSystemFileHandle = await window.showSaveFilePicker({
+            suggestedName: `${testEditorStore.test.title}.zip`,
+        });
+
+        const blob = await jszip.generateAsync({ type: 'blob' });
+
+        const fileWriter = await fileHandle.createWritable();
+        await fileWriter.write(blob);
+        await fileWriter.close();
+
+        toast.success({ message: `Test exported to [${fileHandle.name}]!` });
+    } catch (e) {
+        if (e instanceof DOMException && e.name === 'AbortError') return;
+        console.error(e);
+        toast.danger({ message: 'Uh oh! An error prevented exporting your test.' });
+    }
+};
+//endregion
 </script>
 
 <style scoped lang="scss"></style>

@@ -9,7 +9,7 @@
             :correct-response="questionDeliveryItem?.getCorrectResponse() as string ?? ''"
             :success-feedback="successFeedbackContent"
             :failure-feedback="failureFeedbackContent"
-            v-model="selection"
+            v-model="selection as string"
             :reveal-answer="revealAnswer"
         />
         <ManyChoice
@@ -20,7 +20,7 @@
             :correct-response="(questionDeliveryItem?.getCorrectResponse() as string[]) ?? []"
             :success-feedback="successFeedbackContent"
             :failure-feedback="failureFeedbackContent"
-            v-model="selection"
+            v-model="selection as string[]"
             :reveal-answer="revealAnswer"
         />
     </div>
@@ -30,11 +30,11 @@
 import ManyChoice from '@renderer/components/question-renderers/ManyChoice.vue';
 import MultipleChoice from '@renderer/components/question-renderers/MultipleChoice.vue';
 import { AnswerType } from '@renderer/db/models/answer';
-import { ResourcesService } from '@renderer/services/resources-service';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
@@ -47,18 +47,22 @@ const revealAnswer = ref(false);
 
 const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => {
     const questionContentResource = (
-        await ResourcesService.fetchResource(newDeliveryItem?.getContentRef() ?? 'nonce')
+        await DeliveryTestObjectProvider.fetchResource(newDeliveryItem?.getContentRef() ?? 'nonce')
     )?.data as string;
     questionContent.value = questionContentResource ?? t('noQuestionContent');
 
     const successFeedbackContentResource = (
-        await ResourcesService.fetchResource(newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce')
+        await DeliveryTestObjectProvider.fetchResource(
+            newDeliveryItem?.getSuccessFeedbackRef() ?? 'nonce',
+        )
     )?.data as string;
     successFeedbackContent.value =
         questionDeliveryItem.value?.getSuccessFeedbackText() ?? successFeedbackContentResource;
 
     const failureFeedbackContentResource = (
-        await ResourcesService.fetchResource(newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce')
+        await DeliveryTestObjectProvider.fetchResource(
+            newDeliveryItem?.getFailureFeedbackRef() ?? 'nonce',
+        )
     )?.data as string;
     failureFeedbackContent.value =
         questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;

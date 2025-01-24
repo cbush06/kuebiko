@@ -10,7 +10,7 @@
         />
     </div>
     <div class="block">
-        <div v-for="opt in options" class="block">
+        <div v-for="opt in choices" class="block">
             <div
                 class="field exam-field"
                 :class="{
@@ -125,11 +125,11 @@
 
 <script setup lang="ts">
 import { Option } from '@renderer/db/models/option';
-import { ResourcesService } from '@renderer/services/resources-service';
 import { MANY_CHOICE_EVALUATOR } from '@renderer/store/test-delivery-store/question-evaluators/many-choice-evaluator';
 import { MdPreview } from 'md-editor-v3';
 import { onBeforeMount, ref, watch } from 'vue';
 import { RendererBaseProps } from './renderer-base-props';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 export interface ManyChoiceProps extends RendererBaseProps {
     correctResponse: string[];
@@ -145,15 +145,16 @@ export interface ManyChoiceOption {
 const props = defineProps<ManyChoiceProps>();
 const model = defineModel({ default: new Array<string>() });
 
-const options = ref<Array<ManyChoiceOption>>([]);
+const choices = ref<Array<ManyChoiceOption>>([]);
 const updateOptions = async (newProps: ManyChoiceProps) => {
-    options.value = await Promise.all(
+    choices.value = await Promise.all(
         newProps.options.map(
             async (o) =>
                 ({
                     uuid: o.uuid,
-                    content: (await ResourcesService.fetchResource(o.contentRef ?? 'nonce'))
-                        ?.data as string,
+                    content: (
+                        await DeliveryTestObjectProvider.fetchResource(o.contentRef ?? 'nonce')
+                    )?.data as string,
                     explanation: o.explanation,
                 }) as ManyChoiceOption,
         ),
@@ -165,8 +166,7 @@ onBeforeMount(async () => await updateOptions(props));
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
-@import '@renderer/scss/bulma-customizations.scss';
+@use '@renderer/style' as *;
 
 .exam-field {
     @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;

@@ -1,5 +1,6 @@
-@import '@renderer/scss/bulma-customizations.scss';
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
+@use '~bulma/sass/utilities/initial-variables' as *;
+@use '~bulma/sass/utilities/derived-variables' as *;
 
 .milkdown-menu {
     // --menu-bg: #2e3440;

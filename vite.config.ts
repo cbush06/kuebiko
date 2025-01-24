@@ -7,6 +7,7 @@ import { resolve } from 'path';
 import vue from '@vitejs/plugin-vue';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import { NodePackageImporter } from 'sass-embedded';
 
 export default defineConfig({
     resolve: {
@@ -23,6 +24,10 @@ export default defineConfig({
                 find: 'vue-i18n',
                 replacement: 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
             },
+            {
+                find: 'dexie',
+                replacement: 'dexie/dist/dexie.mjs',
+            },
         ],
     },
     plugins: [
@@ -31,10 +36,7 @@ export default defineConfig({
             targets: [
                 {
                     src: normalizePath(
-                        resolve(
-                            __dirname,
-                            'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                        ),
+                        resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*'),
                     ),
                     dest: normalizePath(
                         resolve(__dirname, 'src/renderer/src/main/assets/webfonts'),
@@ -42,10 +44,7 @@ export default defineConfig({
                 },
                 {
                     src: normalizePath(
-                        resolve(
-                            __dirname,
-                            'node_modules/@fortawesome/fontawesome-free/webfonts/*',
-                        ),
+                        resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts/*'),
                     ),
                     dest: normalizePath(resolve(__dirname, 'out/renderer/assets/webfonts')),
                 },
@@ -72,6 +71,22 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: resolve(__dirname, 'src/renderer/index.html'),
+            },
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            sass: {
+                quietDeps: true,
+                silenceDeprecations: ['legacy-js-api', 'color-functions'],
+                api: 'modern-compiler',
+                importers: [new NodePackageImporter()],
+            },
+            scss: {
+                quietDeps: true,
+                silenceDeprecations: ['legacy-js-api', 'color-functions'],
+                api: 'modern-compiler',
+                importers: [new NodePackageImporter()],
             },
         },
     },

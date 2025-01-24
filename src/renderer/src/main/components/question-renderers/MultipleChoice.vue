@@ -10,7 +10,7 @@
         />
     </div>
     <div class="block">
-        <div v-for="opt in options" class="block">
+        <div v-for="opt in choices" class="block">
             <div
                 class="field exam-field"
                 :data-testid="`field-${opt.uuid}`"
@@ -125,11 +125,11 @@
 
 <script setup lang="ts">
 import { Option } from '@renderer/db/models/option';
-import { ResourcesService } from '@renderer/services/resources-service';
 import { MULTIPLE_CHOICE_EVALUATOR } from '@renderer/store/test-delivery-store/question-evaluators/multiple-choice-evaluator';
 import { MdPreview } from 'md-editor-v3';
 import { onBeforeMount, ref, watch } from 'vue';
 import { RendererBaseProps } from './renderer-base-props';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 export interface MultipleChoiceProps extends RendererBaseProps {
     correctResponse: string;
@@ -145,15 +145,16 @@ export interface MultipleChoiceOption {
 const props = defineProps<MultipleChoiceProps>();
 const model = defineModel({ default: '' });
 
-const options = ref<Array<MultipleChoiceOption>>([]);
+const choices = ref<Array<MultipleChoiceOption>>([]);
 const updateOptions = async (newProps: MultipleChoiceProps) => {
-    options.value = await Promise.all(
+    choices.value = await Promise.all(
         newProps.options.map(
             async (o) =>
                 ({
                     uuid: o.uuid,
-                    content: (await ResourcesService.fetchResource(o.contentRef ?? 'nonce'))
-                        ?.data as string,
+                    content: (
+                        await DeliveryTestObjectProvider.fetchResource(o.contentRef ?? 'nonce')
+                    )?.data as string,
                     explanation: o.explanation,
                 }) as MultipleChoiceOption,
         ),
@@ -165,8 +166,7 @@ onBeforeMount(() => updateOptions(props));
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
-@import '@renderer/scss/bulma-customizations.scss';
+@use '@renderer/style' as *;
 
 .exam-field {
     @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;

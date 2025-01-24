@@ -107,9 +107,9 @@ const isExpanded = ref(props.isExpanded ?? true);
 const iconClass = computed(() => {
     if (!!props.isContainer && !props.isRoot) {
         return isExpanded.value
-            ? props.treeOptions?.containerExpandedIcon ??
-                  'fa-regular fa-folder-open has-text-primary'
-            : props.treeOptions?.containerIcon ?? 'fa-solid fa-folder has-text-primary';
+            ? (props.treeOptions?.containerExpandedIcon ??
+                  'fa-regular fa-folder-open has-text-primary')
+            : (props.treeOptions?.containerIcon ?? 'fa-solid fa-folder has-text-primary');
     }
     return props.iconClass;
 });
@@ -200,7 +200,7 @@ function onDragEndLeave(e: DragEvent) {
 </script>
 
 <style scoped lang="scss">
-@import '~/bulma/bulma.sass';
+@use '@renderer/scss/bulma-customized' as *;
 
 .tree-node {
     display: block;
@@ -247,6 +247,8 @@ function onDragEndLeave(e: DragEvent) {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding-top: 1px;
+        margin-top: -1px;
 
         .label-text {
             margin-left: 0.2em;
@@ -275,7 +277,6 @@ function onDragEndLeave(e: DragEvent) {
         }
     }
 
-    // &:not(:first-child) > .branch + .drop-line,
     &:last-child > .drop-line {
         display: none;
     }
@@ -288,7 +289,7 @@ function onDragEndLeave(e: DragEvent) {
             content: ' ';
             position: absolute;
             left: -0.7em;
-            top: 0em;
+            top: 0;
             height: 0.5em;
             width: 1px;
             background-color: $primary;

@@ -1,16 +1,22 @@
-$ribbon-color: $grey-darker !default;
-$ribbon-background-color: $white !default;
-$ribbon-border: 0.1rem solid $grey-lighter !default;
+@use 'sass:list';
+@use 'sass:color';
+@use 'helper-functions' as fn;
+@use 'bulma/sass/utilities/derived-variables' as derived-variables;
+@use 'bulma/sass/utilities/initial-variables' as initial-variables;
+
+$ribbon-color: initial-variables.$grey-darker !default;
+$ribbon-background-color: initial-variables.$white !default;
+$ribbon-border: 0.1rem solid initial-variables.$grey-lighter !default;
 
 // The ribbon sizes use mixins so they can be used at different breakpoints
 @mixin ribbon-small {
-    font-size: $size-small;
+    font-size: derived-variables.$size-small;
 }
 @mixin ribbon-medium {
-    font-size: $size-medium;
+    font-size: derived-variables.$size-medium;
 }
 @mixin ribbon-large {
-    font-size: $size-large;
+    font-size: derived-variables.$size-large;
 }
 .has-ribbon {
     position: relative;
@@ -36,7 +42,7 @@ $ribbon-border: 0.1rem solid $grey-lighter !default;
     border: $ribbon-border;
     border-right: none;
     color: $ribbon-color;
-    font-size: $size-normal;
+    font-size: derived-variables.$size-normal;
     justify-content: center;
     padding-left: 0.75em;
     padding-right: 0.75em;
@@ -47,9 +53,9 @@ $ribbon-border: 0.1rem solid $grey-lighter !default;
     right: 0;
     font-weight: 400;
     z-index: 2;
-    @each $name, $pair in $colors {
-        $color: nth($pair, 1);
-        $color-invert: nth($pair, 2);
+    @each $name, $pair in derived-variables.$colors {
+        $color: list.nth($pair, 1);
+        $color-invert: fn.get-text-color($color);
         &.is-#{$name}:not(.is-outlined) {
             background-color: $color;
             border-color: transparent;
@@ -63,7 +69,7 @@ $ribbon-border: 0.1rem solid $grey-lighter !default;
         }
     }
 
-    @each $name, $color in $shades {
+    @each $name, $color in derived-variables.$shades {
         &.is-#{$name} {
             background-color: $color;
             border-color: transparent;

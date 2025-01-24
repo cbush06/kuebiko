@@ -1,3 +1,4 @@
 // See https://pictogrammers.com/library/mdi/
-$mdi-font-path: 'assets/webfonts';
-@import '~@mdi/font/scss/materialdesignicons.scss';
+@use '@mdi/font/scss/materialdesignicons.scss' with (
+    $mdi-font-path: 'assets/webfonts'
+);

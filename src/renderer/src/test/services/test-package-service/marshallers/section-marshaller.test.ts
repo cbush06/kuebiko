@@ -1,4 +1,3 @@
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Section } from '@renderer/db/models/section';
 import { QuestionMarshaller } from '@renderer/services/test-package-service/marshallers/question-marshaller';
 import { SectionMarshaller } from '@renderer/services/test-package-service/marshallers/section-marshaller';
@@ -6,18 +5,17 @@ import { Manifest } from '@renderer/services/test-package-service/model/manifest
 import { TestPackageQuestion } from '@renderer/services/test-package-service/model/test-package-question';
 import { TestPackageSection } from '@renderer/services/test-package-service/model/test-package-section';
 import JSZip from 'jszip';
-import { Mock, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, Mock, test, vi } from 'vitest';
+import { DeliveryDbFacade } from '@renderer/services/delivery-db-facade';
 
 // Mock the DB
-vi.mock('@renderer/db/kuebiko-db.ts', () => {
-    const KuebikoDb = vi.fn();
-    KuebikoDb.prototype.questions = {
-        add: vi.fn().mockImplementation(() => Promise.resolve()),
-    };
-    return {
-        KuebikoDb,
-    };
-});
+vi.mock('@renderer/services/delivery-db-facade.ts', () => ({
+    DeliveryDbFacade: {
+        questions: {
+            add: vi.fn().mockImplementation(() => Promise.resolve()),
+        },
+    },
+}));
 
 describe('section marshaller', async () => {
     const questionMarshaller = {
@@ -26,9 +24,9 @@ describe('section marshaller', async () => {
 
     let sectionMarshaller = new SectionMarshaller(
         {} as JSZip,
-        {} as unknown as Manifest,
-        new KuebikoDb(),
+        DeliveryDbFacade,
         questionMarshaller,
+        {} as unknown as Manifest,
     );
 
     const toUnmarshal = {

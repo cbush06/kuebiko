@@ -10,22 +10,20 @@ const mockOptionContents = new Map<string, string>([
     ['e25acb29-0336-4c85-8f9d-c36b611db55e', '∛125 = 6'],
 ]);
 
-vi.mock('@renderer/services/resources-service.ts', () => {
-    return {
-        ResourcesService: {
-            fetchResource: vi.fn().mockImplementation((uuid: string) =>
-                Promise.resolve({
-                    uuid,
-                    name: '',
-                    type: 'MARKDOWN',
-                    mime: '',
-                    sha256: '',
-                    data: mockOptionContents.get(uuid),
-                } as Resource),
-            ),
-        },
-    };
-});
+vi.mock('@renderer/services/delivery-test-object-provider.ts', () => ({
+    DeliveryTestObjectProvider: {
+        fetchResource: vi.fn().mockImplementation((uuid: string) =>
+            Promise.resolve({
+                uuid,
+                name: '',
+                type: 'MARKDOWN',
+                mime: '',
+                sha256: '',
+                data: mockOptionContents.get(uuid),
+            } as Resource),
+        ),
+    },
+}));
 
 describe('multiple choice component', () => {
     const options = [
@@ -61,6 +59,7 @@ describe('multiple choice component', () => {
             props: {
                 options,
                 correctResponse,
+                questionRef: '',
                 questionContent: 'Select the valid statement.',
             },
         });

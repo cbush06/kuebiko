@@ -1,28 +1,10 @@
 <template>
-    <nav class="navbar is-info is-fixed-top navbar-top-content">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <img src="../../assets/kuebiko_white.png" />
-                <span class="is-size-4 has-text-weight-semibold ml-3">Kuebiko</span>
-            </div>
-        </div>
-        <div class="test-title">
-            <span class="title has-text-white">{{ test?.title }}</span>
-        </div>
-        <div class="navbar-item test-timer">
-            <!-- <div v-if="test?.allowedTime" class="level has-text-white"> -->
-            <div class="level has-text-white">
-                <i class="fa-solid fa-clock"></i>
-                <span class="timer is-size-5 ml-2 has-text-weight-semibold">
-                    <TimerVue
-                        :duration="timerValue"
-                        :ticking="testDeliveryStore.inProgress"
-                        @expired="outOfTime()"
-                    />
-                </span>
-            </div>
-        </div>
-    </nav>
+    <TestNav
+        :title="test?.title ?? ''"
+        :timer-value="timerValue"
+        :ticking="testDeliveryStore.inProgress"
+        @outOfTime="outOfTime()"
+    />
 
     <nav
         class="navbar navbar-section-header is-primary"
@@ -117,10 +99,8 @@
 </template>
 
 <script setup lang="ts">
-import TimerVue from '@renderer/components/timer/Timer.vue';
 import { Test } from '@renderer/db/models/test';
 import { AttemptsService } from '@renderer/services/attempts-service';
-import { TestsService } from '@renderer/services/tests-service';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { QuestionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/question-delivery-item';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
@@ -133,6 +113,8 @@ import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/
 import { computed, inject, onBeforeMount, onUnmounted, ref, toRaw, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { CannotNavigateError } from './errors/cannot-navigate-error';
+import TestNav from '@renderer/components/nav/TestNav.vue';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 const router = useRouter();
 const route = useRoute();
@@ -142,7 +124,7 @@ const test = ref<Test | undefined>();
 const $toast = inject<BulmaToastService>(BulmaToast)!;
 
 const updateTest = async (uuid: string) => {
-    test.value = await TestsService.fetchTest(uuid);
+    test.value = await DeliveryTestObjectProvider.fetchTest(uuid);
 };
 
 onBeforeMount(async () => {
@@ -231,8 +213,7 @@ const outOfTime = () => {
 </script>
 
 <style scoped lang="scss">
-@import '@renderer/scss/bulma-customizations.scss';
-@import '~/bulma/bulma.sass';
+@use '@renderer/style' as *;
 
 .navbar-top-content {
     display: grid;

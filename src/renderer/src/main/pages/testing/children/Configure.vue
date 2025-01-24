@@ -4,30 +4,19 @@
 
         <h2 class="subtitle">{{ t('testDeliveryMode') }}</h2>
         <div class="block ml-5">
-            <div class="field">
-                <input
-                    v-model="testConfigurationStore.format"
-                    class="is-checkradio"
-                    id="test-delivery-mode-simulate"
-                    data-testid="test-delivery-mode-simulate"
-                    type="radio"
-                    name="test-delivery-mode"
-                    value="SIMULATE"
-                />
-                <label for="test-delivery-mode-simulate">{{ t('simulate') }}</label>
-            </div>
-            <div class="field">
-                <input
-                    v-model="testConfigurationStore.format"
-                    class="is-checkradio"
-                    id="test-delivery-mode-prepare"
-                    data-testid="test-delivery-mode-prepare"
-                    type="radio"
-                    name="test-delivery-mode"
-                    value="PREPARE"
-                />
-                <label for="test-delivery-mode-prepare">{{ t('prepare') }}</label>
-            </div>
+            <BulmaOptionGroup
+                v-model="testConfigurationStore.format"
+                name="test-delivery-mode"
+                orientation="column"
+                icon-class="has-text-primary"
+            >
+                <BulmaOption value="SIMULATE" data-testid="test-delivery-mode-simulate">
+                    {{ t('simulate') }}
+                </BulmaOption>
+                <BulmaOption value="PREPARE" data-testid="test-delivery-mode-prepare">
+                    {{ t('prepare') }}
+                </BulmaOption>
+            </BulmaOptionGroup>
         </div>
 
         <div
@@ -58,44 +47,25 @@
 
         <div class="subtitle">{{ t('questionOrdering') }}</div>
         <div class="block ml-5">
-            <div class="field">
-                <input
-                    v-model="testConfigurationStore.order"
-                    class="is-checkradio"
-                    id="question-ordering-original"
-                    data-testid="question-ordering-original"
-                    type="radio"
-                    name="question-ordering"
-                    value="ORIGINAL"
-                />
-                <label for="question-ordering-original">{{ t('questionOrderingOriginal') }}</label>
-            </div>
-            <div class="field">
-                <input
-                    v-model="testConfigurationStore.order"
-                    class="is-checkradio"
-                    id="question-ordering-random"
-                    data-testid="question-ordering-random"
-                    type="radio"
-                    name="question-ordering"
-                    value="RANDOM"
-                />
-                <label for="question-ordering-random">{{ t('questionOrderingRandom') }}</label>
-            </div>
-            <div class="field">
-                <input
-                    v-model="testConfigurationStore.order"
-                    class="is-checkradio"
-                    id="question-ordering-random-by-section"
+            <BulmaOptionGroup
+                v-model="testConfigurationStore.order"
+                name="question-ordering"
+                orientation="column"
+                icon-class="has-text-primary"
+            >
+                <BulmaOption value="ORIGINAL" data-testid="question-ordering-original">
+                    {{ t('questionOrderingOriginal') }}
+                </BulmaOption>
+                <BulmaOption value="RANDOM" data-testid="question-ordering-random">
+                    {{ t('questionOrderingRandom') }}
+                </BulmaOption>
+                <BulmaOption
+                    value="RANDOM_BY_SECION"
                     data-testid="question-ordering-random-by-section"
-                    type="radio"
-                    name="question-ordering"
-                    value="RANDOM_BY_SECTION"
-                />
-                <label for="question-ordering-random-by-section">{{
-                    t('questionOrderingRandomBySection')
-                }}</label>
-            </div>
+                >
+                    {{ t('questionOrderingRandomBySection') }}
+                </BulmaOption>
+            </BulmaOptionGroup>
         </div>
 
         <!-- OPTIONS BELOW ARE ONLY ALLOWED FOR RANDOM & RANDOM_PER_SECTION ORDERING -->
@@ -179,8 +149,6 @@
 <script setup lang="ts">
 import { Question } from '@renderer/db/models/question';
 import { Test } from '@renderer/db/models/test';
-import { QuestionsService } from '@renderer/services/questions-service';
-import { TestsService } from '@renderer/services/tests-service';
 import { useTestConfigurationStore } from '@renderer/store/test-configuration-store/test-configuration-store';
 import { AbstractQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/abstract-question-filter';
 import { CategoryQuestionFilter } from '@renderer/store/test-delivery-store/question-filter/category-question-filter';
@@ -197,6 +165,9 @@ import { useI18n } from 'vue-i18n';
 import { IMaskComponent as VueMask } from 'vue-imask';
 import { Multiselect } from 'vue-multiselect';
 import { useRoute } from 'vue-router';
+import BulmaOptionGroup from '@renderer/components/bulma-option/BulmaOptionGroup.vue';
+import BulmaOption from '@renderer/components/bulma-option/BulmaOption.vue';
+import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
 
 interface SectionOption {
     title: string;
@@ -221,10 +192,10 @@ const testQuestions = ref<Question[]>([]);
 const duration = ref<string>('');
 
 onBeforeMount(async () => {
-    test.value = await TestsService.fetchTest(route.params['testUuid'] as string);
+    test.value = await DeliveryTestObjectProvider.fetchTest(route.params['testUuid'] as string);
     duration.value = durationToClockFormat(test.value?.allowedTime ?? 0);
     testQuestions.value.push(
-        ...((await QuestionsService.fetchQuestions(
+        ...((await DeliveryTestObjectProvider.fetchQuestions(
             test.value?.sections.flatMap((s) => s.questionRefs) ?? [],
         )) as Question[]),
     );
@@ -335,6 +306,9 @@ watch([
 
         testConfigurationStore.filter = new CompoundQuestionFilter(test.value!, filters);
     });
+
+const testVal = ref(['green']);
+watch(testVal, (n) => console.log(n));
 </script>
 
 <style scoped lang="scss"></style>

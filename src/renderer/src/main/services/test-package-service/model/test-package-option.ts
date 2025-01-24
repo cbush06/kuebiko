@@ -1,8 +1,8 @@
-import { TestPackagePoint } from './test-package-point';
+import { Point } from '@renderer/db/models/point';
 
 export interface TestPackageOption {
-    uuid: string;
-    subjectImageArea?: TestPackagePoint[];
     contentRef?: string;
     explanation?: string;
+    subjectImageArea?: Point[][];
+    uuid: string;
 }

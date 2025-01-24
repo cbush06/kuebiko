@@ -135,7 +135,6 @@ import {
     durationMask,
     durationToClockFormat,
 } from '@renderer/utils/datetime-utils';
-import VueTagsInput from '@sipec/vue3-tags-input/dist/vue-tags-input';
 import { watchDebounced } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 import { IMaskComponent as VueMask } from 'vue-imask';
@@ -176,7 +175,7 @@ watch(tags, (t) => {
     );
 });
 
-// #region Handle description updates
+//region Handle description updates
 if (!testEditorStore.test.descriptionRef) {
     testEditorStore.test.descriptionRef = testEditorStore.addResource(
         'description.md',
@@ -197,7 +196,7 @@ watchDebounced(
     },
     { debounce: 500 },
 );
-// #endregion
+//endregion
 </script>
 
 <style scoped lang="scss">

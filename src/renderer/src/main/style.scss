@@ -1,18 +1,24 @@
-@import './scss/fontawesome.scss';
-@import './scss/mdi.scss';
-@import './scss/bulma-customizations.scss';
-@import './scss/vue-tags-input.scss';
-@import '~bulma-slider/src/sass/index';
-@import './scss/bulma-ribbon.scss';
-@import '~bulma/bulma.sass';
-@import '~bulma-extensions/bulma-checkradio/dist/css/bulma-checkradio.sass';
-@import '~bulma-multiselect/sass/multiselect';
+@use 'scss/bulma-customized' as *;
+@use 'scss/fontawesome' as *;
+@use 'scss/mdi' as *;
+@use 'scss/roboto' as *;
+@use 'scss/roboto-mono' as *;
+@use 'scss/multi-select' as *;
+@use 'scss/vue-slider' as *;
+@use 'scss/bulma-ribbon' as *;
 
-html.is-full-height {
-    &,
-    body,
-    #app,
-    #app > .container {
-        height: 100%;
+:root {
+    font-size: 16px;
+
+    -moz-osx-font-smoothing: grayscale !important;
+    -webkit-font-smoothing: subpixel-antialiased !important;
+
+    &.is-full-height {
+        &,
+        body,
+        #app,
+        #app > .container {
+            height: 100%;
+        }
     }
 }
