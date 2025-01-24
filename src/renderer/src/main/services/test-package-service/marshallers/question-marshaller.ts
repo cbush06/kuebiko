@@ -1,15 +1,15 @@
 import { AnswerType } from '@renderer/db/models/answer';
-import { Point } from '@renderer/db/models/point';
 import { Question, QuestionType } from '@renderer/db/models/question';
 import JSZip from 'jszip';
 import { MarshallingDbError } from '../errors/marshalling-db-error';
 import { Manifest } from '../model/manifest';
 import { TestPackageAnswerType } from '../model/test-package-answer';
-import { TestPackagePoint } from '../model/test-package-point';
 import { TestPackageQuestion, TestPackageQuestionType } from '../model/test-package-question';
 import { AbstractMarshaller } from './abstract-marshaller';
 import { OptionMarshaller } from './option-marshaller';
 import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
+import { TestPackageRectangle } from '@renderer/services/test-package-service/model/test-package-rectangle';
+import { Rectangle } from '@renderer/db/models/rectangle';
 
 export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackageQuestion> {
     constructor(
@@ -23,31 +23,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
 
     async marshall(o: Question): Promise<TestPackageQuestion> {
         const marshalledType = o.type as TestPackageQuestionType;
-        let marshalledAnswer: TestPackageAnswerType;
-        let marshalledDropZones: TestPackagePoint[] | undefined;
-
-        if (o.type === 'POINT' || o.type === 'HOTAREA') {
-            const points = (o.answer ?? []) as Point[];
-            marshalledAnswer = points.map(
-                (p) =>
-                    ({
-                        x: p.x,
-                        y: p.y,
-                    }) as TestPackagePoint,
-            );
-        } else {
-            marshalledAnswer = o.answer as string | string[];
-        }
-
-        if (o.type === 'DRAGNDROP') {
-            marshalledDropZones = (o.dropZones ?? []).map(
-                (p) =>
-                    ({
-                        x: p.x,
-                        y: p.y,
-                    }) as TestPackagePoint,
-            );
-        }
+        let marshalledAnswer = o.answer as TestPackageAnswerType;
 
         const marshalledOptions = await Promise.all(
             o.options.map((o) => this.optionMarshaller.marshall(o)),
@@ -59,7 +35,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             title: o.title,
             contentRef: o.contentRef,
             subjectImageRef: o.subjectImageRef,
-            dropZones: marshalledDropZones,
+            dropZones: o.dropZones as TestPackageRectangle[],
             answer: marshalledAnswer,
             options: marshalledOptions,
             successFeedbackText: o.successFeedbackText,
@@ -74,31 +50,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
 
     async unmarshall(o: TestPackageQuestion): Promise<Question> {
         const marshalledType = o.type as QuestionType;
-        let marshalledAnswer: AnswerType;
-        let marshalledDropZones: Point[] | undefined;
-
-        if (o.type === 'POINT' || o.type === 'HOTAREA') {
-            const testPackagePoints = (o.answer ?? []) as TestPackagePoint[];
-            marshalledAnswer = testPackagePoints.map(
-                (p) =>
-                    ({
-                        x: p.x,
-                        y: p.y,
-                    }) as Point,
-            );
-        } else {
-            marshalledAnswer = o.answer as string | string[];
-        }
-
-        if (o.type === 'DRAGNDROP') {
-            marshalledDropZones = (o.dropZones ?? []).map(
-                (p) =>
-                    ({
-                        x: p.x,
-                        y: p.y,
-                    }) as Point,
-            );
-        }
+        let marshalledAnswer = o.answer as AnswerType;
 
         const marshalledOptions = await Promise.all(
             o.options.map((opt) => this.optionMarshaller.unmarshall(opt)),
@@ -110,7 +62,7 @@ export class QuestionMarshaller extends AbstractMarshaller<Question, TestPackage
             title: o.title,
             contentRef: o.contentRef,
             subjectImageRef: o.subjectImageRef,
-            dropZones: marshalledDropZones,
+            dropZones: o.dropZones as Rectangle[],
             answer: marshalledAnswer,
             options: marshalledOptions,
             successFeedbackRef: o.successFeedbackRef,

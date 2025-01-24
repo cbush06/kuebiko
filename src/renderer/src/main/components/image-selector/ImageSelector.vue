@@ -78,7 +78,7 @@ function show(): Observable<ImageSelectionPayload | undefined> {
 }
 
 function confirm() {
-    if (!!results.value) {
+    if (results.value) {
         results.value.next({} as unknown as ImageSelectionPayload);
         results.value.complete();
         results.value = undefined;
@@ -90,7 +90,7 @@ function confirm() {
 }
 
 function cancel() {
-    if (!!results.value) {
+    if (results.value) {
         results.value.next(undefined);
         results.value.complete();
         results.value = undefined;

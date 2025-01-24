@@ -317,7 +317,10 @@ export const useTestEditorStore = defineStore<
                 await EditorTestObjectProvider.saveTestAndRelations(
                     toRaw(this.test),
                     Array.from(this.resources.values()).map((r) => toRaw(r)),
-                    Array.from(this.questions.values()).map((q) => toRaw(q)),
+                    Array.from(this.questions.values()).map((q) => ({
+                        ...toRaw(q),
+                        options: q.options.map((o) => toRaw(o)),
+                    })),
                 );
             } catch (e) {
                 console.error('Error encountered while saving test', e);

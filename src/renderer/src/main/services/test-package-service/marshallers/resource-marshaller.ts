@@ -6,7 +6,7 @@ import { TestPackageResource } from '../model/test-package-resource';
 import { AbstractMarshaller } from './abstract-marshaller';
 
 export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackageResource> {
-    marshall(o: Resource): Promise<TestPackageResource> {
+    async marshall(o: Resource): Promise<TestPackageResource> {
         this.jszip.file(o.name, o.data);
 
         return Promise.resolve({
