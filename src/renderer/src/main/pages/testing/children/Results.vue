@@ -60,12 +60,11 @@ import {
     Chart as ChartJS,
     ChartData,
     ChartOptions,
-    DoughnutDataPoint,
+    DefaultDataPoint,
     Legend,
     PieController,
     Tooltip,
 } from 'chart.js';
-import { DistributiveArray } from 'chart.js/dist/types/utils';
 
 // see https://chartjs-plugin-datalabels.netlify.app/
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -172,7 +171,7 @@ const chartData = computed(
                     backgroundColor: ['#84E0A3', '#FFAFA3', '#E6E6E6'],
                 },
             ],
-        }) as ChartData<'doughnut', DistributiveArray<DoughnutDataPoint>>,
+        }) as ChartData<'doughnut', DefaultDataPoint<'doughnut'>>,
 );
 
 const reviewQuestions = () => {
