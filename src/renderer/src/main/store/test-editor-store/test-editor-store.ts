@@ -232,6 +232,10 @@ export const useTestEditorStore = defineStore<
                     this.appendOption(newQuestion);
                     break;
                 }
+                case 'HOTSPOT': {
+                    newQuestion.answer = [] as Point[][];
+                    break;
+                }
             }
             section.questionRefs.push(uuid);
 

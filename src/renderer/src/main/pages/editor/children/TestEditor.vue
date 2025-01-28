@@ -55,12 +55,15 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a class="dropdown-item" @click="() => addQuestion('MULTIPLE')"
-                                ><i class="fa-solid fa-list-ul mr-2"></i> Select One</a
-                            >
-                            <a class="dropdown-item" @click="() => addQuestion('MANY')"
-                                ><i class="fa-solid fa-list-check mr-2"></i> Select Many</a
-                            >
+                            <a class="dropdown-item" @click="() => addQuestion('MULTIPLE')">
+                                <i class="fa-solid fa-list-ul mr-2"></i> Select One
+                            </a>
+                            <a class="dropdown-item" @click="() => addQuestion('MANY')">
+                                <i class="fa-solid fa-list-check mr-2"></i> Select Many
+                            </a>
+                            <a class="dropdown-item" @click="() => addQuestion('HOTSPOT')">
+                                <i class="fa-solid fa-arrows-to-circle mr-2"></i> Hot Spot
+                            </a>
                             <!--
                             <a
                                 class="dropdown-item"
@@ -309,6 +312,7 @@ const buildTestElementIdPathList = (test: Test, questions: Question[]) => {
 const QUESTION_TYPE_TO_ICON_MAP = Object.seal({
     MULTIPLE: 'fa-solid fa-list-ul',
     MANY: 'fa-solid fa-list-check',
+    HOTSPOT: 'fa-solid fa-arrows-to-circle',
 } as Record<QuestionType, string>);
 
 const convertTestToTree = async (test: Test) => {

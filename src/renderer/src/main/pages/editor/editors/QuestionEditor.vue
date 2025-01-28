@@ -9,6 +9,7 @@
     </div>
     <MultipleChoiceEditor v-if="question.type === 'MULTIPLE'" :question="question" />
     <ManyChoiceEditor v-else-if="question.type === 'MANY'" :question="question" />
+    <HotSpotEditor v-else-if="question.type === 'HOTSPOT'" />
     <div v-else>Question type not recognized</div>
 </template>
 
@@ -18,6 +19,7 @@ import { useTestEditorStore } from '@renderer/store/test-editor-store/test-edito
 import { computed } from 'vue';
 import ManyChoiceEditor from './question-editors/ManyChoiceEditor.vue';
 import MultipleChoiceEditor from './question-editors/MultipleChoiceEditor.vue';
+import HotSpotEditor from '@renderer/pages/editor/editors/question-editors/HotSpotEditor.vue';
 
 const testEditorStore = useTestEditorStore();
 const question = computed(() => testEditorStore.testEditPart as Question);
