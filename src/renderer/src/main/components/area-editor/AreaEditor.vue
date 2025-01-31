@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, defineProps, onMounted, ref, watch } from 'vue';
+import { defineProps, onMounted, ref, watch } from 'vue';
 import Konva from 'konva';
 import { DragPoint } from './shapes/drag-point';
 import { Polygon } from './shapes/polygon';
@@ -26,7 +26,8 @@ const props = defineProps<{
 const stageEl = ref<HTMLDivElement>();
 const konvaMenuEl = ref<HTMLDivElement>();
 let stage: Konva.Stage;
-let layer: Konva.Layer;
+let polyLayer: Konva.Layer;
+let imageLayer: Konva.Layer;
 const polys = new Array<Polygon>();
 const polyCoords = new Map<Konva.Node['_id'], Array<[number, number]>>();
 let activePoly: Polygon | undefined;
@@ -81,7 +82,6 @@ async function imageSelected(
     imageEl.addEventListener('load', () => {
         scaleImage(imageEl, maxWidth, maxHeight);
         initializeStage(imageEl.width, imageEl.height, imageEl);
-        console.log('heres');
     });
     imageEl.src = `data:${imageMime};base64,${base64Data}`;
 }
@@ -98,21 +98,22 @@ function initializeStage(width: number, height: number, image?: HTMLImageElement
         height,
     });
 
-    layer = new Konva.Layer();
-
-    stage.add(layer);
-
     // Add the image to the stage
-    layer.add(
+    imageLayer = new Konva.Layer();
+    stage.add(imageLayer);
+    imageLayer.add(
         new Konva.Image({
             image,
             width,
             height,
         }),
     );
+    imageLayer.drawScene();
 
-    // Paint the stage
-    layer.drawScene();
+    // Init poly layer
+    polyLayer = new Konva.Layer();
+    stage.add(polyLayer);
+    polyLayer.drawScene();
 
     // Handle adding new points
     stage.on('click', (e: Konva.KonvaEventObject<MouseEvent>) => {
@@ -212,7 +213,7 @@ function hideContextMenu() {
  */
 function addPoly(coords: Array<[number, number]> = []) {
     // Create a new poly and track its points
-    updateActivePoly(new Polygon(coords, layer));
+    updateActivePoly(new Polygon(coords, polyLayer));
     activePoly!.mouseDown.subscribe((e) => {
         hideContextMenu();
         updateActivePoly(e.currentTarget as Polygon);
@@ -229,7 +230,7 @@ function addPoly(coords: Array<[number, number]> = []) {
         .subscribe((coords) => (model.value = coords));
 
     // Render the poly
-    layer.add(activePoly!);
+    polyLayer.add(activePoly!);
 }
 
 /**

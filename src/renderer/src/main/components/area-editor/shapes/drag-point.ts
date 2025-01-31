@@ -68,6 +68,15 @@ export class DragPoint extends Konva.Circle {
         // Get stage from event
         const evtStage = e.target.getStage()!;
 
+        // Prevent leaving the stage
+        if (
+            evtStage.getPointerPosition()!.x < 0 ||
+            evtStage.getPointerPosition()!.y < 0 ||
+            evtStage.getPointerPosition()!.x > evtStage.width() ||
+            evtStage.getPointerPosition()!.y > evtStage.height()
+        )
+            return;
+
         // Update position from absolute coordinates relative to its parent
         this.position({
             x: evtStage.getPointerPosition()!.x - this.parent!.absolutePosition().x,

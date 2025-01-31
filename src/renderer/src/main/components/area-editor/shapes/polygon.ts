@@ -8,6 +8,11 @@ export class Polygon extends Konva.Group {
     private readonly _change = new Subject<{ id: number; coords: Array<[number, number]> }>();
     public readonly change = this._change.asObservable();
 
+    private leftMostPoint?: DragPoint;
+    private rightMostPoint?: DragPoint;
+    private topMostPoint?: DragPoint;
+    private bottomMostPoint?: DragPoint;
+
     private line = new Konva.Line({
         lineCap: 'round',
         lineJoin: 'round',
@@ -43,7 +48,8 @@ export class Polygon extends Konva.Group {
         this.add(this.line);
         this.on('click', (e) => (e.cancelBubble = true));
         this.on('mousedown', (e) => this._mouseDown.next(e));
-        this.on('dragend', this.updatePointPositions);
+        this.on('dragmove', this.enforceStageBounds);
+        this.on('dragend', this.onChange);
 
         const loadInitialCoords = (e: Konva.KonvaEventObject<any>) => {
             if (e.child?._id === this._id) {
@@ -94,6 +100,7 @@ export class Polygon extends Konva.Group {
         this.line.points(this.points.flatMap((point) => [point.x(), point.y()]));
         this.drawScene();
         this._change.next({ id: this._id, coords: this.getPoints() });
+        this.findExtremes();
     }
 
     /**
@@ -114,16 +121,51 @@ export class Polygon extends Konva.Group {
     }
 
     /**
-     * Reset point x-y coords to absolute coordinates
+     * Notify listeners that this polygon has been updated
      */
-    private updatePointPositions() {
-        this.points.forEach((point) =>
-            point.position({
-                x: point.absolutePosition().x - this.absolutePosition().x,
-                y: point.absolutePosition().y - this.absolutePosition().y,
-            }),
-        );
+    private onChange() {
         this._change.next({ id: this._id, coords: this.getPoints() });
+    }
+
+    private findExtremes() {
+        for (const next of this.points) {
+            if (!this.leftMostPoint || next.x() < this.leftMostPoint.absolutePosition().x) {
+                this.leftMostPoint = next;
+            }
+            if (!this.rightMostPoint || next.x() > this.rightMostPoint.absolutePosition().x) {
+                this.rightMostPoint = next;
+            }
+            if (!this.topMostPoint || next.y() < this.topMostPoint.absolutePosition().y) {
+                this.topMostPoint = next;
+            }
+            if (!this.bottomMostPoint || next.y() > this.bottomMostPoint.absolutePosition().y) {
+                this.bottomMostPoint = next;
+            }
+        }
+    }
+
+    /**
+     * Enforce stage bounds while dragging.
+     */
+    private enforceStageBounds(e: Konva.KonvaEventObject<DragEvent>) {
+        this.findExtremes();
+
+        const position = e.target.absolutePosition();
+        if (position.x < -1 * this.leftMostPoint!.x()) {
+            this.x(-1 * this.leftMostPoint!.x());
+        }
+
+        if (position.x > this.getStage()!.width() - this.rightMostPoint!.x()) {
+            this.x(this.getStage()!.width() - this.rightMostPoint!.x());
+        }
+
+        if (position.y < -1 * this.topMostPoint!.y()) {
+            this.y(-1 * this.topMostPoint!.y());
+        }
+
+        if (position.y > this.getStage()!.height() - this.bottomMostPoint!.y()) {
+            this.y(this.getStage()!.height() - this.bottomMostPoint!.y());
+        }
     }
 
     private getPoints() {
