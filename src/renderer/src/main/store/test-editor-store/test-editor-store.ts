@@ -6,6 +6,9 @@ import { Test } from '@renderer/db/models/test';
 import { defineStore } from 'pinia';
 import { toRaw } from 'vue';
 import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
+import { Point } from '@renderer/db/models/point';
+import { FailedSaveError } from '@renderer/store/test-editor-store/errors/failed-save';
+import { EditorDbFacade } from '@renderer/services/editor-db-facade';
 
 interface TestEditorStoreState {
     test: Test;
@@ -44,6 +47,7 @@ interface TestEditorStoreActions {
     snapshotState: () => void;
     hasChangedWithoutSaving: () => boolean;
     save: () => Promise<void>;
+    deleteTest: () => Promise<void>;
 }
 
 export const useTestEditorStore = defineStore<
@@ -318,17 +322,45 @@ export const useTestEditorStore = defineStore<
             this.snapshotState();
 
             try {
-                await EditorTestObjectProvider.saveTestAndRelations(
-                    toRaw(this.test),
-                    Array.from(this.resources.values()).map((r) => toRaw(r)),
-                    Array.from(this.questions.values()).map((q) => ({
-                        ...toRaw(q),
-                        options: q.options.map((o) => toRaw(o)),
-                    })),
+                await EditorDbFacade.INSTANCE.transaction(
+                    'rw',
+                    [EditorDbFacade.tests, EditorDbFacade.resources, EditorDbFacade.questions],
+                    async () => {
+                        await EditorDbFacade.tests.put(toRaw(this.test));
+                        await EditorDbFacade.resources.bulkPut(
+                            Array.from(this.resources.values()).map((r) => toRaw(r)),
+                        );
+                        await EditorDbFacade.questions.bulkPut(
+                            Array.from(this.questions.values()).map((q) => ({
+                                ...toRaw(q),
+                                options: q.options.map((o) => toRaw(o)),
+                            })),
+                        );
+                    },
                 );
             } catch (e) {
-                console.error('Error encountered while saving test', e);
-                throw e;
+                throw new FailedSaveError('Failed to save Test and Relations from editor', {
+                    cause: e,
+                });
+            }
+        },
+        async deleteTest() {
+            try {
+                await EditorDbFacade.INSTANCE.transaction(
+                    'rw',
+                    [EditorDbFacade.tests, EditorDbFacade.resources, EditorDbFacade.questions],
+                    async () => {
+                        await EditorDbFacade.questions.bulkDelete(
+                            this.test.sections.flatMap((s) => s.questionRefs),
+                        );
+                        await EditorDbFacade.resources.bulkDelete(this.test.resourceRefs);
+                        await EditorDbFacade.tests.delete(this.test.uuid);
+                    },
+                );
+            } catch (e) {
+                throw new FailedSaveError('Failed to save Test and Relations from editor', {
+                    cause: e,
+                });
             }
         },
     },

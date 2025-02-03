@@ -6,7 +6,7 @@
             <h1 class="title mb-1">{{ t('projects') }}</h1>
             <div class="box is-flex is-flex-gap-2 is-justify-content-flex-end p-2">
                 <div class="file mb-0 is-info">
-                    <label class="file-label">
+                    <label class="file-label has-text-weight-medium">
                         <input
                             class="file-input"
                             type="file"
@@ -58,13 +58,18 @@ import { Test } from '@renderer/db/models/test';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
 import { useMemoize } from '@vueuse/core';
 import { useObservable } from '@vueuse/rxjs';
-import { computed, onBeforeMount } from 'vue';
+import { computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
+import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';
+import { EditorDbFacade } from '@renderer/services/editor-db-facade';
+import { BulmaToast, BulmaToastService } from '@renderer/vue-config/bulma-toast/bulma-toast';
 
 const helmetStore = useHelmetStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
+
+const toast = inject<BulmaToastService>(BulmaToast)!;
 
 onBeforeMount(() => (helmetStore.title = t('title')));
 
@@ -100,15 +105,15 @@ const columns = computed(
 );
 
 const importTestPackage = async (e: InputEvent) => {
-    // const packageFile = (e.target as HTMLInputElement).files?.[0];
-    // if (packageFile) {
-    //     try {
-    //         await TestPackageMarshaller.unmarshal(packageFile, KuebikoDb.INSTANCE);
-    //     } catch (e) {
-    //         toast.danger({ message: `Uh oh! An error occurred during import: ${e}` });
-    //     }
-    // }
-    // (e.target as HTMLInputElement).value = '';
+    const packageFile = (e.target as HTMLInputElement).files?.[0];
+    if (packageFile) {
+        try {
+            await new TestPackageMarshaller(EditorDbFacade).unmarshall(packageFile);
+        } catch (e) {
+            toast.danger({ message: `Uh oh! An error occurred during import: ${e}` });
+        }
+    }
+    (e.target as HTMLInputElement).value = '';
 };
 
 const handleTestSelection = async (test: Test) => {

@@ -5,12 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { SectionDeliveryItem } from '@renderer/store/test-delivery-store/delivery-item/section-delivery-item';
 import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-delivery-store';
 import { MdPreview } from 'md-editor-v3';
 import { onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { DeliveryDbFacade } from '@renderer/services/delivery-db-facade';
 
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local' });
@@ -18,7 +18,7 @@ const sectionContent = ref(t('defaultSectionIntro', { sectionTitle: 'Unknown Sec
 
 const updateSectionContent = async (newSection: SectionDeliveryItem) => {
     const sectionDescriptionResource = (
-        await KuebikoDb.INSTANCE.resources
+        await DeliveryDbFacade.resources
             .where('uuid')
             .equals(newSection?.getContentRef() ?? 'nonce')
             .first()

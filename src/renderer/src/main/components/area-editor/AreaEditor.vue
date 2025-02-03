@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import Konva from 'konva';
 import { DragPoint } from './shapes/drag-point';
 import { Polygon } from './shapes/polygon';
@@ -219,7 +219,7 @@ function addPoly(coords: Array<[number, number]> = []) {
         updateActivePoly(e.currentTarget as Polygon);
     });
     polys.push(activePoly!);
-    polyCoords.set(activePoly!._id, []);
+    polyCoords.set(activePoly!._id, coords);
 
     // Propagate the poly's changes to the model
     activePoly!.change
@@ -241,6 +241,7 @@ function deletePoly() {
         activePoly.destroy();
         const index = polys.indexOf(activePoly);
         if (index > -1) polys.splice(index, 1);
+        polyCoords.delete(activePoly._id);
         updateActivePoly();
     }
     hideContextMenu();

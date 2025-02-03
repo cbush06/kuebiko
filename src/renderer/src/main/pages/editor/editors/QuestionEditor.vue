@@ -9,7 +9,7 @@
     </div>
     <MultipleChoiceEditor v-if="question.type === 'MULTIPLE'" :question="question" />
     <ManyChoiceEditor v-else-if="question.type === 'MANY'" :question="question" />
-    <HotSpotEditor v-else-if="question.type === 'HOTSPOT'" />
+    <HotSpotEditor v-else-if="question.type === 'HOTSPOT'" :question="question" />
     <div v-else>Question type not recognized</div>
 </template>
 

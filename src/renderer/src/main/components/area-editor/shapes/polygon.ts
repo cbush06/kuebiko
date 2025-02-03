@@ -46,7 +46,10 @@ export class Polygon extends Konva.Group {
             draggable: true,
         });
         this.add(this.line);
-        this.on('click', (e) => (e.cancelBubble = true));
+        this.on('click', (e) => {
+            e.cancelBubble = true;
+            this.isActive = true;
+        });
         this.on('mousedown', (e) => this._mouseDown.next(e));
         this.on('dragmove', this.enforceStageBounds);
         this.on('dragend', this.onChange);

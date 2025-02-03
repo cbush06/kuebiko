@@ -51,12 +51,11 @@ interface BulmaModalProps {
 }
 defineProps<BulmaModalProps>();
 
-interface BulmaModalEvents {
+const emit = defineEmits<{
     (e: 'shown'): void;
     (e: 'closed', string: any): void;
-}
+}>();
 
-const emit = defineEmits<BulmaModalEvents>();
 const { t } = useI18n();
 
 const isActive = ref(false);

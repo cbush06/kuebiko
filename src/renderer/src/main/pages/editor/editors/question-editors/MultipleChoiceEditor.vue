@@ -5,7 +5,7 @@
         </div>
         <div class="field-body is-justify-content-stretch">
             <draggable
-                v-model="props.question.options"
+                v-model="question.options"
                 item-key="uuid"
                 class="panel is-flex-grow-1"
                 handle=".is-draggable"
@@ -14,16 +14,14 @@
                 <template #item="{ element }">
                     <div
                         class="panel-block m-0 p-0"
-                        :class="{ 'is-active': element.uuid === props.question.answer }"
+                        :class="{ 'is-active': element.uuid === question.answer }"
                     >
                         <div class="is-flex w-100">
                             <div
                                 class="is-flex-grow-0"
                                 :class="{
-                                    'has-background-grey-lighter':
-                                        element.uuid !== props.question.answer,
-                                    'has-background-primary':
-                                        element.uuid === props.question.answer,
+                                    'has-background-grey-lighter': element.uuid !== question.answer,
+                                    'has-background-primary': element.uuid === question.answer,
                                 }"
                                 style="width: 8px"
                             ></div>
@@ -41,7 +39,7 @@
                                         :name="element.uuid"
                                         :id="element.uuid"
                                         :value="element.uuid"
-                                        v-model="props.question.answer"
+                                        v-model="question.answer"
                                         type="radio"
                                     />
                                     <label :for="element.uuid" class="pr-0 pl-4"></label>
@@ -74,7 +72,7 @@
                     <div class="panel-block">
                         <button
                             class="button is-primary is-outlined is-fullwidth"
-                            @click="testEditorStore.appendOption(props.question)"
+                            @click="testEditorStore.appendOption(question)"
                         >
                             <i class="fa-solid fa-plus mr-1"></i> Add Option
                         </button>
@@ -92,23 +90,20 @@ import { Question } from '@renderer/db/models/question';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';
 import draggable from 'vuedraggable';
 
-interface MultipleChoiceEditorProps {
-    question: Question;
-}
+const { question } = defineProps<{ question: Question }>();
 
-const props = defineProps<MultipleChoiceEditorProps>();
 const testEditorStore = useTestEditorStore();
 
 const deleteOption = (option: Option) => {
-    const idx = props.question.options.findIndex((o) => o.uuid === option.uuid);
+    const idx = question.options.findIndex((o) => o.uuid === option.uuid);
 
     if (idx < 0) return;
 
     // eslint-disable-next-line vue/no-mutating-props
-    props.question.options.splice(idx, 1);
+    question.options.splice(idx, 1);
 
     // eslint-disable-next-line vue/no-mutating-props
-    if (props.question.answer === option.uuid) props.question.answer = undefined;
+    if (question.answer === option.uuid) question.answer = undefined;
 
     // Remove content from db
     testEditorStore.removeResource(option.contentRef!);

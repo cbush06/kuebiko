@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
-import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Test } from '@renderer/db/models/test';
 import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';
 import { useHelmetStore } from '@renderer/store/helmet-store/helmet-store';
@@ -103,10 +102,7 @@ const importTestPackage = async (e: InputEvent) => {
 
     if (packageFile) {
         try {
-            await new TestPackageMarshaller(DeliveryDbFacade).unmarshall(
-                packageFile,
-                KuebikoDb.INSTANCE,
-            );
+            await new TestPackageMarshaller(DeliveryDbFacade).unmarshall(packageFile);
         } catch (e) {
             toast.danger({ message: `Uh oh! An error occurred during import: ${e}` });
         }

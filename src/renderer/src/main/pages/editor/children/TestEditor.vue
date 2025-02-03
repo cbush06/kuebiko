@@ -6,6 +6,13 @@
             {{ testEditorStore.test.title.trim().length ? testEditorStore.test.title : 'Untitled' }}
         </span>
         <div class="is-flex is-flex-direction-row is-align-items-center is-flex-gap-2 pr-2">
+            <button class="button is-danger" @click="deleteTest">
+                <i class="fa-solid fa-trash pr-2"></i> Delete
+            </button>
+            <div
+                class="is-grey-lighter-border has-left-border-1"
+                style="height: 3rem; width: 1px"
+            ></div>
             <button class="button is-link" @click="exportTest">
                 <i class="fa-solid fa-download pr-2"></i> Export
             </button>
@@ -139,6 +146,20 @@
     <BulmaModal ref="confirmLeaveWithoutSavingModal" :title="t('closeWithoutSaving')">
         <template #body>{{ t('closeWithoutSavingMsg') }}</template>
     </BulmaModal>
+
+    <BulmaModal ref="confirmDeleteModal" :title="t('confirmDelete')">
+        <template #body>{{ t('confirmDeleteMsg') }}</template>
+        <template #footer="{ close }">
+            <div class="buttons">
+                <button class="button is-danger" @click="close('confirmed')">
+                    {{ t('delete') }}
+                </button>
+                <button class="button" @click="close('cancelled')">
+                    {{ t('cancel') }}
+                </button>
+            </div>
+        </template>
+    </BulmaModal>
 </template>
 
 <script setup lang="ts">
@@ -166,26 +187,25 @@ const toast = inject<BulmaToastService>(BulmaToast)!;
 const addQuestionMenuShown = ref(false);
 const testEditorStore = useTestEditorStore();
 const confirmLeaveWithoutSavingModal = ref<InstanceType<typeof BulmaModal> | undefined>();
+const confirmDeleteModal = ref<InstanceType<typeof BulmaModal> | undefined>();
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 
 //region Initialize
-onBeforeMount(() => {
+onBeforeMount(async () => {
     testEditorStore.testEditMode = 'test';
+    await EditorTestObjectProvider.fetchTest(route.params['testUuid'] as string).then((test) => {
+        if (test) {
+            return testEditorStore.initializeForTest(route.params['testUuid'] as string);
+        } else {
+            testEditorStore.$reset();
+        }
+    });
 });
 //endregion
 
 //region Fetch/init test data and navigation tree
-const route = useRoute();
-
-EditorTestObjectProvider.fetchTest(route.params['testUuid'] as string).then((t) => {
-    if (t) {
-        testEditorStore.initializeForTest(route.params['testUuid'] as string);
-    } else {
-        testEditorStore.$reset();
-    }
-});
-
 // Prepare the tree nav
 const navigationTree = ref({
     id: 'root',
@@ -389,7 +409,7 @@ const onDrop = (e: TreeNodeDropData) => {
 };
 //endregion
 
-//region Saving and navigating
+//region Saving, Deleting, and Navigating
 const save = async () => {
     try {
         await testEditorStore.save();
@@ -400,13 +420,23 @@ const save = async () => {
     }
 };
 
-const back = () => {
+const deleteTest = () => {
+    confirmDeleteModal.value?.show().subscribe(async (result) => {
+        if (result === 'confirmed') {
+            await testEditorStore.deleteTest();
+            await router.push('/editor');
+            testEditorStore.$reset();
+        }
+    });
+};
+
+const back = async () => {
     if (testEditorStore.hasChangedWithoutSaving()) {
         confirmLeaveWithoutSavingModal.value?.show().subscribe((result) => {
             if (result === 'confirmed') router.push('/editor');
         });
     } else {
-        router.push('/editor');
+        await router.push('/editor');
     }
 };
 
@@ -444,7 +474,9 @@ const exportTest = async () => {
 {
     "en": {
         "closeWithoutSaving": "Close Without Saving?",
-        "closeWithoutSavingMsg": "You have unsaved changes. If you want to keep them, click \"Cancel\" and save you changes; otherwise, click \"Confirm.\""
+        "closeWithoutSavingMsg": "You have unsaved changes. If you want to keep them, click \"Cancel\" and save you changes; otherwise, click \"Confirm.\"",
+        "confirmDelete": "Are you sure you want to delete?",
+        "confirmDeleteMsg": "This action cannot be undone. If you are sure, click \"Confirm\"; otherwise, click \"Cancel\"."
     }
 }
 </i18n>

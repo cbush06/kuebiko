@@ -58,11 +58,11 @@
             <label class="label">Tags</label>
         </div>
         <div class="field-body">
-            <vue-tags-input
-                v-model="tag"
-                :tags="tags"
-                @tags-changed="(newTags) => (tags = newTags)"
-            />
+            <!--            <vue-tags-input-->
+            <!--                v-model="tag"-->
+            <!--                :tags="tags"-->
+            <!--                @tags-changed="(newTags) => (tags = newTags)"-->
+            <!--            />-->
         </div>
     </div>
     <div class="field is-horizontal">
@@ -135,7 +135,6 @@ import {
     durationMask,
     durationToClockFormat,
 } from '@renderer/utils/datetime-utils';
-import { watchDebounced } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 import { IMaskComponent as VueMask } from 'vue-imask';
 
@@ -185,17 +184,12 @@ if (!testEditorStore.test.descriptionRef) {
     );
     testEditorStore.snapshotState();
 }
-const description = ref<string>(
-    (testEditorStore.resources.get(testEditorStore.test.descriptionRef ?? '')?.data as string) ??
-        '',
-);
-watchDebounced(
-    description,
-    (d) => {
-        testEditorStore.updateResourceData(testEditorStore.test.descriptionRef!, d);
-    },
-    { debounce: 500 },
-);
+const description = computed({
+    get: () =>
+        (testEditorStore.resources.get(testEditorStore.test.descriptionRef ?? '')
+            ?.data as string) ?? '',
+    set: (d: string) => testEditorStore.updateResourceData(testEditorStore.test.descriptionRef!, d),
+});
 //endregion
 </script>
 
