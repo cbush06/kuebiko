@@ -7,6 +7,7 @@
 import { menu } from '@milkdown-lab/plugin-menu';
 import { defaultValueCtx, Editor, rootCtx } from '@milkdown/core';
 import { listener, listenerCtx } from '@milkdown/plugin-listener';
+import { history } from '@milkdown/plugin-history';
 import { commonmark } from '@milkdown/preset-commonmark';
 import { gfm } from '@milkdown/preset-gfm';
 import { replaceAll } from '@milkdown/utils';
@@ -36,6 +37,7 @@ onMounted(async () => {
         .use(gfm)
         .use(menu)
         .use(listener)
+        .use(history)
         .use(customMenuCommands(async () => await lastValueFrom(imageSelector.value!.show())))
         .create();
 });

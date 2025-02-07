@@ -174,13 +174,14 @@ import { vOnClickOutside } from '@vueuse/components';
 import { watchThrottled } from '@vueuse/core';
 import { computed, inject, onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import QuestionEditor from '../editors/QuestionEditor.vue';
 import SectionDetailsEditor from '../editors/SectionDetailsEditor.vue';
 import TestDetailsEditor from '../editors/TestDetailsEditor.vue';
 import { TestPackageMarshaller } from '@renderer/services/test-package-service/test-package-marshaller';
 import { EditorTestObjectProvider } from '@renderer/services/editor-test-object-provider';
 import { EditorDbFacade } from '@renderer/services/editor-db-facade';
+import { firstValueFrom } from '~/rxjs';
 
 const toast = inject<BulmaToastService>(BulmaToast)!;
 
@@ -430,14 +431,15 @@ const deleteTest = () => {
     });
 };
 
-const back = async () => {
+onBeforeRouteLeave(async () => {
     if (testEditorStore.hasChangedWithoutSaving()) {
-        confirmLeaveWithoutSavingModal.value?.show().subscribe((result) => {
-            if (result === 'confirmed') router.push('/editor');
-        });
-    } else {
-        await router.push('/editor');
+        return (await firstValueFrom(confirmLeaveWithoutSavingModal.value!.show())) === 'confirmed';
     }
+    return true;
+});
+
+const back = async () => {
+    await router.push('/editor');
 };
 
 const exportTest = async () => {
