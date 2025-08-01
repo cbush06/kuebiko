@@ -27,7 +27,7 @@ const router = createRouter({
 
 // Some pages need 100% height of body, html, #app, and #app > .container
 // Others do not.
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
     document.documentElement.classList.remove('is-full-height');
     if (to.meta.isFullHeight === true) {
         document.documentElement.classList.add('is-full-height');

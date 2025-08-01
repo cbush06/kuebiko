@@ -1,6 +1,6 @@
 import { externalizeDepsPlugin, defineConfig } from 'electron-vite';
 import { resolve } from 'path';
-import KuebikoViteConfig from './vite.config';
+import KuebikoViteConfig from './vite.config.ts';
 
 export default defineConfig({
     main: {

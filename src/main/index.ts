@@ -2,7 +2,7 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { BinaryLike, randomUUID } from 'crypto';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
-import sha256 from './sha256';
+import sha256 from './sha256.js';
 // import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
@@ -14,7 +14,7 @@ function createWindow(): void {
         autoHideMenuBar: true,
         // ...(process.platform === 'linux' ? { icon } : {}),
         webPreferences: {
-            preload: join(__dirname, '../preload/index.js'),
+            preload: join(__dirname, '../preload/index.mjs'),
             sandbox: false,
         },
     });

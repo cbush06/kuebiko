@@ -53,7 +53,7 @@ import {
     TimeScale,
     Tooltip,
 } from 'chart.js';
-import { DistributiveArray } from '~/chart.js/dist/types/utils';
+import { DistributiveArray } from 'chart.js/dist/types/utils';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'vue-chartjs';
 
