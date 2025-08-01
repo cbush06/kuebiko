@@ -182,7 +182,7 @@ import { computed, ref, watch } from 'vue';
 import { Bar, Doughnut } from 'vue-chartjs';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { DistributiveArray } from '~/chart.js/dist/types/utils';
+import { DistributiveArray } from '~chart.js/dist/types/utils';
 import ResponseVue from './Response.vue';
 import { AttemptsService } from '@renderer/services/attempts-service';
 

@@ -2,7 +2,7 @@ import { liveQuery } from 'dexie';
 import { Question } from '@renderer/db/models/question';
 import { Resource } from '@renderer/db/models/resource';
 import { Observable } from 'rxjs';
-import { from } from '~/@vueuse/rxjs';
+import { from } from '@vueuse/rxjs';
 import { Test } from '@renderer/db/models/test';
 import { KuebikoDbFacade } from '@renderer/services/kuebiko-db-facade';
 
