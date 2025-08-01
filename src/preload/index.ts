@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 // Custom APIs for renderer
 const api = {};
-
+console.log('hi')
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.

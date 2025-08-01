@@ -2,12 +2,12 @@
 //  This file is only here to get webstorm to recognize aliases  //
 ///////////////////////////////////////////////////////////////////
 
-import { defineConfig, normalizePath } from 'vite';
-import { resolve } from 'path';
-import vue from '@vitejs/plugin-vue';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
 import { NodePackageImporter } from 'sass-embedded';
+import { defineConfig, normalizePath } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
     resolve: {
@@ -62,7 +62,6 @@ export default defineConfig({
         }),
         VueI18nPlugin({
             include: 'json',
-            jitCompilation: true,
             runtimeOnly: true,
             compositionOnly: true,
         }),
@@ -79,13 +78,11 @@ export default defineConfig({
             sass: {
                 quietDeps: true,
                 silenceDeprecations: ['legacy-js-api', 'color-functions'],
-                api: 'modern-compiler',
                 importers: [new NodePackageImporter()],
             },
             scss: {
                 quietDeps: true,
                 silenceDeprecations: ['legacy-js-api', 'color-functions'],
-                api: 'modern-compiler',
                 importers: [new NodePackageImporter()],
             },
         },

@@ -48,7 +48,7 @@ const componentRerenderKey = ref(0);
 </script>
 
 <style scoped lang="scss">
-@use '~bulma/sass/utilities/initial-variables.scss' as *;
+@use 'pkg:bulma/sass/utilities/initial-variables.scss' as *;
 
 .text-mode-button {
     border-top-width: 0;
