@@ -8,9 +8,10 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import Konva from 'konva';
-import { DragPoint } from './shapes/drag-point';
-import { Polygon } from './shapes/polygon';
+import { DragPoint } from '@renderer/components/konva-shapes/drag-point';
+import { Polygon } from '@renderer/components/konva-shapes/polygon';
 import { map, tap } from 'rxjs';
+import { scaleImage } from '@renderer/utils/image-utils';
 
 const model = defineModel<Array<Array<[number, number]>>>({
     default: [],
@@ -58,15 +59,6 @@ watch<[Uint8Array | undefined, string | undefined, number | undefined, number | 
         }
     },
 );
-
-/**
- * Scales an image to fit within the given width and height.
- */
-function scaleImage(image: HTMLImageElement, width: number, height: number) {
-    const scale = Math.min(width / image.width, height / image.height);
-    image.width = image.width * scale;
-    image.height = image.height * scale;
-}
 
 /**
  * Use a selected image to initialize the Konva stage.

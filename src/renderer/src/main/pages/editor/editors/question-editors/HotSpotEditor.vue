@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue';
-import { useI18n } from '~/vue-i18n';
+import { useI18n } from '@node/vue-i18n';
 import AreaEditor from '@renderer/components/area-editor/AreaEditor.vue';
 import { Question } from '@renderer/db/models/question';
 import { useTestEditorStore } from '@renderer/store/test-editor-store/test-editor-store';

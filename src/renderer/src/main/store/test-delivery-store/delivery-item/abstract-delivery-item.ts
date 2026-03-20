@@ -12,6 +12,8 @@ export abstract class AbstractDeliveryItem {
 
     abstract getContentRef(): string | undefined;
 
+    abstract getSubjectImageRef(): string | undefined;
+
     abstract getPath(): string;
 
     abstract setRevealed(): void;

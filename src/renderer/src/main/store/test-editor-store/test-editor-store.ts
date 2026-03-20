@@ -222,6 +222,7 @@ export const useTestEditorStore = defineStore<
                 type,
                 options: [],
                 categories: [],
+                contentRef: this.addResource(`question-${uuid}.md`, 'MARKDOWN', 'text/markdown', ''),
             } as Question;
             this.questions.set(uuid, newQuestion);
 

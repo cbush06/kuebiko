@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { menu } from '@milkdown-lab/plugin-menu';
-import { defaultValueCtx, Editor, rootCtx } from '@milkdown/core';
+import { defaultValueCtx, Editor, editorViewCtx, rootCtx } from '@milkdown/core';
 import { listener, listenerCtx } from '@milkdown/plugin-listener';
 import { history } from '@milkdown/plugin-history';
 import { commonmark } from '@milkdown/preset-commonmark';
@@ -46,7 +46,7 @@ onMounted(async () => {
 // This likely only occurs at first render when the initial model hasn't fully
 // loaded.
 watch(model, (newValue, oldValue) => {
-    if (!oldValue && newValue) {
+    if (oldValue === undefined && !!newValue) {
         editor.value!.action(replaceAll(newValue, true));
     }
 });

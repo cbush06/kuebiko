@@ -10,7 +10,7 @@
         />
     </div>
     <div class="block">
-        <div v-for="opt in choices" class="block">
+        <div v-for="opt in choices" v-bind:key="opt.uuid" class="block">
             <div
                 class="field exam-field"
                 :class="{
@@ -171,11 +171,9 @@ onBeforeMount(async () => await updateOptions(props));
 .exam-field {
     @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;
 
-    .is-checkradio[type='checkbox'] {
-        & + label {
-            @extend .has-border-1, .is-grey-darker-border;
-        }
+    gap: 1.5rem;
 
+    .is-checkradio[type='checkbox'] {
         &:not([disabled]) + label:hover {
             @extend .is-primary-border, .has-text-primary;
         }
@@ -183,7 +181,14 @@ onBeforeMount(async () => await updateOptions(props));
 }
 
 .exam-choice {
-    @extend .content, .is-flex-grow-1, .pr-3, .pt-3, .pb-3, .m-0, .pl-6;
+    @extend
+        .content,
+        .is-flex-grow-1, .pr-3,
+        .pt-3, .pb-3,
+        .m-0, .pl-3,
+        .has-border-1, .is-grey-darker-border;
+
+    cursor: pointer;
 
     &::before {
         left: 0.75rem !important;

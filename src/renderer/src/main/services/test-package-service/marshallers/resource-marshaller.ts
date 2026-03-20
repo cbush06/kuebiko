@@ -31,6 +31,7 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
             case 'IMAGE':
             case 'VIDEO':
                 content = await zipObj.async('uint8array');
+                break;
             case 'MARKDOWN':
                 content = await zipObj.async('string');
         }
@@ -51,7 +52,7 @@ export class ResourceMarshaller extends AbstractMarshaller<Resource, TestPackage
         } as Resource;
 
         try {
-            await this.db.resources.add(r);
+            await this.db.resources.put(r);
         } catch (e) {
             throw new MarshallingDbError(
                 `Failed to write object of type [Resource] with UUID [${r.uuid}] to the database: ${e}`,
