@@ -25,8 +25,7 @@
 import { RendererBaseProps } from '@renderer/components/question-renderers/renderer-base-props';
 import { MdPreview } from '@node/md-editor-v3';
 import { Point } from '@renderer/db/models/point';
-import { computed, onBeforeMount, ref } from 'vue';
-import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+import { computed } from 'vue';
 import AreaPicker from '@renderer/components/area-picker/AreaPicker.vue';
 
 export interface HotSpotProps extends RendererBaseProps {

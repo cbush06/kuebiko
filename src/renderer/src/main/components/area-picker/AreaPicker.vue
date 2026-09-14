@@ -8,6 +8,13 @@ import Konva from '@node/konva';
 import { scaleImage } from '@renderer/utils/image-utils';
 import { DragPoint } from '@renderer/components/konva-shapes/drag-point';
 
+// NOTE: While this model is Array<Array<[number, number]>>, it is expected to only contain a
+// single polygon (i.e. a single array of points). This is because the area picker is designed
+// to only allow the user to select a single area at a time.
+//
+// The reason for the odd type is to be compatible with QuestionEvaluators which expect the
+// "correct" response to be the same format as the "user" response. In this case, the correct
+// response is the area of the containing polygon while the user response is a single point.
 const model = defineModel<Array<Array<[number, number]>>>({
     default: [],
 });
