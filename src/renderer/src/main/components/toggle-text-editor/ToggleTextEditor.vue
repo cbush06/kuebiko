@@ -10,7 +10,7 @@
                 v-model="model"
                 :style="{ 'min-height': props.startingHeight }"
             ></textarea>
-            <MilkdownEditor v-else v-model="model" />
+            <MilkdownEditor v-else v-model="model" ref="componentRerenderKey" />
         </div>
         <div class="panel-tabs is-justify-content-end pr-4 is-flex-grow-0">
             <div class="buttons has-addons">
@@ -44,6 +44,7 @@ interface ToggleTextEditorProps {
 const props = defineProps<ToggleTextEditorProps>();
 const model = defineModel({ default: '' });
 const textMode = ref<'plain' | 'rich'>('rich');
+const componentRerenderKey = ref(0);
 </script>
 
 <style scoped lang="scss">

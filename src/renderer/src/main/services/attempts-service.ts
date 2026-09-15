@@ -2,6 +2,7 @@ import { KuebikoDb } from '@renderer/db/kuebiko-db';
 import { Attempt } from '@renderer/db/models/attempt';
 import { from } from '@vueuse/rxjs';
 import { Dexie, liveQuery } from 'dexie';
+import { DeliveryDbFacade } from '@renderer/services/delivery-db-facade';
 
 export interface AttemptTestRollup {
     testUuid: string;
@@ -21,7 +22,7 @@ const fetchAttemptRollupByTest = () =>
             const tests = await Dexie.Promise.all(
                 attempts.map(
                     async (a) =>
-                        await KuebikoDb.INSTANCE.tests.where('uuid').equals(a.testRef).first(),
+                        await DeliveryDbFacade.tests.where('uuid').equals(a.testRef).first(),
                 ),
             );
 

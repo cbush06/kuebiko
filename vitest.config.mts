@@ -1,9 +1,5 @@
 /// <reference types="vitest" />
 
-////////////////////////////////////////////////
-//  This file is only here to support vitest  //
-////////////////////////////////////////////////
-
 import { mergeConfig } from 'vite';
 import KuebikoViteConfig from './vite.config';
 

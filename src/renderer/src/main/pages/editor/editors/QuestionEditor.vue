@@ -7,8 +7,20 @@
             <input type="text" class="input" placeholder="Untitled" v-model="question.title" />
         </div>
     </div>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal">
+            <label class="label">Question</label>
+        </div>
+        <div class="field-body">
+            <ToggleTextEditor
+                v-model="testEditorStore.resources.get(question.contentRef!)!.data as string"
+                starting-height="8rem"
+            />
+        </div>
+    </div>
     <MultipleChoiceEditor v-if="question.type === 'MULTIPLE'" :question="question" />
     <ManyChoiceEditor v-else-if="question.type === 'MANY'" :question="question" />
+    <HotSpotEditor v-else-if="question.type === 'HOTSPOT'" :question="question" />
     <div v-else>Question type not recognized</div>
 </template>
 
@@ -18,6 +30,8 @@ import { useTestEditorStore } from '@renderer/store/test-editor-store/test-edito
 import { computed } from 'vue';
 import ManyChoiceEditor from './question-editors/ManyChoiceEditor.vue';
 import MultipleChoiceEditor from './question-editors/MultipleChoiceEditor.vue';
+import HotSpotEditor from '@renderer/pages/editor/editors/question-editors/HotSpotEditor.vue';
+import ToggleTextEditor from '@renderer/components/toggle-text-editor/ToggleTextEditor.vue';
 
 const testEditorStore = useTestEditorStore();
 const question = computed(() => testEditorStore.testEditPart as Question);

@@ -10,7 +10,7 @@
         />
     </div>
     <div class="block">
-        <div v-for="opt in choices" class="block">
+        <div v-bind:key="opt.uuid" v-for="opt in choices" class="block">
             <div
                 class="field exam-field"
                 :data-testid="`field-${opt.uuid}`"
@@ -171,31 +171,37 @@ onBeforeMount(() => updateOptions(props));
 .exam-field {
     @extend .p-0, .m-0, .is-flex, .is-flex-direction-row, .is-align-items-center;
 
-    .is-checkradio[type='radio'] {
-        & + label {
-            @extend .has-border-1, .is-grey-darker-border;
-        }
+    gap: 1.5rem;
 
-        &:not([disabled]) + label:hover {
+    .is-checkradio[type='radio'] {
+        &:not([disabled]) + .exam-choice:hover {
             @extend .is-primary-border, .has-text-primary;
         }
     }
-}
 
-.exam-choice {
-    @extend .is-flex-grow-1, .pr-3, .pt-3, .pb-3, .m-0, .pl-6;
+    .exam-choice {
 
-    &::before {
-        left: 0.75rem !important;
-        top: 50% !important;
-        transform: translateY(-50%);
-    }
+        @extend
+            .content,
+            .is-flex-grow-1, .pr-3,
+            .pt-3, .pb-3,
+            .m-0, .pl-3,
+            .has-border-1, .is-grey-darker-border;
 
-    &::after {
-        left: 0.75rem !important;
-        top: 50% !important;
-        transform: scale(0.5) translateY(-50%) !important;
-        transform-origin: center top;
+        cursor: pointer;
+
+        &::before {
+            left: 0.75rem !important;
+            top: 50% !important;
+            transform: translateY(-50%);
+        }
+
+        &::after {
+            left: 0.75rem !important;
+            top: 50% !important;
+            transform: scale(0.5) translateY(-50%) !important;
+            transform-origin: center top;
+        }
     }
 }
 </style>

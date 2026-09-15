@@ -23,6 +23,18 @@
             v-model="selection as string[]"
             :reveal-answer="revealAnswer"
         />
+        <HotSpot
+            v-else-if="questionDeliveryItem?.getType() === 'HOTSPOT'"
+            :question-ref="questionDeliveryItem.getModel().questionRef"
+            :subject-image-data="subjectImageData"
+            :subject-image-mime="subjectImageType"
+            :question-content="questionContent"
+            :correct-response="(questionDeliveryItem?.getCorrectResponse() as Point[][]) ?? []"
+            :success-feedback="successFeedbackContent"
+            :failure-feedback="failureFeedbackContent"
+            v-model="selection as Point[][]"
+            :reveal-answer="revealAnswer"
+        />
     </div>
 </template>
 
@@ -35,21 +47,37 @@ import { useTestDeliveryStore } from '@renderer/store/test-delivery-store/test-d
 import { onBeforeMount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+import HotSpot from '@renderer/components/question-renderers/HotSpot.vue';
+import { Point } from '@renderer/db/models/point';
+import { Resource } from '@renderer/db/models/resource';
 
 const testDeliveryStore = useTestDeliveryStore();
 const { t } = useI18n({ inheritLocale: true, useScope: 'local', fallbackRoot: true });
 const questionContent = ref(t('noQuestionContent'));
 const successFeedbackContent = ref<string>();
 const failureFeedbackContent = ref<string>();
+const subjectImageData = ref<Uint8Array>();
+const subjectImageType = ref<string>();
 const selection = ref<AnswerType>();
 const questionDeliveryItem = ref<QuestionDeliveryItem | undefined>();
 const revealAnswer = ref(false);
 
 const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => {
+    questionDeliveryItem.value = newDeliveryItem as QuestionDeliveryItem;
+    selection.value = questionDeliveryItem.value?.getModel().response;
+
     const questionContentResource = (
         await DeliveryTestObjectProvider.fetchResource(newDeliveryItem?.getContentRef() ?? 'nonce')
     )?.data as string;
     questionContent.value = questionContentResource ?? t('noQuestionContent');
+
+    const subjectImageResource = (await DeliveryTestObjectProvider.fetchResource(
+        newDeliveryItem?.getSubjectImageRef() ?? 'nonce',
+    )) as Resource | undefined;
+    if (subjectImageResource) {
+        subjectImageData.value = subjectImageResource.data as Uint8Array;
+        subjectImageType.value = subjectImageResource.mime as string;
+    }
 
     const successFeedbackContentResource = (
         await DeliveryTestObjectProvider.fetchResource(
@@ -66,9 +94,6 @@ const updateQuestionDetails = async (newDeliveryItem?: QuestionDeliveryItem) => 
     )?.data as string;
     failureFeedbackContent.value =
         questionDeliveryItem.value?.getFailureFeedbackText() ?? failureFeedbackContentResource;
-
-    questionDeliveryItem.value = newDeliveryItem as QuestionDeliveryItem;
-    selection.value = questionDeliveryItem.value?.getModel().response;
 };
 
 onBeforeMount(() => updateQuestionDetails(testDeliveryStore.deliveryItem as QuestionDeliveryItem));

@@ -17,7 +17,7 @@ export default defineConfig({
                 replacement: resolve(__dirname, 'src/renderer/src/main'),
             },
             {
-                find: /~(.+)/,
+                find: /~(.+)|@node\//,
                 replacement: resolve(__dirname, 'node_modules') + '/$1',
             },
             {

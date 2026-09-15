@@ -1,5 +1,5 @@
 import { MenuConfigItem, menuConfigCtx } from '@milkdown-lab/plugin-menu';
-import { editorStateCtx, rootCtx, schemaCtx } from '@milkdown/core';
+import { editorStateCtx, editorViewCtx, rootCtx, schemaCtx } from '@milkdown/core';
 import { Ctx } from '@milkdown/ctx';
 import { listenerCtx } from '@milkdown/plugin-listener';
 import { MarkType } from '@milkdown/prose/model';
@@ -218,9 +218,11 @@ export const menuConfig = (ctx: Ctx) => {
     listener.mounted((ctx) => {
         // Register event listeners on all menu buttons
         const root = ctx.get(rootCtx) as HTMLElement;
-        const editor = root.querySelector('.editor[contenteditable=true]') as HTMLElement;
+        const editorView = ctx.get(editorViewCtx);
         root.querySelectorAll(
             '.milkdown-menu button:not([aria-haspopup]), li[role="menuitem"]',
-        ).forEach((e) => (e as HTMLElement).addEventListener('click', () => editor.focus()));
+        ).forEach((e) =>
+            (e as HTMLElement).addEventListener('click', () => editorView.focus()),
+        );
     });
 };

@@ -31,6 +31,10 @@ export class QuestionDeliveryItem extends AbstractDeliveryItem {
         }
     }
 
+    getSubjectImageRef(): string | undefined {
+        return this.question.subjectImageRef;
+    }
+
     getModel(): QuestionResponse {
         return this.response;
     }

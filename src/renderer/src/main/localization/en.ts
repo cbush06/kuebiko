@@ -5,6 +5,7 @@ export default {
     confirm: 'Confirm',
     correct: 'Correct',
     default: 'Default',
+    delete: 'Delete',
     fail: 'fail',
     hours: 'hours',
     incorrect: 'Incorrect',
