@@ -38,21 +38,28 @@ export class Polygon extends Konva.Group {
         this.syncActiveStatus();
     }
 
+    private readOnly = false;
+
     private readonly _mouseDown = new Subject<Konva.KonvaEventObject<MouseEvent>>();
     public readonly mouseDown = this._mouseDown.asObservable();
 
-    constructor(coords: Array<[number, number]> = [], layer: Konva.Layer) {
+    constructor(coords: Array<[number, number]> = [], layer: Konva.Layer, readOnly = false) {
         super({
-            draggable: true,
+            draggable: !readOnly,
         });
         this.add(this.line);
-        this.on('click', (e) => {
-            e.cancelBubble = true;
-            this.isActive = true;
-        });
-        this.on('mousedown', (e) => this._mouseDown.next(e));
-        this.on('dragmove', this.enforceStageBounds);
-        this.on('dragend', this.onChange);
+
+        this.readOnly = readOnly;
+
+        if (!this.readOnly) {
+            this.on('click', (e) => {
+                e.cancelBubble = true;
+                this.isActive = true;
+            });
+            this.on('mousedown', (e) => this._mouseDown.next(e));
+            this.on('dragmove', this.enforceStageBounds);
+            this.on('dragend', this.onChange);
+        }
 
         const loadInitialCoords = (e: Konva.KonvaEventObject<any>) => {
             if (e.child?._id === this._id) {
@@ -75,25 +82,29 @@ export class Polygon extends Konva.Group {
     public addPoint(point: DragPoint) {
         point.change.subscribe(() => this.updateLine());
         this.points.push(point);
-        this.add(point);
-        this.updateLine();
 
-        // Forward point click events as polygon's own so the context menu is cleared
-        point.on('mousedown', (e) =>
-            this._mouseDown.next({
-                evt: new MouseEvent('mousedown', { ...e.evt }),
-                target: e.target,
-                type: 'mousedown',
-                pointerId: 0,
-                currentTarget: this,
-                cancelBubble: true,
-            } as Konva.KonvaEventObject<MouseEvent>),
-        );
+        if (!this.readOnly) {
+            this.add(point);
 
-        // If the first point is clicked when there are 3 or more, close the poly
-        if (this.points.length === 1) {
-            point.on('click', () => this.close());
+            // Forward point click events as polygon's own so the context menu is cleared
+            point.on('mousedown', (e) =>
+                this._mouseDown.next({
+                    evt: new MouseEvent('mousedown', { ...e.evt }),
+                    target: e.target,
+                    type: 'mousedown',
+                    pointerId: 0,
+                    currentTarget: this,
+                    cancelBubble: true,
+                } as Konva.KonvaEventObject<MouseEvent>),
+            );
+
+            // If the first point is clicked when there are 3 or more, close the poly
+            if (this.points.length === 1) {
+                point.on('click', () => this.close());
+            }
         }
+
+        this.updateLine();
     }
 
     /**

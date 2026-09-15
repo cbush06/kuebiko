@@ -27,12 +27,15 @@ export class DragPoint extends Konva.Circle {
         if (!value) this.dragEnd();
     }
 
-    constructor(x: number, y: number, stage: Konva.Stage) {
+    constructor(x: number, y: number, stage: Konva.Stage, readOnly = false) {
         super({
             ...DragPoint.DRAG_POINT_CONFIG,
             x,
             y,
         });
+
+        if (readOnly) return;
+
         this.on('click', (e) => (e.cancelBubble = true));
 
         this.on('mousedown', this.dragStart);

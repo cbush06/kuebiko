@@ -35,6 +35,18 @@
                     v-model="answer as string[]"
                     :options="question.options ?? []"
                 />
+                <HotSpot
+                    v-else-if="question?.type === 'HOTSPOT'"
+                    v-model="answer as Point[][]"
+                    :correct-response="(correctResponse as Point[][]) ?? []"
+                    :subject-image-data="subjectImageData"
+                    :subject-image-mime="subjectImageType"
+                    :question-ref="props.question?.uuid ?? ''"
+                    :question-content="questionContent"
+                    :reveal-answer="true"
+                    :success-feedback="successFeedback"
+                    :failure-feedback="failureFeedback"
+                />
             </div>
         </div>
     </div>
@@ -49,6 +61,9 @@ import { QuestionResponse } from '@renderer/db/models/question-response';
 import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+import HotSpot from '@renderer/components/question-renderers/HotSpot.vue';
+import { Point } from '@renderer/db/models/point';
+import { Resource } from '@renderer/db/models/resource';
 
 interface ResponseProps {
     questionNumber: number;
@@ -61,6 +76,8 @@ const { t } = useI18n();
 const props = defineProps<ResponseProps>();
 
 const questionContent = ref<string>('');
+const subjectImageData = ref<Uint8Array>();
+const subjectImageType = ref<string>();
 const correctResponse = computed(() => props.question?.answer);
 const successFeedback = ref<string>();
 const failureFeedback = ref<string>();
@@ -88,6 +105,14 @@ watchEffect(async () => {
         )?.data as string;
         failureFeedback.value =
             props.question?.failureFeedbackText ?? failureFeedbackContentResource;
+
+        const subjectImageResource = (await DeliveryTestObjectProvider.fetchResource(
+            props.question?.subjectImageRef ?? 'nonce',
+        )) as Resource | undefined;
+        if (subjectImageResource) {
+            subjectImageData.value = subjectImageResource.data as Uint8Array;
+            subjectImageType.value = subjectImageResource.mime as string;
+        }
     } catch (e) {
         console.log(e);
     }

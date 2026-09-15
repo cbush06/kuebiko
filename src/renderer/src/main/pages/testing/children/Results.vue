@@ -133,6 +133,8 @@ const chartOptions = computed(
     () =>
         ({
             responsive: true,
+            animation: false,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'bottom',

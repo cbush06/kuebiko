@@ -17,6 +17,9 @@
             :mime="props.subjectImageMime"
             :width="800"
             :height="600"
+            :reveal-answer="props.revealAnswer"
+            :correct-response="props.correctResponse"
+            mode="hotspot"
         />
     </div>
 </template>
@@ -29,7 +32,7 @@ import { computed } from 'vue';
 import AreaPicker from '@renderer/components/area-picker/AreaPicker.vue';
 
 export interface HotSpotProps extends RendererBaseProps {
-    hotZones: Point[][];
+    correctResponse: Point[][];
     subjectImageData?: Uint8Array;
     subjectImageMime?: string;
 }

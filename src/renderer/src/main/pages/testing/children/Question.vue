@@ -29,7 +29,7 @@
             :subject-image-data="subjectImageData"
             :subject-image-mime="subjectImageType"
             :question-content="questionContent"
-            :hot-zones="(questionDeliveryItem?.getCorrectResponse() as Point[][]) ?? []"
+            :correct-response="(questionDeliveryItem?.getCorrectResponse() as Point[][]) ?? []"
             :success-feedback="successFeedbackContent"
             :failure-feedback="failureFeedbackContent"
             v-model="selection as Point[][]"

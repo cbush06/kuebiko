@@ -7,6 +7,8 @@ import { onMounted, ref, watch } from 'vue';
 import Konva from '@node/konva';
 import { scaleImage } from '@renderer/utils/image-utils';
 import { DragPoint } from '@renderer/components/konva-shapes/drag-point';
+import { Polygon } from '@renderer/components/konva-shapes/polygon';
+import { Point } from '@renderer/db/models/point';
 
 // NOTE: While this model is Array<Array<[number, number]>>, it is expected to only contain a
 // single polygon (i.e. a single array of points). This is because the area picker is designed
@@ -19,15 +21,24 @@ const model = defineModel<Array<Array<[number, number]>>>({
     default: [],
 });
 
-const props = defineProps<{
-    mime?: string;
-    image?: Uint8Array;
-    width?: number;
-    height?: number;
-}>();
+const props = withDefaults(
+    defineProps<{
+        mime?: string;
+        image?: Uint8Array;
+        width?: number;
+        height?: number;
+        revealAnswer?: boolean;
+        correctResponse?: Point[][];
+        mode?: 'hotspot' | 'hotarea';
+    }>(),
+    {
+        mode: 'hotspot',
+    },
+);
 
 const stageEl = ref<HTMLDivElement>();
 let stage: Konva.Stage;
+let pointLayer: Konva.Layer;
 let polyLayer: Konva.Layer;
 let imageLayer: Konva.Layer;
 
@@ -94,6 +105,43 @@ function initializeStage(width: number, height: number, image?: HTMLImageElement
     stage.add(polyLayer);
     polyLayer.drawScene();
 
+    // Init point layer
+    pointLayer = new Konva.Layer();
+    stage.add(pointLayer);
+    pointLayer.drawScene();
+
+    // Add pre-existing point
+    model.value.forEach((polyCoords) => {
+        if (polyCoords?.length > 0) {
+            // Handle drawing selected point
+            addPoint(polyCoords[0][0], polyCoords[0][1], stage);
+        }
+    });
+
+    if (props.revealAnswer) {
+        initializeForRevealingAnswer();
+    } else {
+        initializeForResponding();
+    }
+}
+
+function initializeForRevealingAnswer() {
+    if (props.mode === 'hotspot') {
+        if (!props.correctResponse || props.correctResponse.length === 0) return;
+
+        polyLayer.add(
+            new Polygon(
+                props.correctResponse[0].map(({ x, y }) => [x, y]),
+                polyLayer,
+                true,
+            )
+        )
+    } else {
+        // Handle activating selected polygon
+    }
+}
+
+function initializeForResponding() {
     // Handle adding new points
     stage.on('click', (e: Konva.KonvaEventObject<MouseEvent>) => {
         e.cancelBubble = true;
@@ -107,28 +155,25 @@ function initializeStage(width: number, height: number, image?: HTMLImageElement
         // Only add a point if the Stage was the target
         if (e.currentTarget !== stage) return;
 
-        // Add point
-        const { x, y } = evtStage.getPointerPosition()!;
-        addPoint(x, y, evtStage);
-    });
-
-    // Add pre-existing point
-    model.value.forEach((polyCoords) => {
-        if (polyCoords?.length > 0) {
-            addPoint(polyCoords[0][0], polyCoords[0][1], stage);
+        if (props.mode === 'hotspot') {
+            // Add point
+            const { x, y } = evtStage.getPointerPosition()!;
+            addPoint(x, y, evtStage);
+        } else {
+            // Handle selecting a polygon
         }
     });
 }
 
 function addPoint(x: number, y: number, stage: Konva.Stage) {
     // Create a new point
-    const point = new DragPoint(x, y, stage);
+    const point = new DragPoint(x, y, stage, props.revealAnswer);
 
     // Clear existing point
-    polyLayer.removeChildren();
+    pointLayer.removeChildren();
 
     // Add new point
-    polyLayer.add(point);
+    pointLayer.add(point);
 
     // Update model
     model.value = [[[x, y]]];
