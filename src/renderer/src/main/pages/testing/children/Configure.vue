@@ -200,7 +200,7 @@ onBeforeMount(async () => {
         )) as Question[]),
     );
     availableQuestions.value =
-        test.value?.sections.reduce((cnt, s) => (cnt += s.questionRefs.length), 0) ?? 0;
+        test.value?.sections.reduce((cnt, s) => cnt + s.questionRefs.length, 0) ?? 0;
     sectionOptions.value.push(
         ...(test.value?.sections.flatMap(
             (s) => ({ title: s.title, uuid: s.uuid }) as SectionOption,
