@@ -13,6 +13,7 @@ vi.mock('@renderer/services/delivery-db-facade.ts', () => ({
     DeliveryDbFacade: {
         resources: {
             add: vi.fn().mockImplementation(() => Promise.resolve()),
+            put: vi.fn().mockImplementation(() => Promise.resolve()),
         },
     },
 }));

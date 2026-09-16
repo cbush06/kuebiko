@@ -12,7 +12,7 @@ export default mergeConfig(
             setupFiles: ['./src/renderer/src/test/vitest-setup.ts'],
             deps: {
                 optimizer: {
-                    web: {
+                    client: {
                         include: ['vitest-canvas-mock']
                     }
                 }

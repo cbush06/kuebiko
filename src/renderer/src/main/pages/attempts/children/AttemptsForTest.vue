@@ -53,7 +53,6 @@ import {
     TimeScale,
     Tooltip,
 } from 'chart.js';
-import { DistributiveArray } from 'chart.js/dist/types/utils';
 import 'chartjs-adapter-date-fns';
 import { Line } from 'vue-chartjs';
 
@@ -61,6 +60,10 @@ import TableVue, { TableColumn } from '@renderer/components/table/Table.vue';
 import { Attempt } from '@renderer/db/models/attempt';
 import { differenceInSeconds, format, intervalToDuration } from 'date-fns';
 import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+
+// chart.js no longer exposes this internal utility type via its public
+// package exports, so it's reproduced here (see chart.js/src/types/utils.ts).
+type DistributiveArray<T> = [T] extends [unknown] ? Array<T> : never;
 
 const { t } = useI18n();
 const route = useRoute();

@@ -183,6 +183,7 @@ describe('configure test page', () => {
 
     it('shows correct options for filtering by section and category', async () => {
         const { getByTestId } = render(ConfigureVue);
+        const user = userEvent.setup();
 
         // Set ordering to random
         await fireEvent.click(getByTestId('question-ordering-random').querySelector('input')!);
@@ -190,6 +191,9 @@ describe('configure test page', () => {
         // Confirm filters are shown
         const sectionFilter = getByTestId('section-filter');
         const categoryFilter = getByTestId('category-filter');
+
+        // Open the section filter dropdown so its options are rendered
+        await user.click(sectionFilter.querySelector('.multiselect__select') as HTMLElement);
 
         // Confirm correct sections are available
         await waitFor(() =>
@@ -199,6 +203,12 @@ describe('configure test page', () => {
             (e) => e.textContent,
         );
         expect(sectionOptions).toEqual(['Section 1', 'Section 2']);
+
+        // Open the category filter dropdown so its options are rendered
+        await user.click(categoryFilter.querySelector('.multiselect__select') as HTMLElement);
+        await waitFor(() =>
+            expect(categoryFilter.querySelectorAll('li[role="option"]').item(0)).toBeInTheDocument(),
+        );
 
         // Confirm correct categories are shown
         const categoryOptions = Array.from(
