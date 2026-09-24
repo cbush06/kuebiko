@@ -241,11 +241,11 @@ describe('configure test page', () => {
             '{Enter}{Escape}',
         );
 
-        const maxQuestions = getByTestId('max-questions') as HTMLInputElement;
-        const maxQuestionsValue = getByTestId('max-questions-value') as HTMLInputElement;
+        const maxQuestions = getByTestId('max-questions-range-input') as HTMLInputElement;
+        const maxQuestionsValue = getByTestId('max-questions-value') as HTMLSpanElement;
 
         await waitFor(() => expect(maxQuestions.max).toEqual('2'));
-        expect(maxQuestionsValue).toHaveValue('2');
+        expect(maxQuestionsValue).toHaveTextContent('2');
 
         const categoryFilter = getByTestId('category-filter');
         await user.click(categoryFilter.querySelector('.multiselect__select') as HTMLElement);
