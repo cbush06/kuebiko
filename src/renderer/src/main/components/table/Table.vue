@@ -3,6 +3,7 @@
         <thead>
             <th
                 v-for="column in columns"
+                v-bind:key="column.key"
                 :class="{
                     sortable: column.sortable,
                     'is-clickable': column.sortable,
@@ -23,7 +24,7 @@
                 @click="onRowClick($event, row)"
                 :class="`${clickable ? 'is-clickable' : ''}`"
             >
-                <td v-for="column in columns">
+                <td v-for="column in columns" v-bind:key="column.key">
                     <slot
                         v-if="!(column.editable && props.mode === 'edit')"
                         :name="propIdToString(column.key)"
@@ -82,7 +83,7 @@ export interface TableColumn<T> {
     key: keyof T;
     title: string;
     computed?: (v: T) => any;
-    formatter: (v: any) => string;
+    formatter?: (v: any) => string;
     sortable?: boolean;
     comparator?: ColumnComparator<T>;
     editable?: boolean;

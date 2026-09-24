@@ -2,28 +2,26 @@
     <div class="field is-grouped">
         <div class="control is-expanded">
             <input
-                :data-testid="props.id"
                 type="range"
+                :data-testid="`${props.id}-input`"
                 class="is-fullwidth w-100"
-                :min="Math.min(props.min, props.max)"
+                :min="props.min"
                 :max="props.max"
                 v-model.number="model"
                 list="max-questions-ticks"
+                :disabled="disabled"
             />
             <datalist
-                id="max-questions-ticks"
+                v-if="props.ticks"
+                :data-testid="`${props.id}-datalist`"
                 class="is-flex is-justify-content-space-between w-100"
             >
-                <option
-                    v-for="n in props.ticks"
-                    v-bind:key="n"
-                    :value="n"
-                    :label="props.ticks[n] ?? n"
-                />
+                <option v-for="n in props.ticks" :key="n" :value="n" :label="props.ticks[n] ?? n" />
             </datalist>
         </div>
         <div v-if="props.showValueAtEnd" class="control">
             <span
+                :data-testid="`${props.id}-value`"
                 class="input text-center is-inline-block"
                 style="field-sizing: content; min-width: 3rem"
                 >{{ model }}</span
@@ -33,21 +31,55 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 export interface RangeProps {
     id?: string;
-    ticks: Record<number, string> | number;
+    ticks?: Array<string> | number;
     min: number;
     max: number;
     showValueAtEnd?: boolean;
+    disabled?: boolean;
 }
 
-const props = defineProps<RangeProps>();
+const props = withDefaults(defineProps<RangeProps>(), {
+    showValueAtEnd: false,
+    disabled: false,
+});
 const model = defineModel<number>({ default: 0 });
 
-const progress = computed(() => (((model.value - props.min) / (props.max - props.min)) * 100) + '%');
+const disabled = ref<boolean>(false);
+const progress = computed(() => {
+    if (disabled.value || props.max <= props.min) {
+        return '0%';
+    }
+    return ((model.value - props.min) / (props.max - props.min)) * 100 + '%';
+});
 const rangeTopMargin = computed(() => (props.showValueAtEnd ? '0.5rem' : '0'));
+
+onMounted(() => {
+    validateProps();
+});
+
+const validateProps = (): void => {
+    if (props.max <= props.min) {
+        console.warn("'max' must be greater than 'min'");
+        disabled.value = true;
+    }
+    if (props.ticks) {
+        if (typeof props.ticks == 'number' && props.ticks !== props.max - props.min + 1) {
+            console.warn(
+                "If <Range /> component prop 'ticks' is a number, it must be equal to the number of possible values.",
+            );
+        }
+
+        if (Array.isArray(props.ticks) && props.ticks.length !== props.max - props.min + 1) {
+            console.warn(
+                "If <Range /> component prop 'ticks' is an array, it must have length equal to the number of possible values.",
+            );
+        }
+    }
+};
 </script>
 
 <style scoped lang="scss">
