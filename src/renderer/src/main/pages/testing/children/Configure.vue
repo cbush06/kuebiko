@@ -112,7 +112,8 @@
 
             <div class="subtitle">{{ t('maximumQuestions') }}</div>
             <div class="block ml-5">
-                <Range :ticks="availableQuestions ?? 0"
+                <Range id="max-questions"
+                       :ticks="availableQuestions ?? 0"
                        :min="1"
                        :max="availableQuestions ?? 0"
                        show-value-at-end

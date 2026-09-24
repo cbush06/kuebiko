@@ -5,9 +5,9 @@
                 :data-testid="props.id"
                 type="range"
                 class="is-fullwidth w-100"
-                :min="props.min"
+                :min="Math.min(props.min, props.max)"
                 :max="props.max"
-                v-model="model"
+                v-model.number="model"
                 list="max-questions-ticks"
             />
             <datalist
