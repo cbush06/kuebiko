@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import { menu } from '@milkdown-lab/plugin-menu';
-import { defaultValueCtx, Editor, editorViewCtx, rootCtx } from '@milkdown/core';
+import { defaultValueCtx, Editor, rootCtx } from '@milkdown/core';
 import { listener, listenerCtx } from '@milkdown/plugin-listener';
 import { history } from '@milkdown/plugin-history';
 import { commonmark } from '@milkdown/preset-commonmark';

@@ -112,35 +112,12 @@
 
             <div class="subtitle">{{ t('maximumQuestions') }}</div>
             <div class="block ml-5">
-                <div class="field is-grouped">
-                    <div class="control is-expanded">
-                        <input
-                            data-testid="max-questions"
-                            type="range"
-                            class="slider is-fullwidth is-primary"
-                            min="0"
-                            :value="testConfigurationStore.maxQuestions"
-                            @input="
-                                testConfigurationStore.maxQuestions = parseInt(
-                                    ($event.target! as HTMLInputElement).value,
-                                )
-                            "
-                            :max="availableQuestions"
-                        />
-                    </div>
-                    <div
-                        class="control is-flex is-flex-direction-row is-align-content-center is-flex-wrap-wrap"
-                        style="width: 5rem"
-                    >
-                        <input
-                            data-testid="max-questions-value"
-                            type="text"
-                            class="input has-text-white has-background-dark has-text-centered is-unselectable"
-                            :value="testConfigurationStore.maxQuestions"
-                            disabled
-                        />
-                    </div>
-                </div>
+                <Range :ticks="availableQuestions ?? 0"
+                       :min="1"
+                       :max="availableQuestions ?? 0"
+                       show-value-at-end
+                       v-model="testConfigurationStore.maxQuestions"
+                />
             </div>
         </div>
     </div>
@@ -168,6 +145,7 @@ import { useRoute } from 'vue-router';
 import BulmaOptionGroup from '@renderer/components/bulma-option/BulmaOptionGroup.vue';
 import BulmaOption from '@renderer/components/bulma-option/BulmaOption.vue';
 import { DeliveryTestObjectProvider } from '@renderer/services/delivery-test-object-provider';
+import Range from '@renderer/components/range/Range.vue';
 
 interface SectionOption {
     title: string;
