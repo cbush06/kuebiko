@@ -46,16 +46,18 @@ const props = withDefaults(defineProps<RangeProps>(), {
     showValueAtEnd: false,
     disabled: false,
 });
-const model = defineModel<number>({ default: 0 });
+const model = defineModel<number>({
+    required: true
+});
 
-const disabled = ref<boolean>(false);
+const disabled = ref<boolean>(props.disabled);
 const progress = computed(() => {
     if (disabled.value || props.max <= props.min) {
         return '0%';
     }
     return ((model.value - props.min) / (props.max - props.min)) * 100 + '%';
 });
-const rangeTopMargin = computed(() => (props.showValueAtEnd ? '0.5rem' : '0'));
+const rangeTopMargin = computed(() => (props.showValueAtEnd ? '1rem' : '0'));
 
 onMounted(() => {
     validateProps();

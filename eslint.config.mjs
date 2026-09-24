@@ -22,6 +22,7 @@ export default tseslint.config(
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
             'vue/multi-word-component-names': 'off',
+            'vue/require-default-prop': 'off'
         },
     },
     eslintConfigPrettier,
